@@ -49,6 +49,24 @@ button:hover {
     background-color: #218838;
 }
 
+.content{
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button.center-button {
+    margin: 0 auto; 
+  }
+
+.input-container {
+    /* Existing styles for .content (if any) */
+    margin: 0 auto; /* This will center the div horizontally */
+    display: flex; /* This is needed for horizontal centering with flexbox */
+    justify-content: center; /* This aligns the content of the div horizontally */
+    align-items: center; /* This aligns the content of the div vertically (optional) */
+  }
+
 /* Navigation bar styles */
 * {
     margin: 0;
@@ -73,6 +91,7 @@ button:hover {
     text-decoration: none;
     font-size: 17px;
     display: block;
+    border-radius: 8px; /* Added border-radius for curved edges */
 }
 
 .navbar a:hover {

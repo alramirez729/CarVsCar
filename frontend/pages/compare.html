@@ -9,12 +9,24 @@
 <body>
     <div id="navbar"></div>
     <div id="content">
-        <h1>Compare Cars</h1>
-        <div>
-            <input type="text" id="car1" placeholder="Enter Car 1">
-            <input type="text" id="car2" placeholder="Enter Car 2">
-            <button onclick="compareCars()">Compare</button>
+        <h1>Car vs. Car</h1>
+        <div class="input-container">
+            <input type="text" id="car1" placeholder="Enter Car 1 Brand">
+            <input type="text" id="car2" placeholder="Enter Car 2 Brand">
         </div>
+        <div class="input-container">
+            <input type="text" id="model1" placeholder="Enter Car 1 Model">
+            <input type="text" id="model2" placeholder="Enter Car 2 Model">
+        </div>
+        <div class="input-container">
+            <input type="text" id="model1" placeholder="Enter Car 1 Mileage">
+            <input type="text" id="model2" placeholder="Enter Car 2 Mileage">
+        </div>
+        <div class="input-container">
+            <input type="text" id="model1" placeholder="Enter Car 1 Horsepower">
+            <input type="text" id="model2" placeholder="Enter Car 2 Horsepower">
+        </div>
+        <div><button onclick="compareCars()" class="center-button">Compare</button></div>
         <div id="comparisonResult"></div>
     </div>
     <script src="../js/loadNavbar.js"></script>
