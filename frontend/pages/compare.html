@@ -11,20 +11,18 @@
     <div id="content">
         <h1>Car vs. Car</h1>
         <div class="input-container">
-            <input type="text" id="car1" placeholder="Enter Car 1 Brand">
-            <input type="text" id="car2" placeholder="Enter Car 2 Brand">
+            <input type="text" id="brand1" placeholder="Enter Car 1 Brand" oninput="filterMakes('brand1')">
+            <div id="dropdown1" class="dropdown"></div>
+            <input type="text" id="brand2" placeholder="Enter Car 2 Brand" oninput="filterMakes('brand2')">
+            <div id="dropdown2" class="dropdown"></div>
         </div>
         <div class="input-container">
             <input type="text" id="model1" placeholder="Enter Car 1 Model">
             <input type="text" id="model2" placeholder="Enter Car 2 Model">
         </div>
         <div class="input-container">
-            <input type="text" id="model1" placeholder="Enter Car 1 Mileage">
-            <input type="text" id="model2" placeholder="Enter Car 2 Mileage">
-        </div>
-        <div class="input-container">
-            <input type="text" id="model1" placeholder="Enter Car 1 Horsepower">
-            <input type="text" id="model2" placeholder="Enter Car 2 Horsepower">
+            <input type="text" id="mileage1" placeholder="Enter Car 1 Mileage">
+            <input type="text" id="mileage2" placeholder="Enter Car 2 Mileage">
         </div>
         <div><button onclick="compareCars()" class="center-button">Compare</button></div>
         <div id="comparisonResult"></div>

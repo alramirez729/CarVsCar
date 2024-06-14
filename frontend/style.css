@@ -49,7 +49,7 @@ button:hover {
     background-color: #218838;
 }
 
-.content{
+.content {
     max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
@@ -57,15 +57,41 @@ button:hover {
 
 button.center-button {
     margin: 0 auto; 
-  }
+}
 
+/* Dropdown styles */
 .input-container {
-    /* Existing styles for .content (if any) */
-    margin: 0 auto; /* This will center the div horizontally */
-    display: flex; /* This is needed for horizontal centering with flexbox */
-    justify-content: center; /* This aligns the content of the div horizontally */
-    align-items: center; /* This aligns the content of the div vertically (optional) */
-  }
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-container .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.dropdown .dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.dropdown .dropdown-item:hover {
+    background-color: #ddd;
+}
 
 /* Navigation bar styles */
 * {
@@ -91,7 +117,7 @@ button.center-button {
     text-decoration: none;
     font-size: 17px;
     display: block;
-    border-radius: 8px; /* Added border-radius for curved edges */
+    border-radius: 8px;
 }
 
 .navbar a:hover {
