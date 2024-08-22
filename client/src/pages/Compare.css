@@ -1,0 +1,125 @@
+/* Basic reset for margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Style for the content container */
+#content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading style */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #333;
+}
+
+/* Flexbox container for the comparison boxes */
+.comparison-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Styles for each comparison box */
+.comparison-box {
+    width: 48%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Styles for the car images */
+.car-image {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Style for the input containers */
+.input-container {
+    margin-bottom: 15px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style for the dropdowns */
+.dropdown {
+    position: relative;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 5px;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Style for the compare button */
+.center-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.center-button:hover {
+    background-color: #0056b3;
+}
+
+/* Style for the comparison result */
+#comparisonResult {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#comparisonResult h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#comparisonResult p {
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+#comparisonResult h3 {
+    font-size: 1.3em;
+    color: #007bff;
+}
