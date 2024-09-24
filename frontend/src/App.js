@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import './App.css'; // Make sure Tailwind is loaded here
 
 // Importing components to the website
 import Navbar from './Navbar';
@@ -10,13 +11,17 @@ import Loginpage from './pages/loginpage';
 function App() {
   return (
     <Router>
-      <Navbar />  {/* This will display the Navbar on all pages */}
-      <Routes>
-        <Route path="/" element={<Homepage />} />  {/* Default route */}
-        <Route path="/homepage" element={<Homepage />} />  
-        <Route path="/compare" element={<Compare />} />
-        <Route path="/loginpage" element={<Loginpage />} />
-      </Routes>
+      <div className="flex">
+        <Navbar />  {/* This will display the Navbar on all pages */}
+        <div className="ml-64 p-5 w-full"> {/* Adds margin to avoid overlapping with the fixed sidebar */}
+          <Routes>
+            <Route path="/" element={<Homepage />} />  {/* Default route */}
+            <Route path="/homepage" element={<Homepage />} />  
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/loginpage" element={<Loginpage />} />
+          </Routes>
+        </div>
+      </div>
     </Router>
   );
 }
