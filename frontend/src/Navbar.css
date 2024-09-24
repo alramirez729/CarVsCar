@@ -1,42 +1,16 @@
 /* src/Navbar.css */
-
-.sidebar {
-  height: 100vh; /* Full height */
-  width: 250px; /* Sidebar width */
-  position: fixed; /* Fixed Sidebar */
-  top: 0;
-  left: 0;
-  background-color: #070217; /* Dark background */
-  padding-top: 20px; /* Top padding */
-  z-index: 1; /* Ensure it stays on top */
-  overflow-y: auto; /* Enable vertical scrolling if content exceeds viewport */
-}
-
 .sidebar-nav ul {
-  list-style-type: none; /* Remove bullets */
+  list-style-type: none;
   padding: 0;
-}
-
-.sidebar-nav li {
-  padding: 10px;
-  text-align: left;
 }
 
 .sidebar-nav li a {
+  display: block;
+  padding: 10px 15px;
   text-decoration: none;
-  color: white; /* Link text color */
-  display: flex; /* Make links take up the full width */
-  padding: 10px;
-  transition: background-color 0.3s;
+  color: rgb(7, 3, 26);
 }
-
 .sidebar-nav li a:hover {
-  background-color: #575757; /* Change background on hover */
-}
-
-/* Remove body margin-left to prevent overlapping */
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  background-color: #122544; /* Tailwind blue */
+  color: rgb(0, 0, 0);
 }
