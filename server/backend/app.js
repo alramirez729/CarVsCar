@@ -9,8 +9,6 @@ const userRoutes = require('./routes/users'); // Import the combined user routes
 dotenv.config();
 
 const app = express();
-
-// Middleware to parse JSON bodies
 app.use(express.json());
 
 // Enable CORS
