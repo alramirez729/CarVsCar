@@ -7,35 +7,23 @@ import './Navbar.css';  // Add the CSS file for sidebar styling
 
 function Navbar () {
   return (
-    <aside className="bg-cyan-950 w-64 h-full fixed flex items-center justify-center">
+    <aside className="navbar-style">
       <nav className="p-5">
         <ul className="space-y-8">
           <li className="group relative">
-            <Link to="/homepage" className="block bg-cyan-700 text-white py-10 px-10 rounded-lg text-center hover:bg-cyan-500 transition duration-300 ease-in-out"
-            >
+            <Link to="/homepage" className="navbar-button-styling">
               <FontAwesomeIcon icon={faHome} size="3x" />
-            </Link>
-            <span className="opacity-0 group-hover:opacity-100 absolute  italic top-1/2 left-3/4 transform -translate-y-1/2 bg-black text-white text-sm py-1 px-2 rounded-lg shadow-lg transition-opacity duration-300">
-              Homepage
-            </span>
+            </Link> <span className="navbar-button-hover">Homepage</span>
           </li>
           <li className="group relative">
-            <Link to="/compare" className="block bg-cyan-700 text-white py-10 px-10 rounded-lg text-center hover:bg-cyan-500 transition duration-300 ease-in-out"
-            >
+            <Link to="/compare" className="navbar-button-styling">
               <FontAwesomeIcon icon={faBalanceScale} size="3x" />
-            </Link>
-            <span className="opacity-0 group-hover:opacity-100 absolute italic top-1/2 left-3/4 transform -translate-y-1/2 bg-black text-white text-sm py-1 px-2 rounded-lg shadow-lg transition-opacity duration-300">
-              Compare
-            </span>
+              </Link><span className="navbar-button-hover">Compare</span>
           </li>
           <li className="group relative">
-            <Link to="/loginpage" className="block bg-cyan-700 text-white py-10 px-10 rounded-lg text-center hover:bg-cyan-500 transition duration-300 ease-in-out"
-            >
+            <Link to="/loginpage" className="navbar-button-styling">
               <FontAwesomeIcon icon={faUser} size="3x" />
-            </Link>
-            <span className="opacity-0 group-hover:opacity-100 absolute italic top-1/2 left-3/4 transform -translate-y-1/2 bg-black text-white text-sm py-1 px-2 rounded-lg shadow-lg transition-opacity duration-300">
-              Login/Create Account
-            </span>
+            </Link> <span className="navbar-button-hover"> Login/Create Account</span>
           </li>
         </ul>
       </nav>
