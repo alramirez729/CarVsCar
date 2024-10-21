@@ -37,13 +37,29 @@ app.use('/users', userRoutes);
 // Fetch car data from the free test API and serve it
 app.get('/api/cars', async (req, res) => {
     try {
-        const response = await axios.get('https://freetestapi.com/api/v1/cars');
-        res.json(response.data);
+        const apiKey = process.env.API_KEY;
+        const { make, model } = req.query;
+
+        let apiUrl = `https://api.api-ninjas.com/v1/cars?`;
+        if (make) apiUrl += `make=${make}&`;
+        if (model) apiUrl += `model=${model}&`;
+
+        const response = await axios.get(apiUrl, {
+            headers: { 'X-Api-Key': apiKey }
+        });
+
+        if (response.status === 200 && response.headers['content-type'].includes('application/json')) {
+            res.json(response.data);
+        } else {
+            res.status(response.status).send('Invalid response format from API');
+        }
     } catch (error) {
-        console.error('Error fetching car data:', error);
+        console.error('Error fetching car data:', error.message);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 // Default route for health check or home
 app.get('/', (req, res) => {
