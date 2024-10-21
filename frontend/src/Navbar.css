@@ -1,16 +1,1 @@
-/* src/Navbar.css */
-.sidebar-nav ul {
-  list-style-type: none;
-  padding: 0;
-}
 
-.sidebar-nav li a {
-  display: block;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: rgb(7, 3, 26);
-}
-.sidebar-nav li a:hover {
-  background-color: #122544; /* Tailwind blue */
-  color: rgb(0, 0, 0);
-}
