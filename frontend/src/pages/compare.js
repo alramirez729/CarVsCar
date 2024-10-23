@@ -12,13 +12,6 @@ function Compare() {
   const [model2, setModel2] = useState('');
   const [year2, setYear2] = useState('');
   const [comparisonResult, setComparisonResult] = useState([]);
-  const [metricExplanationVisible, setMetricExplanationVisible] = useState({});
-
-  //drop down menu items
-
-  const [makeOptions, setMakeOptions] = useState([]);
-  const [modelOptions, setModelOptions] = useState([]);
-  const [yearOptions, setYearOptions] = useState([]);
 
 
   // Function to fetch data for a given make, model, and year
@@ -129,53 +122,6 @@ function Compare() {
     cylinders: "Cylinders are the components of an engine that provide power. More cylinders typically mean more power but less fuel efficiency.",
     displacement: "Displacement is the total volume of all the cylinders in the engine, usually measured in liters. It is an indicator of engine size and power."
   };
-
-  const fetchMakeOptions = async (input) => {
-    if (input.length < 2) return; // Fetch only if the input has at least 2 characters
-    try {
-      const response = await fetch(`http://localhost:3000/api/cars?make=${input}`);
-      if (response.ok) {
-        const data = await response.json();
-        const uniqueMakes = [...new Set(data.map(car => car.make))];
-        setMakeOptions(uniqueMakes);
-      }
-    } catch (error) {
-      console.error('Error fetching makes:', error);
-    }
-  };
-  
-  const fetchModelOptions = async (make, input) => {
-    if (make && input.length >= 2) {
-      try {
-        const response = await fetch(`http://localhost:3000/api/cars?make=${make}&model=${input}`);
-        if (response.ok) {
-          const data = await response.json();
-          const uniqueModels = [...new Set(data.map(car => car.model))];
-          setModelOptions(uniqueModels);
-        }
-      } catch (error) {
-        console.error('Error fetching models:', error);
-      }
-    }
-  };
-  
-  const fetchYearOptions = async (make, model) => {
-    if (make && model) {
-      try {
-        const response = await fetch(`http://localhost:3000/api/cars?make=${make}&model=${model}`);
-        if (response.ok) {
-          const data = await response.json();
-          const uniqueYears = [...new Set(data.map(car => car.year))];
-          setYearOptions(uniqueYears);
-        }
-      } catch (error) {
-        console.error('Error fetching years:', error);
-      }
-    }
-  };
-
-
-
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-cyan-700">
