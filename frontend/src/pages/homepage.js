@@ -18,7 +18,7 @@ function Homepage() {
       </p>
       <Link 
         to="/loginpage" 
-        className="mt-8 bg-cyan-700 text-white py-3 px-4 rounded-lg hover:bg-cyan-500 transition duration-300 ease-in-out"
+        className="general-button-styling"
       >
         Sign up
       </Link>
