@@ -83,15 +83,26 @@ function Compare() {
   };
 
   // Component for each metric row with two car cards
+  // MetricComparisonRow component
   const MetricComparisonRow = ({ metric, metricLabel, car1, car2 }) => {
     const [explanationVisible, setExplanationVisible] = useState(false);
-
-    const toggleExplanation = () => {
-      setExplanationVisible(!explanationVisible);
+  
+    // Compare metric values
+    const car1Value = parseFloat(car1.value);
+    const car2Value = parseFloat(car2.value);
+    const isCar1Better = car1Value > car2Value;
+    const isCar2Better = car2Value > car1Value;
+  
+    const toggleExplanation = () => setExplanationVisible(!explanationVisible);
+  
+    // Utility to get the shortened metric label
+    const getShortMetricLabel = (metricLabel) => {
+      const words = metricLabel.split(" ");
+      return words.slice(1).join(" ") || metricLabel;
     };
-
+  
     return (
-      <div className="flex flex-col items-start p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
+      <div className="animate-fade-in flex flex-col items-start p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
         {/* Metric Label and Explanation */}
         <div className="flex items-center mb-2 w-full justify-between">
           <h3 className="text-xl font-bold">{metricLabel}</h3>
@@ -101,7 +112,6 @@ function Compare() {
             onClick={toggleExplanation} 
           />
         </div>
-        {/* Explanation Text */}
         {explanationVisible && (
           <p className="text-sm text-gray-600 mb-3">
             {metricExplanations[metric]}
@@ -110,13 +120,19 @@ function Compare() {
         {/* Car 1 and Car 2 Cards */}
         <div className="flex flex-row w-full gap-4">
           {/* Car 1 Card */}
-          <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md w-1/2">
+          <div
+            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900
+              ${isCar1Better ? 'bg-green-200' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
+          >
             <h4 className="font-semibold">Car 1</h4>
             <p className="mt-2">{car1.brand} {car1.model} ({car1.year})</p>
             <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
           {/* Car 2 Card */}
-          <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md w-1/2">
+          <div
+            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900
+              ${isCar2Better ? 'bg-green-200' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
+          >
             <h4 className="font-semibold">Car 2</h4>
             <p className="mt-2">{car2.brand} {car2.model} ({car2.year})</p>
             <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
@@ -124,12 +140,6 @@ function Compare() {
         </div>
       </div>
     );
-  };
-
-  const getShortMetricLabel = (metricLabel) => {
-    // Split the label by spaces and return everything after the first word
-    const words = metricLabel.split(" ");
-    return words.slice(1).join(" ") || metricLabel; // Return the rest of the words or the original label if there's only one word
   };
 
   // Explanations for each metric in layman's terms
@@ -201,7 +211,7 @@ function Compare() {
 
       <button 
         onClick={handleCompare} 
-        className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+        className="general-button-styling"
       >
         Compare
       </button>
