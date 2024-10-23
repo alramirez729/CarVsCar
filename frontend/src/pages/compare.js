@@ -13,7 +13,6 @@ function Compare() {
   const [year2, setYear2] = useState('');
   const [comparisonResult, setComparisonResult] = useState([]);
 
-
   // Function to fetch data for a given make, model, and year
   const fetchCarData = async (make, model, year) => {
     try {
@@ -40,13 +39,11 @@ function Compare() {
     setCarData1(data1);
     setCarData2(data2);
 
-    // Wait for state to update before calculating comparison
+    // Check if both cars have data
     if (data1.length > 0 && data2.length > 0) {
-      setTimeout(() => {
-        generateComparison(data1, data2);
-      }, 100); // Allow time for state to update before comparison
+      generateComparison(data1, data2);
     } else {
-      setComparisonResult([<p key="error">One or both car models were not found.</p>]);
+      setComparisonResult([<p key="error" className="text-red-500">One or both car models were not found.</p>]);
     }
   };
 
@@ -66,7 +63,7 @@ function Compare() {
       const avg2 = calculateAverageMetric(data2, metric);
 
       return (
-        <MetricComparisonBox
+        <MetricComparisonRow
           key={metric}
           metric={metric}
           metricLabel={metricLabels[metric]}
@@ -81,21 +78,22 @@ function Compare() {
 
   // General function to calculate the average of any given metric
   const calculateAverageMetric = (cars, metric) => {
-    const total = cars.reduce((sum, car) => sum + (car[metric] || 0), 0);
+    const total = cars.reduce((sum, car) => sum + (parseFloat(car[metric]) || 0), 0);
     return (total / cars.length).toFixed(1);
   };
 
-
-  const MetricComparisonBox = ({ metric, metricLabel, car1, car2 }) => {
+  // Component for each metric row with two car cards
+  const MetricComparisonRow = ({ metric, metricLabel, car1, car2 }) => {
     const [explanationVisible, setExplanationVisible] = useState(false);
-  
+
     const toggleExplanation = () => {
       setExplanationVisible(!explanationVisible);
     };
-  
+
     return (
       <div className="flex flex-col items-start p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
-        <div className="flex items-center mb-2">
+        {/* Metric Label and Explanation */}
+        <div className="flex items-center mb-2 w-full justify-between">
           <h3 className="text-xl font-bold">{metricLabel}</h3>
           <FontAwesomeIcon 
             icon={faQuestionCircle} 
@@ -103,15 +101,35 @@ function Compare() {
             onClick={toggleExplanation} 
           />
         </div>
+        {/* Explanation Text */}
         {explanationVisible && (
           <p className="text-sm text-gray-600 mb-3">
             {metricExplanations[metric]}
           </p>
         )}
-        <p>{car1.brand} {car1.model} ({car1.year}): {car1.value}</p>
-        <p>{car2.brand} {car2.model} ({car2.year}): {car2.value}</p>
+        {/* Car 1 and Car 2 Cards */}
+        <div className="flex flex-row w-full gap-4">
+          {/* Car 1 Card */}
+          <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md w-1/2">
+            <h4 className="font-semibold">Car 1</h4>
+            <p className="mt-2">{car1.brand} {car1.model} ({car1.year})</p>
+            <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
+          </div>
+          {/* Car 2 Card */}
+          <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md w-1/2">
+            <h4 className="font-semibold">Car 2</h4>
+            <p className="mt-2">{car2.brand} {car2.model} ({car2.year})</p>
+            <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
+          </div>
+        </div>
       </div>
     );
+  };
+
+  const getShortMetricLabel = (metricLabel) => {
+    // Split the label by spaces and return everything after the first word
+    const words = metricLabel.split(" ");
+    return words.slice(1).join(" ") || metricLabel; // Return the rest of the words or the original label if there's only one word
   };
 
   // Explanations for each metric in layman's terms
@@ -131,25 +149,69 @@ function Compare() {
         {/* Car 1 Input */}
         <div className="flex flex-col items-center bg-gray-300 p-5 rounded-lg shadow-md w-full md:w-1/2">
           <h2 className="text-xl font-bold mb-3">Car 1</h2>
-          <input type="text" value={brand1} onChange={(e) => setBrand1(e.target.value)} placeholder="Enter Car 1 Make" className="w-full p-2 border rounded-md mb-2" />
-          <input type="text" value={model1} onChange={(e) => setModel1(e.target.value)} placeholder="Enter Car 1 Model" className="w-full p-2 border rounded-md mb-2" />
-          <input type="text" value={year1} onChange={(e) => setYear1(e.target.value)} placeholder="Enter Car 1 Year" className="w-full p-2 border rounded-md" />
+          <input 
+            type="text" 
+            value={brand1} 
+            onChange={(e) => setBrand1(e.target.value)} 
+            placeholder="Enter Car 1 Make" 
+            className="w-full p-2 border rounded-md mb-2" 
+          />
+          <input 
+            type="text" 
+            value={model1} 
+            onChange={(e) => setModel1(e.target.value)} 
+            placeholder="Enter Car 1 Model" 
+            className="w-full p-2 border rounded-md mb-2" 
+          />
+          <input 
+            type="text" 
+            value={year1} 
+            onChange={(e) => setYear1(e.target.value)} 
+            placeholder="Enter Car 1 Year" 
+            className="w-full p-2 border rounded-md" 
+          />
         </div>
 
         {/* Car 2 Input */}
         <div className="flex flex-col items-center bg-gray-300 p-5 rounded-lg shadow-md w-full md:w-1/2">
           <h2 className="text-xl font-bold mb-3">Car 2</h2>
-          <input type="text" value={brand2} onChange={(e) => setBrand2(e.target.value)} placeholder="Enter Car 2 Make" className="w-full p-2 border rounded-md mb-2" />
-          <input type="text" value={model2} onChange={(e) => setModel2(e.target.value)} placeholder="Enter Car 2 Model" className="w-full p-2 border rounded-md mb-2" />
-          <input type="text" value={year2} onChange={(e) => setYear2(e.target.value)} placeholder="Enter Car 2 Year" className="w-full p-2 border rounded-md" />
+          <input 
+            type="text" 
+            value={brand2} 
+            onChange={(e) => setBrand2(e.target.value)} 
+            placeholder="Enter Car 2 Make" 
+            className="w-full p-2 border rounded-md mb-2" 
+          />
+          <input 
+            type="text" 
+            value={model2} 
+            onChange={(e) => setModel2(e.target.value)} 
+            placeholder="Enter Car 2 Model" 
+            className="w-full p-2 border rounded-md mb-2" 
+          />
+          <input 
+            type="text" 
+            value={year2} 
+            onChange={(e) => setYear2(e.target.value)} 
+            placeholder="Enter Car 2 Year" 
+            className="w-full p-2 border rounded-md" 
+          />
         </div>
       </div>
 
-      <button onClick={handleCompare} className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+      <button 
+        onClick={handleCompare} 
+        className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+      >
         Compare
       </button>
 
-      {comparisonResult && <div className="mt-5 w-full max-w-4xl">{comparisonResult}</div>}
+      {/* Comparison Results */}
+      {comparisonResult.length > 0 && (
+        <div className="mt-5 w-full max-w-4xl">
+          {comparisonResult}
+        </div>
+      )}
     </div>
   );
 }
