@@ -48,16 +48,33 @@ app.get('/api/cars', async (req, res) => {
             headers: { 'X-Api-Key': apiKey }
         });
 
-        if (response.status === 200 && response.headers['content-type'].includes('application/json')) {
-            res.json(response.data);
-        } else {
-            res.status(response.status).send('Invalid response format from API');
-        }
+        
+        //this is kept to test the .json:
+        //console.log(response.data);
+
+        // Only return the necessary fields for comparison
+        const carData = response.data.map(car => ({
+            make: car.make,
+            model: car.model,
+            year: car.year,
+            city_mpg: car.city_mpg,
+            highway_mpg: car.highway_mpg,
+            combination_mpg: car.combination_mpg,
+            cylinders: car.cylinders,
+            displacement: car.displacement,
+            drive: car.drive,
+            fuel_type: car.fuel_type,
+            transmission: car.transmission,
+            class: car.class,
+        }));
+
+        res.json(carData);
     } catch (error) {
         console.error('Error fetching car data:', error.message);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
