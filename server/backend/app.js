@@ -50,7 +50,8 @@ app.get('/api/cars', async (req, res) => {
 
         
         //this is kept to test the .json:
-        //console.log(response.data);
+        console.log(response.data);
+        console.log('Fetching data from:', apiUrl); // Log the API URL for debugging
 
         // Only return the necessary fields for comparison
         const carData = response.data.map(car => ({
@@ -68,9 +69,22 @@ app.get('/api/cars', async (req, res) => {
             class: car.class,
         }));
 
+        // Check if data exists
+        if (carData.length === 0) {
+            return res.status(404).json({ message: 'No cars found.' });
+        }
+
         res.json(carData);
     } catch (error) {
         console.error('Error fetching car data:', error.message);
+
+        if (error.response) {
+            // Provide more specific error messages for failed external API calls
+            return res.status(error.response.status).json({
+                message: error.response.data || 'Error fetching data from external API'
+            });
+        }
+
         res.status(500).send('Internal Server Error');
     }
 });
