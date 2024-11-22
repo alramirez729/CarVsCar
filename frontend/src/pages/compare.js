@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 function Compare() {
-  const [carData1, setCarData1] = useState([]);
-  const [carData2, setCarData2] = useState([]);
+
   const [make1, setBrand1] = useState('');
   const [model1, setModel1] = useState('');
   const [year1, setYear1] = useState('');
@@ -15,23 +14,6 @@ function Compare() {
   const [suggestions, setSuggestions] = useState([]);
   const [activeInput, setActiveInput] = useState('');
 
-  useEffect(() => {
-    const fetchAllCars = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/cars');
-        if (response.ok) {
-          const data = await response.json();
-          setSuggestions(data.map(car => car.make)); // Preload makes
-        } else {
-          console.error('Error fetching all cars:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error fetching all cars:', error);
-      }
-    };
-  
-    fetchAllCars();
-  }, []);
 
 
   // Function to fetch data for a given make, model, and year
@@ -98,8 +80,6 @@ function Compare() {
         return;
       }
   
-      setCarData1(data1);
-      setCarData2(data2);
       generateComparison(data1, data2);
     } catch (error) {
       console.error('Error comparing cars:', error);
@@ -184,8 +164,7 @@ function Compare() {
             className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900
               ${isCar1Better ? 'bg-green-200' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold">Car 1</h4>
-            <p className="mt-2">{car1.make} {car1.model} ({car1.year})</p>
+            <h4 className="font-semibold">Car 1: {car1.make} {car1.model} ({car1.year})</h4>
             <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
           {/* Car 2 Card */}
@@ -193,8 +172,7 @@ function Compare() {
             className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900
               ${isCar2Better ? 'bg-green-200' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold">Car 2</h4>
-            <p className="mt-2">{car2.make} {car2.model} ({car2.year})</p>
+            <h4 className="font-semibold">Car 2: {car2.make} {car2.model} ({car2.year})</h4>
             <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
         </div>
@@ -293,30 +271,12 @@ function Compare() {
             value={year1} 
             onChange={(e) => {
               setYear1(e.target.value);
-              fetchSuggestions(e.target.value, 'year');
               setActiveInput('year1');
             }}
             onFocus={() => setActiveInput('year1')}
-            onBlur={() => setTimeout(() => setSuggestions([]), 100)}
             placeholder="Enter Car 1 Year" 
             className="w-full p-2 border rounded-md" 
           />
-          {activeInput === 'year1' && suggestions.length > 0 && (
-            <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setYear1(suggestion);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       </div>
 
@@ -398,30 +358,12 @@ function Compare() {
             value={year2} 
             onChange={(e) => {
               setYear2(e.target.value);
-              fetchSuggestions(e.target.value, 'year');
               setActiveInput('year2');
             }}
             onFocus={() => setActiveInput('year2')}
-            onBlur={() => setTimeout(() => setSuggestions([]), 100)}
             placeholder="Enter Car 2 Year" 
             className="w-full p-2 border rounded-md" 
           />
-          {activeInput === 'year2' && suggestions.length > 0 && (
-            <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setYear2(suggestion);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       </div>
     </div>
