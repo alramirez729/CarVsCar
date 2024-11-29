@@ -13,6 +13,7 @@ function Navbar () {
       <nav className="p-5">
         <ul className="space-y-8">
           <li className="group relative">
+          <h1 className="text-3xl font-bold mb-5 text-center text-white font-mono">Car vs. Car</h1>
             <Link to="/homepage" className="navbar-button-styling flex items-center space-x-4">
               <FontAwesomeIcon icon={faHome} size="3x" /> <div className="hidden lg:block">Homepage</div>
             </Link> 

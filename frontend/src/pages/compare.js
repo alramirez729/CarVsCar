@@ -190,13 +190,14 @@ function Compare() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-cyan-700">
-      <h1 className="text-3xl font-bold mb-5 text-center text-white">Car vs. Car</h1>
+    <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-5 bg-white">
+      <h1 className="heading bg-gray-200 rounded-l h-20 border-b-gray-300 border-2 p-5">Car Comparison</h1>
+      <h1 className="subheading">Select two vehicles to see how they compare.</h1>
 
-      <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5">
+      <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 my-10">
         {/* Car 1 Input */}
-      <div className="flex flex-col items-center bg-gray-300 p-5 rounded-lg shadow-md w-full md:w-1/2">
-        <h2 className="text-xl font-bold mb-3">Car 1</h2>
+      <div className="box_with_shadow">
+        <h2 className="subtitle">Car 1</h2>
 
         {/* Brand 1 Input with Dropdown */}
         <div className="relative w-full">
@@ -282,8 +283,8 @@ function Compare() {
 
         {/* Car 2 Input */}
          {/* Car 2 Input */}
-      <div className="flex flex-col items-center bg-gray-300 p-5 rounded-lg shadow-md w-full md:w-1/2">
-        <h2 className="text-xl font-bold mb-3">Car 2</h2>
+      <div className="box_with_shadow">
+        <h2 className="subtitle">Car 2</h2>
 
         {/* Brand 2 Input with Dropdown */}
         <div className="relative w-full">
@@ -368,13 +369,22 @@ function Compare() {
       </div>
     </div>
 
+    <div className="flex flex-row gap-5 my-10 justify-between ml-20">
+        <button 
+          onClick={handleCompare} 
+          className="general-button-styling"
+        >
+          Compare
+        </button>
 
-      <button 
-        onClick={handleCompare} 
-        className="general-button-styling"
-      >
-        Compare
-      </button>
+        <button 
+          className="general-button-styling"
+        >
+          🪄 AI suggestion
+        </button>
+
+    </div>
+        
 
       {/* Comparison Results */}
       {comparisonResult.length > 0 && (
