@@ -13,7 +13,21 @@ function Compare() {
   const [comparisonResult, setComparisonResult] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [activeInput, setActiveInput] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(''); // New state for alert message
+  const [alertType, setAlertType] = useState('info'); // Optional: for different alert styles
 
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage('');
+        setAlertType('info'); // Reset to default if using alertType
+      }, 3000); // 3 seconds
+  
+      return () => clearTimeout(timer); // Cleanup on unmount or message change
+    }
+  }, [alertMessage]);
+  
 
 
   // Function to fetch data for a given make, model, and year
@@ -56,36 +70,44 @@ function Compare() {
     }
   };
   
-  
-
   // Handle comparison
   const handleCompare = async () => {
-
     // Validate inputs for both cars
     if (!make1 || !model1 || !year1) {
-      alert('Please fill in all fields for Car 1.');
+      setAlertMessage('Please fill in all fields for Car 1.');
+      setAlertType('error'); // Optional
       return;
     }
     if (!make2 || !model2 || !year2) {
-      alert('Please fill in all fields for Car 2.');
+      setAlertMessage('Please fill in all fields for Car 2.');
+      setAlertType('error'); // Optional
       return;
     }
+  
     // Fetch data for both cars
     try {
       const data1 = await fetchCarData(make1, model1, year1);
       const data2 = await fetchCarData(make2, model2, year2);
   
       if (data1.length === 0 || data2.length === 0) {
-        alert('Invalid car details. Please check your inputs.');
+        setAlertMessage('Invalid car details. Please check your inputs.');
+        setAlertType('error'); // Optional
         return;
       }
   
       generateComparison(data1, data2);
     } catch (error) {
       console.error('Error comparing cars:', error);
-      alert('An error occurred during comparison. Please try again.');
+      setAlertMessage('An error occurred during comparison. Please try again.');
+      setAlertType('error'); // Optional
     }
   };
+
+  const handleAISuggestion = () => {
+    setShowAlert(true); // Show alert
+    setTimeout(() => setShowAlert(false), 3000); // Hide after 3 seconds
+  };
+
 
   // Function to generate comparison
   const generateComparison = (data1, data2) => {
@@ -381,9 +403,37 @@ function Compare() {
 
         <button 
           className="general-button-styling"
+          onClick={handleAISuggestion}
         >
+          
           🪄 AI suggestion
         </button>
+
+        {/* Custom Alert */}
+        {alertMessage && (
+          <div
+            className={`fixed -my-10 -ml-48 z-50 p-4 text-sm rounded-lg shadow-lg ${
+              alertType === 'error'
+                ? 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400'
+                : 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400'
+            }`}
+            role="alert"
+          >
+            <span className="font-medium">
+              {alertType === 'error' ? 'Error!' : 'Info!'}
+            </span>{' '}
+            {alertMessage}
+          </div>
+        )}
+        {showAlert && (
+        <div
+          className="p-4 -my-10 ml-32 fixed text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 shadow-lg"
+          role="alert"
+        >
+          <span className="font-medium ">Sorry!</span> Still working on this feature :)
+        </div>
+      )}
+
 
     </div>
         
