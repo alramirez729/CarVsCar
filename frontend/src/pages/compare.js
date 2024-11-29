@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
 
 function Compare() {
 
@@ -197,7 +197,8 @@ function Compare() {
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 my-10">
         {/* Car 1 Input */}
       <div className="box_with_shadow">
-        <h2 className="subtitle">Car 1</h2>
+        <FontAwesomeIcon icon ={faCarSide} size="3x"/>
+        <h2 className="subtitle">Car 1 </h2>
 
         {/* Brand 1 Input with Dropdown */}
         <div className="relative w-full">
@@ -284,6 +285,7 @@ function Compare() {
         {/* Car 2 Input */}
          {/* Car 2 Input */}
       <div className="box_with_shadow">
+      <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
         <h2 className="subtitle">Car 2</h2>
 
         {/* Brand 2 Input with Dropdown */}
