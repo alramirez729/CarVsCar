@@ -4,11 +4,11 @@
 
 
 body {
-    @apply font-oswald m-0 p-0 box-border bg-cyan-700;
+    @apply font-oswald m-0 p-0 box-border bg-white h-full;
 }
 
 .navbar-style {
-    @apply bg-cyan-950 h-full fixed flex place-items-start justify-center p-4 font-oswald;
+    @apply bg-cyan-700 h-full fixed flex place-items-start justify-center p-4 font-oswald;
 }
 .navbar-button-styling {
     @apply flex items-center bg-cyan-500 text-white py-3 px-4 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 font-oswald;
@@ -19,5 +19,21 @@ body {
 }
 
 .general-button-styling{
-    @apply mt-8 bg-cyan-500 text-white py-3 px-4 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105;
+    @apply mt-8 bg-cyan-500 text-white font-mono py-3 px-4 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
+}
+
+.box_with_shadow{
+    @apply my-0 flex flex-col items-center bg-white ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full;
+}
+
+.heading{
+    @apply text-3xl font-bold mb-5 text-center text-gray-500 font-mono;
+}
+
+.subheading{
+    @apply text-xl font-bold mb-5 text-center text-gray-500 font-mono;
+}
+
+.subtitle{
+    @apply text-xl text-slate-900 font-mono mb-3;
 }

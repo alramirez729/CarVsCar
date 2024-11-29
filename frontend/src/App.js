@@ -12,7 +12,7 @@ import Registerpage from './pages/registerPage';
 function App() {
   return (
     <Router>
-      <div className="flex">
+      <div className="flex bg-white">
         <Navbar />  {/* This will display the Navbar on all pages */}
         <div className="ml-64 p-5 w-full"> {/* Adds margin to avoid overlapping with the fixed sidebar */}
           <Routes>
