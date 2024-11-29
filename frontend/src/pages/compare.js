@@ -145,15 +145,15 @@ function Compare() {
       <div className="animate-fade-in flex flex-col items-start p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
         {/* Metric Label and Explanation */}
         <div className="flex items-center mb-2 w-full justify-between">
-          <h3 className="text-xl font-bold">{metricLabel}</h3>
+          <h3 className="text-xl font-bold font-mono">{metricLabel}</h3>
           <FontAwesomeIcon 
             icon={faQuestionCircle} 
-            className="ml-2 text-blue-600 cursor-pointer" 
+            className="ml-2 text-blue-600 cursor-pointer " 
             onClick={toggleExplanation} 
           />
         </div>
         {explanationVisible && (
-          <p className="text-sm text-gray-600 mb-3">
+          <p className="text-sm text-gray-600 mb-3 font-mono">
             {metricExplanations[metric]}
           </p>
         )}
@@ -161,18 +161,18 @@ function Compare() {
         <div className="flex flex-row w-full gap-4">
           {/* Car 1 Card */}
           <div
-            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900
+            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
               ${isCar1Better ? 'bg-green-200' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold">Car 1: {car1.make} {car1.model} ({car1.year})</h4>
+            <h4 className="font-semibold font-mono">Car 1: {car1.make} {car1.model} ({car1.year})</h4>
             <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
           {/* Car 2 Card */}
           <div
-            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900
+            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
               ${isCar2Better ? 'bg-green-200' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold">Car 2: {car2.make} {car2.model} ({car2.year})</h4>
+            <h4 className="font-semibold font-mono">Car 2: {car2.make} {car2.model} ({car2.year})</h4>
             <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
         </div>
