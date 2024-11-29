@@ -31,7 +31,11 @@ body {
 }
 
 .subheading{
-    @apply text-xl font-bold mb-5 text-center text-gray-500 font-mono;
+    @apply text-2xl font-bold mb-5 text-center text-gray-500 font-mono;
+}
+
+.title{
+    @apply text-2xl font-bold font-mono tracking-wider mb-6 text-center;
 }
 
 .subtitle{

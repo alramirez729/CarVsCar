@@ -220,7 +220,7 @@ function Compare() {
         {/* Car 1 Input */}
       <div className="box_with_shadow">
         <FontAwesomeIcon icon ={faCarSide} size="3x"/>
-        <h2 className="subtitle">Car 1 </h2>
+        <h2 className="title">Car 1 </h2>
 
         {/* Brand 1 Input with Dropdown */}
         <div className="relative w-full">
@@ -308,7 +308,7 @@ function Compare() {
          {/* Car 2 Input */}
       <div className="box_with_shadow">
       <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
-        <h2 className="subtitle">Car 2</h2>
+        <h2 className="title">Car 2</h2>
 
         {/* Brand 2 Input with Dropdown */}
         <div className="relative w-full">
