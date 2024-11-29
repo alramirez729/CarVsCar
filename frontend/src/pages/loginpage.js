@@ -27,22 +27,22 @@ function LoginPage() {
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center">
-            <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full ring-1 ring-slate-500">
-                <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+            <div className="bg-slate-200 p-8 rounded-lg shadow-xl max-w-md w-full ring-1 ring-slate-500">
+                <h1 className="text-2xl font-bold font-mono tracking-wider mb-6 text-center">Login</h1>
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="email" className="font-mono block text-sm font-medium text-gray-700">Email</label>
                         <input 
                             type="email" 
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            className=" mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full"
                         />
                     </div>
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="password" className="font-mono block text-sm font-medium text-gray-700">Password</label>
                         <input 
                             type="password" 
                             id="password"
@@ -54,14 +54,14 @@ function LoginPage() {
                     </div>
                     <button 
                         type="submit"
-                        className="w-full py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition duration-300"
+                        className="font-mono w-full py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition duration-300"
                     >
                         Login
                     </button>
                 </form>
-                {message && <p className="mt-4 text-center text-red-500">{message}</p>}
-                <p className="mt-6 text-center">
-                    Don't have an account? <Link to="/register" className="text-cyan-600 hover:underline">Register here</Link>.
+                {message && <p className="font-mono mt-4 text-center text-red-500">{message}</p>}
+                <p className="font-mono mt-6 text-center">
+                    Don't have an account? <Link to="/register" className="font-mono text-cyan-600 hover:underline">Register here</Link>.
                 </p>
             </div>
         </div>

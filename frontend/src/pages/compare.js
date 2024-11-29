@@ -191,7 +191,7 @@ function Compare() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-5 bg-white">
-      <h1 className="heading bg-gray-200 rounded-l h-20 border-b-gray-300 border-2 p-5">Car Comparison</h1>
+      <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
 
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 my-10">
@@ -213,14 +213,14 @@ function Compare() {
             onFocus={() => setActiveInput('make1')}
             onBlur={() => setTimeout(() => setSuggestions([]), 100)} // Delay to capture click on dropdown
             placeholder="Enter Car 1 Make" 
-            className="w-full p-2 border rounded-md mb-2" 
+            className="font-mono w-full p-2 border rounded-md mb-2" 
           />
           {activeInput === 'make1' && suggestions.length > 0 && (
             <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
               {suggestions.map((suggestion, index) => (
                 <li 
                   key={index} 
-                  className="p-2 cursor-pointer hover:bg-gray-200"
+                  className="font-mono p-2 cursor-pointer hover:bg-gray-200"
                   onClick={() => {
                     setBrand1(suggestion);
                     setSuggestions([]);
@@ -246,14 +246,14 @@ function Compare() {
             onFocus={() => setActiveInput('model1')}
             onBlur={() => setTimeout(() => setSuggestions([]), 100)}
             placeholder="Enter Car 1 Model" 
-            className="w-full p-2 border rounded-md mb-2" 
+            className="font-mono w-full p-2 border rounded-md mb-2" 
           />
           {activeInput === 'model1' && suggestions.length > 0 && (
             <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
               {suggestions.map((suggestion, index) => (
                 <li 
                   key={index} 
-                  className="p-2 cursor-pointer hover:bg-gray-200"
+                  className="font-mono p-2 cursor-pointer hover:bg-gray-200"
                   onClick={() => {
                     setModel1(suggestion);
                     setSuggestions([]);
@@ -277,7 +277,7 @@ function Compare() {
             }}
             onFocus={() => setActiveInput('year1')}
             placeholder="Enter Car 1 Year" 
-            className="w-full p-2 border rounded-md" 
+            className="font-mono w-full p-2 border rounded-md" 
           />
         </div>
       </div>
@@ -301,7 +301,7 @@ function Compare() {
             onFocus={() => setActiveInput('make2')}
             onBlur={() => setTimeout(() => setSuggestions([]), 100)}
             placeholder="Enter Car 2 Make" 
-            className="w-full p-2 border rounded-md mb-2" 
+            className="font-mono w-full p-2 border rounded-md mb-2" 
           />
           {activeInput === 'make2' && suggestions.length > 0 && (
             <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
@@ -334,7 +334,7 @@ function Compare() {
             onFocus={() => setActiveInput('model2')}
             onBlur={() => setTimeout(() => setSuggestions([]), 100)}
             placeholder="Enter Car 2 Model" 
-            className="w-full p-2 border rounded-md mb-2" 
+            className="font-mono w-full p-2 border rounded-md mb-2" 
           />
           {activeInput === 'model2' && suggestions.length > 0 && (
             <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
@@ -365,7 +365,7 @@ function Compare() {
             }}
             onFocus={() => setActiveInput('year2')}
             placeholder="Enter Car 2 Year" 
-            className="w-full p-2 border rounded-md" 
+            className="font-mono w-full p-2 border rounded-md" 
           />
         </div>
       </div>
