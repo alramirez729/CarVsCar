@@ -13,14 +13,14 @@ function Homepage() {
         alt="CarVsCar" 
         className="max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] mb-5 border-4 border-gray-300 rounded-lg object-contain"
       />
-      <p className="text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
-        Can't decide between one car or the other? That's where we come in... Compare two distinct cars and see which one is right for you!
+      <p className="text-left text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
+        Two cars of your choice go head to head, see which one suites your needs using Car vs. Car! 
       </p>
       <Link 
         to="/loginpage" 
         className="general-button-styling"
       >
-        Sign up
+        Sign up/login
       </Link>
     </div>
   );
