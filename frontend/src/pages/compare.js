@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
+import carMakes from './carMakes';
 
 function Compare() {
 
@@ -33,7 +34,7 @@ function Compare() {
   // Function to fetch data for a given make, model, and year
   const fetchCarData = async (make, model, year) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cars?make=${make}&model=${model}&year=${year}`);
+      const response = await fetch(`http://localhost:3000/api/cars?limit=10make=${make}&model=${model}&year=${year}`);
       const contentType = response.headers.get('content-type');
       if (response.ok && contentType && contentType.includes('application/json')) {
         return await response.json();
@@ -47,13 +48,18 @@ function Compare() {
     }
   };
 
-  const fetchSuggestions = async (query = '', type) => {
-    if (!query) return setSuggestions([]);
+  const fetchSuggestions = async (query = '', type, make = '', model = '') => {
+    if (!query && type !== 'year') return setSuggestions([]);
   
     try {
-      // Ensure `make` is used instead of `brand`
-      const response = await fetch(`http://localhost:3000/api/cars?${type}=${query}`);
-      
+      let endpoint = `http://localhost:3000/api/cars?${type}=${query}`;
+      if (type === 'year') {
+        // If fetching years, use make and model in the query
+        endpoint = `http://localhost:3000/api/cars?make=${make}&model=${model}`;
+      }
+  
+      const response = await fetch(endpoint);
+  
       if (!response.ok) {
         console.error(`Error fetching suggestions: ${response.statusText}`);
         return setSuggestions([]); // Clear suggestions if the fetch fails
@@ -61,14 +67,24 @@ function Compare() {
   
       const data = await response.json();
   
-      // Extract unique suggestions for the input type (make, model, etc.)
-      const uniqueSuggestions = [...new Set(data.map(car => car[type]))];
-      setSuggestions(uniqueSuggestions);
+      if (type === 'make') {
+        const uniqueModels = [...new Set(data.filter(car => car.make.toLowerCase() === query.toLowerCase()).map(car => car.model))];
+        setSuggestions(uniqueModels);
+      } else if (type === 'year') {
+        const uniqueYears = [...new Set(data.map(car => car.year))].sort((a, b) => b - a); // Sort years descending
+        setSuggestions(uniqueYears);
+      } else {
+        const uniqueSuggestions = [...new Set(data.map(car => car[type]))];
+        setSuggestions(uniqueSuggestions);
+      }
     } catch (error) {
       console.error('Error fetching suggestions:', error);
       setSuggestions([]); // Clear suggestions on error
     }
   };
+  
+  
+  
   
   // Handle comparison
   const handleCompare = async () => {
@@ -215,200 +231,148 @@ function Compare() {
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-5 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
-
+  
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 my-10">
         {/* Car 1 Input */}
-      <div className="box_with_shadow">
-        <FontAwesomeIcon icon ={faCarSide} size="3x"/>
-        <h2 className="title">Car 1 </h2>
+        <div className="box_with_shadow">
+          <FontAwesomeIcon icon={faCarSide} size="3x" />
+          <h2 className="title">Car 1</h2>
 
-        {/* Brand 1 Input with Dropdown */}
-        <div className="relative w-full">
-          <input 
-            type="text" 
-            value={make1} 
-            onChange={(e) => {
-              setBrand1(e.target.value);
-              fetchSuggestions(e.target.value, 'make');
-              setActiveInput('make1');
-            }}
-            onFocus={() => setActiveInput('make1')}
-            onBlur={() => setTimeout(() => setSuggestions([]), 100)} // Delay to capture click on dropdown
-            placeholder="Enter Car 1 Make" 
-            className="font-mono w-full p-2 border rounded-md mb-2" 
-          />
-          {activeInput === 'make1' && suggestions.length > 0 && (
-            <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
-                  className="font-mono p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setBrand1(suggestion);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion}
-                </li>
+          {/* Make Dropdown */}
+          <div className="relative w-full">
+            <select
+              value={make1}
+              onChange={(e) => {
+                const selectedMake = e.target.value;
+                setBrand1(selectedMake);
+                fetchSuggestions(selectedMake, 'make'); // Fetch models for selected make
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="" disabled>Select Car Make</option>
+              {carMakes.map((make, index) => (
+                <option key={index} value={make}>
+                  {make}
+                </option>
               ))}
-            </ul>
-          )}
-        </div>
+            </select>
+          </div>
 
-        {/* Model 1 Input with Dropdown */}
-        <div className="relative w-full">
-          <input 
-            type="text" 
-            value={model1} 
-            onChange={(e) => {
-              setModel1(e.target.value);
-              fetchSuggestions(e.target.value, 'model');
-              setActiveInput('model1');
-            }}
-            onFocus={() => setActiveInput('model1')}
-            onBlur={() => setTimeout(() => setSuggestions([]), 100)}
-            placeholder="Enter Car 1 Model" 
-            className="font-mono w-full p-2 border rounded-md mb-2" 
-          />
-          {activeInput === 'model1' && suggestions.length > 0 && (
-            <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
-                  className="font-mono p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setModel1(suggestion);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion}
-                </li>
+          {/* Model Dropdown */}
+          <div className="relative w-full">
+            <select
+              value={model1}
+              onChange={(e) => {
+                setModel1(e.target.value);
+                fetchSuggestions('', 'year', make1, e.target.value); // Fetch years for selected make and model
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="" disabled>Select Car Model</option>
+              {suggestions.map((model, index) => (
+                <option key={index} value={model}>
+                  {model}
+                </option>
               ))}
-            </ul>
-          )}
-        </div>
+            </select>
+          </div>
 
-        {/* Year 1 Input with Dropdown */}
-        <div className="relative w-full">
-          <input 
-            type="text" 
-            value={year1} 
-            onChange={(e) => {
-              setYear1(e.target.value);
-              setActiveInput('year1');
-            }}
-            onFocus={() => setActiveInput('year1')}
-            placeholder="Enter Car 1 Year" 
-            className="font-mono w-full p-2 border rounded-md" 
-          />
+          {/* Year Dropdown */}
+          <div className="relative w-full">
+            <select
+              value={year1}
+              onChange={(e) => setYear1(e.target.value)}
+              onFocus={() => {
+                if (make1 && model1) {
+                  fetchSuggestions('', 'year', make1, model1); // Fetch years for make and model
+                }
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="" disabled>Select Year</option>
+              {suggestions.map((year, index) => (
+                <option key={index} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
-
+  
         {/* Car 2 Input */}
-         {/* Car 2 Input */}
-      <div className="box_with_shadow">
-      <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
-        <h2 className="title">Car 2</h2>
-
-        {/* Brand 2 Input with Dropdown */}
-        <div className="relative w-full">
-          <input 
-            type="text" 
-            value={make2} 
-            onChange={(e) => {
-              setBrand2(e.target.value);
-              fetchSuggestions(e.target.value, 'make');
-              setActiveInput('make2');
-            }}
-            onFocus={() => setActiveInput('make2')}
-            onBlur={() => setTimeout(() => setSuggestions([]), 100)}
-            placeholder="Enter Car 2 Make" 
-            className="font-mono w-full p-2 border rounded-md mb-2" 
-          />
-          {activeInput === 'make2' && suggestions.length > 0 && (
-            <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setBrand2(suggestion);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion}
-                </li>
+        <div className="box_with_shadow">
+          <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
+          <h2 className="title">Car 2</h2>
+  
+          {/* Brand 2 Input with Dropdown */}
+          <div className="relative w-full">
+            <select
+              value={make2}
+              onChange={(e) => {
+                const selectedMake = e.target.value;
+                setBrand2(selectedMake);
+                fetchSuggestions(selectedMake, 'make'); // Fetch models for the selected make
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="" disabled>Select Car Make</option>
+              {carMakes.map((make, index) => (
+                <option key={index} value={make}>
+                  {make}
+                </option>
               ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Model 2 Input with Dropdown */}
-        <div className="relative w-full">
-          <input 
-            type="text" 
-            value={model2} 
-            onChange={(e) => {
-              setModel2(e.target.value);
-              fetchSuggestions(e.target.value, 'model');
-              setActiveInput('model2');
-            }}
-            onFocus={() => setActiveInput('model2')}
-            onBlur={() => setTimeout(() => setSuggestions([]), 100)}
-            placeholder="Enter Car 2 Model" 
-            className="font-mono w-full p-2 border rounded-md mb-2" 
-          />
-          {activeInput === 'model2' && suggestions.length > 0 && (
-            <ul className="absolute bg-white border rounded-md w-full z-10 max-h-40 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setModel2(suggestion);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion}
-                </li>
+            </select>
+          </div>
+  
+          {/* Model 2 Input with Dropdown */}
+          <div className="relative w-full">
+            <select
+              value={model2}
+              onChange={(e) => setModel2(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="" disabled>Select Car Model</option>
+              {suggestions.map((model, index) => (
+                <option key={index} value={model}>
+                  {model}
+                </option>
               ))}
-            </ul>
-          )}
-        </div>
+            </select>
+          </div>
+  
+          {/* Year 2 Input */}
+          <div className="relative w-full">
+            <select
+              value={year2}
+              onChange={(e) => setYear2(e.target.value)}
+              onFocus={() => {
+                if (make2 && model2) {
+                  fetchSuggestions('', 'year', make2, model2); // Fetch years for selected make and model
+                }
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="" disabled>Select Year</option>
+              {suggestions.map((year, index) => (
+                <option key={index} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Year 2 Input with Dropdown */}
-        <div className="relative w-full">
-          <input 
-            type="text" 
-            value={year2} 
-            onChange={(e) => {
-              setYear2(e.target.value);
-              setActiveInput('year2');
-            }}
-            onFocus={() => setActiveInput('year2')}
-            placeholder="Enter Car 2 Year" 
-            className="font-mono w-full p-2 border rounded-md" 
-          />
         </div>
       </div>
-    </div>
-
-    <div className="flex flex-row gap-5 my-10 justify-between ml-20">
-        <button 
-          onClick={handleCompare} 
-          className="general-button-styling"
-        >
+  
+      <div className="flex flex-row gap-5 my-10 justify-between ml-20">
+        <button onClick={handleCompare} className="general-button-styling">
           Compare
         </button>
-
-        <button 
-          className="general-button-styling"
-          onClick={handleAISuggestion}
-        >
-          
+  
+        <button className="general-button-styling" onClick={handleAISuggestion}>
           🪄 AI suggestion
         </button>
-
+  
         {/* Custom Alert */}
         {alertMessage && (
           <div
@@ -426,26 +390,22 @@ function Compare() {
           </div>
         )}
         {showAlert && (
-        <div
-          className="p-4 -my-10 ml-32 fixed text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 shadow-lg"
-          role="alert"
-        >
-          <span className="font-medium ">Sorry!</span> Still working on this feature :)
-        </div>
-      )}
-
-
-    </div>
-        
-
+          <div
+            className="p-4 -my-10 ml-32 fixed text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 shadow-lg"
+            role="alert"
+          >
+            <span className="font-medium ">Sorry!</span> Still working on this feature :)
+          </div>
+        )}
+      </div>
+  
       {/* Comparison Results */}
       {comparisonResult.length > 0 && (
-        <div className="mt-5 w-full max-w-4xl">
-          {comparisonResult}
-        </div>
+        <div className="mt-5 w-full max-w-4xl">{comparisonResult}</div>
       )}
     </div>
   );
+  
 }
 
 export default Compare;

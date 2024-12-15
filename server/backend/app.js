@@ -38,7 +38,14 @@ app.use('/users', userRoutes);
 app.get('/api/cars', async (req, res) => {
     try {
         const apiKey = process.env.API_KEY;
-        const { make, model } = req.query;
+        const { make, model, allMakes } = req.query;
+
+        //this
+        if (allMakes === 'true') {
+            const response = await axios.get(`https://api.api-ninjas.com/v1/carmakes`, {
+                headers: { 'X-Api-Key': apiKey }
+            });
+        }
 
         let apiUrl = `https://api.api-ninjas.com/v1/cars?`;
         if (make) apiUrl += `make=${make}&`;
