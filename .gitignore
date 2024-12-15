@@ -27,4 +27,4 @@ yarn-error.log*
 # Ignore macOS system files
 .DS_Store
 
-/test.rest
+test.rest
