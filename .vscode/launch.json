@@ -2,14 +2,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "cwd": "${workspaceFolder}/server",
+            "cwd": "${workspaceFolder}/server/backend",
             "command": "npm start",
             "name": "Backend Testing",
             "request": "launch",
             "type": "node-terminal"
         },
         {
-            "cwd": "${workspaceFolder}/client",
+            "cwd": "${workspaceFolder}/frontend",
             "command": "npm start",
             "name": "Frontend Testing",
             "request": "launch",

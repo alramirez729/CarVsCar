@@ -5,10 +5,10 @@ import carMakes from './carMakes';
 
 function Compare() {
 
-  const [make1, setBrand1] = useState('');
+  const [make1, setMake1] = useState('');
   const [model1, setModel1] = useState('');
   const [year1, setYear1] = useState('');
-  const [make2, setBrand2] = useState('');
+  const [make2, setMake2] = useState('');
   const [model2, setModel2] = useState('');
   const [year2, setYear2] = useState('');
   const [comparisonResult, setComparisonResult] = useState([]);
@@ -244,7 +244,7 @@ function Compare() {
               value={make1}
               onChange={(e) => {
                 const selectedMake = e.target.value;
-                setBrand1(selectedMake);
+                setMake1(selectedMake);
                 fetchSuggestions(selectedMake, 'make'); // Fetch models for selected make
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
@@ -304,13 +304,13 @@ function Compare() {
           <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
           <h2 className="title">Car 2</h2>
   
-          {/* Brand 2 Input with Dropdown */}
+          {/* Make 2 Input with Dropdown */}
           <div className="relative w-full">
             <select
               value={make2}
               onChange={(e) => {
                 const selectedMake = e.target.value;
-                setBrand2(selectedMake);
+                setMake2(selectedMake);
                 fetchSuggestions(selectedMake, 'make'); // Fetch models for the selected make
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
