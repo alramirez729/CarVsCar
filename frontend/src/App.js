@@ -16,7 +16,7 @@ function App() {
       <Router>
         <div className="flex bg-white my-10">
           <Navbar />  {/* This will display the Navbar on all pages */}
-          <div className="ml-64 p-5 w-full"> {/* Adds margin to avoid overlapping with the fixed sidebar */}
+          <div className="ml-center p-5 w-full"> {/* Adds margin to avoid overlapping with the fixed sidebar */}
             <Routes>
               <Route path="/" element={<Homepage />} />  {/* Default route */}
               <Route path="/homepage" element={<Homepage />} />  
