@@ -13,40 +13,48 @@ function Navbar() {
   };
 
   return (
-    <aside className="navbar-style">
-      <nav className="p-1">
-        <ul className="space-y-8">
-          <li className="group relative">
-            <h1 className="text-4xl font-bold mb-5 text-center text-white font-mono">Car vs. Car</h1>
-            <Link to="/homepage" className="navbar-button-styling flex items-center space-x-4">
-              <FontAwesomeIcon icon={faHome} size="3x" />
-              <div className="font-mono text-xl flex-grow hidden lg:block">Homepage</div>
+    <nav className="bg-gray-800 text-white w-full py-4 shadow-lg fixed top-0 left-0 z-50">
+      <div className="container mx-auto flex items-center justify-between px-6">
+        {/* Brand / Logo */}
+        <Link to="/" className="text-2xl font-bold font-mono tracking-wide">
+          Car vs. Car
+        </Link>
+
+        {/* Navigation Links */}
+        <ul className="flex items-center space-x-8">
+          <li>
+            <Link to="/homepage" className="hover:text-cyan-400 transition duration-300 flex items-center space-x-2">
+              <FontAwesomeIcon icon={faHome} />
+              <span className="hidden sm:block font-mono">Homepage</span>
             </Link>
           </li>
-          <li className="group relative">
-            <Link to="/compare" className="navbar-button-styling flex items-center space-x-4">
-              <FontAwesomeIcon icon={faCodeCompare} size="3x" />
-              <div className="font-mono text-xl flex-grow hidden lg:block">Compare</div>
+          <li>
+            <Link to="/compare" className="hover:text-cyan-400 transition duration-300 flex items-center space-x-2">
+              <FontAwesomeIcon icon={faCodeCompare} />
+              <span className="hidden sm:block font-mono">Compare</span>
             </Link>
           </li>
           {!isLoggedIn ? (
-            <li className="group relative">
-              <Link to="/loginpage" className="navbar-button-styling flex items-center space-x-4">
-                <FontAwesomeIcon icon={faUserCircle} size="3x" />
-                <div className="font-mono text-xl flex-grow hidden lg:block">Login/Sign up</div>
+            <li>
+              <Link to="/loginpage" className="hover:text-cyan-400 transition duration-300 flex items-center space-x-2">
+                <FontAwesomeIcon icon={faUserCircle} />
+                <span className="hidden sm:block font-mono">Login / Sign up</span>
               </Link>
             </li>
           ) : (
-            <li className="group relative">
-              <button onClick={handleLogout} className="navbar-button-styling flex items-center space-x-4">
-                <FontAwesomeIcon icon={faSignOutAlt} size="3x" />
-                <div className="font-mono text-xl flex-grow hidden lg:block">Logout</div>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="hover:text-cyan-400 transition duration-300 flex items-center space-x-2"
+              >
+                <FontAwesomeIcon icon={faSignOutAlt} />
+                <span className="hidden sm:block font-mono">Logout</span>
               </button>
             </li>
           )}
         </ul>
-      </nav>
-    </aside>
+      </div>
+    </nav>
   );
 }
 

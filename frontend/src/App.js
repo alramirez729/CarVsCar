@@ -14,7 +14,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="flex bg-white">
+        <div className="flex bg-white my-10">
           <Navbar />  {/* This will display the Navbar on all pages */}
           <div className="ml-64 p-5 w-full"> {/* Adds margin to avoid overlapping with the fixed sidebar */}
             <Routes>
