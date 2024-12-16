@@ -11,9 +11,18 @@ function Compare() {
   const [make2, setMake2] = useState('');
   const [model2, setModel2] = useState('');
   const [year2, setYear2] = useState('');
+
+  const [setMakeSuggestions] = useState([]);
+
+  const [modelSuggestions1, setModelSuggestions1] = useState([]);
+  const [yearSuggestions1, setYearSuggestions1] = useState([]);
+
+  const [modelSuggestions2, setModelSuggestions2] = useState([]);
+  const [yearSuggestions2, setYearSuggestions2] = useState([]);
+
   const [comparisonResult, setComparisonResult] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [activeInput, setActiveInput] = useState('');
+
+
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState(''); // New state for alert message
   const [alertType, setAlertType] = useState('info'); // Optional: for different alert styles
@@ -48,40 +57,59 @@ function Compare() {
     }
   };
 
-  const fetchSuggestions = async (query = '', type, make = '', model = '') => {
-    if (!query && type !== 'year') return setSuggestions([]);
-  
+  const fetchSuggestions = async (query = '', type, make = '', model = '', carNumber) => {
+    if (!carNumber) {
+      console.error('carNumber is missing. You must pass carNumber explicitly (1 or 2).');
+      return;
+    }
     try {
       let endpoint = `http://localhost:3000/api/cars?${type}=${query}`;
+      if (type === 'model') {
+        endpoint = `http://localhost:3000/api/cars?make=${make}`;
+      }
       if (type === 'year') {
-        // If fetching years, use make and model in the query
         endpoint = `http://localhost:3000/api/cars?make=${make}&model=${model}`;
       }
   
-      const response = await fetch(endpoint);
+      console.log('Fetching suggestions from:', endpoint); // Debugging log
   
+      const response = await fetch(endpoint);
       if (!response.ok) {
-        console.error(`Error fetching suggestions: ${response.statusText}`);
-        return setSuggestions([]); // Clear suggestions if the fetch fails
+        console.error(`Error fetching ${type} suggestions: ${response.statusText}`);
+        return;
       }
   
       const data = await response.json();
   
-      if (type === 'make') {
-        const uniqueModels = [...new Set(data.filter(car => car.make.toLowerCase() === query.toLowerCase()).map(car => car.model))];
-        setSuggestions(uniqueModels);
+      // Update the correct suggestion state
+      if (type === 'model') {
+        if (carNumber === 1) {
+          setModelSuggestions1((prev) => {
+            console.log('Updating model suggestions for Car 1:', data);
+            return [...new Set(data.map((car) => car.model))];
+          });
+        } else if (carNumber === 2) {
+          setModelSuggestions2((prev) => {
+            console.log('Updating model suggestions for Car 2:', data);
+            return [...new Set(data.map((car) => car.model))];
+          });
+        }
       } else if (type === 'year') {
-        const uniqueYears = [...new Set(data.map(car => car.year))].sort((a, b) => b - a); // Sort years descending
-        setSuggestions(uniqueYears);
-      } else {
-        const uniqueSuggestions = [...new Set(data.map(car => car[type]))];
-        setSuggestions(uniqueSuggestions);
+        if (carNumber === 1) {
+          setYearSuggestions1([...new Set(data.map((car) => car.year))].sort((a, b) => b - a));
+          console.log('Updating year suggestions for Car 1');
+        } else if (carNumber === 2) {
+          setYearSuggestions2([...new Set(data.map((car) => car.year))].sort((a, b) => b - a));
+          console.log('Updating year suggestions for Car 2');
+        }
       }
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
-      setSuggestions([]); // Clear suggestions on error
+      console.error(`Error fetching ${type} suggestions:`, error);
     }
   };
+  
+  
+  
   
   
   
@@ -243,9 +271,8 @@ function Compare() {
             <select
               value={make1}
               onChange={(e) => {
-                const selectedMake = e.target.value;
-                setMake1(selectedMake);
-                fetchSuggestions(selectedMake, 'make'); // Fetch models for selected make
+                setMake1(e.target.value);
+                fetchSuggestions('', 'model', e.target.value, '', 1);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             >
@@ -263,16 +290,15 @@ function Compare() {
             <select
               value={model1}
               onChange={(e) => {
-                setModel1(e.target.value);
-                fetchSuggestions('', 'year', make1, e.target.value); // Fetch years for selected make and model
+                const selectedModel = e.target.value;
+                setModel1(selectedModel);  
+                fetchSuggestions('', 'year', make1, selectedModel, 1);            
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="" disabled>Select Car Model</option>
-              {suggestions.map((model, index) => (
-                <option key={index} value={model}>
-                  {model}
-                </option>
+              {modelSuggestions1.map((model, index) => (
+                <option key={index} value={model}>{model}</option>
               ))}
             </select>
           </div>
@@ -283,15 +309,12 @@ function Compare() {
               value={year1}
               onChange={(e) => setYear1(e.target.value)}
               onFocus={() => {
-                if (make1 && model1) {
-                  fetchSuggestions('', 'year', make1, model1); // Fetch years for make and model
-                }
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="" disabled>Select Year</option>
-              {suggestions.map((year, index) => (
-                <option key={index} value={year}>
+              {yearSuggestions1.map((year, index) => (
+                <option key={index + 1} value={year}>
                   {year}
                 </option>
               ))}
@@ -309,9 +332,8 @@ function Compare() {
             <select
               value={make2}
               onChange={(e) => {
-                const selectedMake = e.target.value;
-                setMake2(selectedMake);
-                fetchSuggestions(selectedMake, 'make'); // Fetch models for the selected make
+                setMake2(e.target.value);
+                fetchSuggestions('', 'model', e.target.value, '', 2); // Fetch models for the selected make
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             >
@@ -328,11 +350,14 @@ function Compare() {
           <div className="relative w-full">
             <select
               value={model2}
-              onChange={(e) => setModel2(e.target.value)}
+              onChange={(e) => {
+                setModel2(e.target.value)
+                fetchSuggestions('', 'year', make2, e.target.value, 2);
+              }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="" disabled>Select Car Model</option>
-              {suggestions.map((model, index) => (
+              {modelSuggestions2.map((model, index) => (
                 <option key={index} value={model}>
                   {model}
                 </option>
@@ -347,13 +372,13 @@ function Compare() {
               onChange={(e) => setYear2(e.target.value)}
               onFocus={() => {
                 if (make2 && model2) {
-                  fetchSuggestions('', 'year', make2, model2); // Fetch years for selected make and model
+                  fetchSuggestions('', 'year', make2, model2, 2); // Fetch years for selected make and model
                 }
               }}
               className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="" disabled>Select Year</option>
-              {suggestions.map((year, index) => (
+              {yearSuggestions2.map((year, index) => (
                 <option key={index} value={year}>
                   {year}
                 </option>
