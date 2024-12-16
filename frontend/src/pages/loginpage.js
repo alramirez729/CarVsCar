@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';  // Import Link for navigation
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../AuthContext'; // Import AuthContext
 
 function LoginPage() {
+    const { setIsLoggedIn } = useContext(AuthContext); // Access setIsLoggedIn from context
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -11,9 +13,9 @@ function LoginPage() {
         e.preventDefault();
 
         try {
-            // Update the API URL to the correct endpoint
             const response = await axios.post('http://localhost:3000/users/login', { email, password });
             setMessage(response.data.message);
+            setIsLoggedIn(true); // Update login state in context
             console.log('Login successful:', response.data.user);
         } catch (error) {
             if (error.response) {

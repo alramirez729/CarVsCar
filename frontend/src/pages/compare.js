@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import carMakes from './carMakes';
+import { AuthContext } from '../AuthContext';
+
+
 
 function Compare() {
 
@@ -21,6 +24,8 @@ function Compare() {
   const [yearSuggestions2, setYearSuggestions2] = useState([]);
 
   const [comparisonResult, setComparisonResult] = useState([]);
+
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
 
   const [showAlert, setShowAlert] = useState(false);
@@ -394,9 +399,11 @@ function Compare() {
           Compare
         </button>
   
+        {isLoggedIn && (
         <button className="general-button-styling" onClick={handleAISuggestion}>
           🪄 AI suggestion
         </button>
+      )}
   
         {/* Custom Alert */}
         {alertMessage && (

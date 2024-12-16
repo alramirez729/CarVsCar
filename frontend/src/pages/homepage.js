@@ -1,8 +1,12 @@
-import React from 'react';
+import {React, useContext} from 'react';
 import { Link } from 'react-router-dom';
 import homePageIcon from './images/carvcar.JPG';
+import { AuthContext } from '../AuthContext';
 
 function Homepage() {
+
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+
   return (
     <div className="flex rounded-lg flex-col items-center justify-center p-3 text-center font-mono">
       <h1 className="my-5 heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">
@@ -16,12 +20,15 @@ function Homepage() {
       <p className="text-left text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
         Two cars of your choice go head to head, see which one suites your needs using Car vs. Car! 
       </p>
-      <Link 
+      {!isLoggedIn &&
+        <Link 
         to="/loginpage" 
         className="general-button-styling"
       >
         Sign up/login
       </Link>
+      }
+      
     </div>
   );
 };
