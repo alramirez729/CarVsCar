@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import carMakes from './carMakes';
@@ -32,6 +32,10 @@ function Compare() {
   const [alertMessage, setAlertMessage] = useState(''); // New state for alert message
   const [alertType, setAlertType] = useState('info'); // Optional: for different alert styles
 
+  const resultsRef = useRef(null);
+
+
+  //alerts for button if input fields are incomplete/incorrect
   useEffect(() => {
     if (alertMessage) {
       const timer = setTimeout(() => {
@@ -42,6 +46,21 @@ function Compare() {
       return () => clearTimeout(timer); // Cleanup on unmount or message change
     }
   }, [alertMessage]);
+
+
+  //autoscroll when clicking the compare button
+  useEffect(() => {
+    if (comparisonResult.length > 0 && resultsRef.current) {
+      const offset = -100; // Adjust this value to move the scroll position up
+      const top = resultsRef.current.getBoundingClientRect().top + window.pageYOffset + offset;
+  
+      window.scrollTo({
+        top: top,
+        behavior: 'smooth', // Ensures smooth scrolling
+      });
+    }
+  }, [comparisonResult]);
+  
   
 
 
@@ -398,6 +417,8 @@ function Compare() {
         <button onClick={handleCompare} className="general-button-styling">
           Compare
         </button>
+
+        
   
         {isLoggedIn && (
         <button className="general-button-styling" onClick={handleAISuggestion}>
@@ -433,7 +454,7 @@ function Compare() {
   
       {/* Comparison Results */}
       {comparisonResult.length > 0 && (
-        <div className="mt-5 w-full max-w-4xl">{comparisonResult}</div>
+        <div ref={resultsRef} className="mt-5 w-full max-w-4xl">{comparisonResult}</div>
       )}
     </div>
   );
