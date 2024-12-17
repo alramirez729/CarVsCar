@@ -413,7 +413,7 @@ function Compare() {
         </div>
       </div>
   
-      <div className="flex flex-row gap-5 my-10 justify-between ml-20">
+      <div className="flex flex-row gap-5 my-10 justify-center">
         <button onClick={handleCompare} className="general-button-styling">
           Compare
         </button>
