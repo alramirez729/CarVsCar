@@ -23,7 +23,7 @@ body {
 }
 
 .box_with_shadow{
-    @apply my-0 flex flex-col items-center bg-slate-200 ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full;
+    @apply my-0 flex flex-col items-center bg-slate-200 ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-slate-300;
 }
 
 .heading{

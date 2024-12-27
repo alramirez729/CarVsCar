@@ -298,7 +298,7 @@ function Compare() {
                 setMake1(e.target.value);
                 fetchSuggestions('', 'model', e.target.value, '', 1);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
             >
               <option value="" disabled>Select Car Make</option>
               {carMakes.map((make, index) => (
@@ -318,7 +318,7 @@ function Compare() {
                 setModel1(selectedModel);  
                 fetchSuggestions('', 'year', make1, selectedModel, 1);            
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
             >
               <option value="" disabled>Select Car Model</option>
               {modelSuggestions1.map((model, index) => (
@@ -334,7 +334,7 @@ function Compare() {
               onChange={(e) => setYear1(e.target.value)}
               onFocus={() => {
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
             >
               <option value="" disabled>Select Year</option>
               {yearSuggestions1.map((year, index) => (
@@ -359,7 +359,7 @@ function Compare() {
                 setMake2(e.target.value);
                 fetchSuggestions('', 'model', e.target.value, '', 2); // Fetch models for the selected make
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
             >
               <option value="" disabled>Select Car Make</option>
               {carMakes.map((make, index) => (
@@ -378,7 +378,7 @@ function Compare() {
                 setModel2(e.target.value)
                 fetchSuggestions('', 'year', make2, e.target.value, 2);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
             >
               <option value="" disabled>Select Car Model</option>
               {modelSuggestions2.map((model, index) => (
@@ -399,7 +399,7 @@ function Compare() {
                   fetchSuggestions('', 'year', make2, model2, 2); // Fetch years for selected make and model
                 }
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
             >
               <option value="" disabled>Select Year</option>
               {yearSuggestions2.map((year, index) => (

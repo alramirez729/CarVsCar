@@ -16,7 +16,7 @@ function Navbar() {
     <nav className="bg-gray-800 text-white w-full py-4 shadow-lg fixed top-0 left-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-6">
         {/* Brand / Logo */}
-        <Link to="/" className="text-2xl font-bold font-mono tracking-wide ">
+        <Link to="/" className="text-2xl font-bold font-mono tracking-wide hover:scale-125 transition duration-300">
           Car vs. Car
         </Link>
 
