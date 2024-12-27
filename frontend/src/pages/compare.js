@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import carMakes from './carMakes';
+import SingleMetricChart from './SingleMetricChart';
 import { AuthContext } from '../AuthContext';
 
 
@@ -272,9 +273,9 @@ function Compare() {
 
   // Explanations for each metric in layman's terms
   const metricExplanations = {
-    combination_mpg: "Combined MPG is the average fuel efficiency of the car, combining both city and highway driving.",
-    city_mpg: "City MPG is how many miles the car can travel on one gallon of fuel in city driving conditions.",
-    highway_mpg: "Highway MPG is how many miles the car can travel on one gallon of fuel on the highway.",
+    combination_mpg: "Combined miles per gallon (MPG) is the average fuel efficiency of the car, combining both city and highway driving.",
+    city_mpg: "City miles per gallon (MPG) is how many miles the car can travel on one gallon of fuel in city driving conditions.",
+    highway_mpg: "Highway miles per gallon (MPG) is how many miles the car can travel on one gallon of fuel on the highway.",
     cylinders: "Cylinders are the components of an engine that provide power. More cylinders typically mean more power but less fuel efficiency.",
     displacement: "Displacement is the total volume of all the cylinders in the engine, usually measured in liters. It is an indicator of engine size and power."
   };
@@ -453,9 +454,20 @@ function Compare() {
       </div>
   
       {/* Comparison Results */}
-      {comparisonResult.length > 0 && (
-        <div ref={resultsRef} className="mt-5 w-full max-w-4xl">{comparisonResult}</div>
-      )}
+      <div ref={resultsRef} className="mt-5 w-full max-w-4xl flex flex-col gap-6">
+      {comparisonResult.map((metricComponent, index) => (
+        <div key={index} className="flex flex-row items-center gap-10">
+          {/* Metric */}
+          <div className="w-1/2">{metricComponent}</div>
+
+          {/* Chart */}
+          <div className="w-1/2">
+            <SingleMetricChart comparisonData={metricComponent.props} />
+          </div>
+        </div>
+      ))}
+    </div>
+
     </div>
   );
   
