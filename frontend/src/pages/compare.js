@@ -5,8 +5,6 @@ import carMakes from './carMakes';
 import SingleMetricChart from './SingleMetricChart';
 import { AuthContext } from '../AuthContext';
 
-
-
 function Compare() {
 
   const [make1, setMake1] = useState('');
@@ -15,8 +13,6 @@ function Compare() {
   const [make2, setMake2] = useState('');
   const [model2, setModel2] = useState('');
   const [year2, setYear2] = useState('');
-
-  const [setMakeSuggestions] = useState([]);
 
   const [modelSuggestions1, setModelSuggestions1] = useState([]);
   const [yearSuggestions1, setYearSuggestions1] = useState([]);
@@ -134,11 +130,6 @@ function Compare() {
   };
   
   
-  
-  
-  
-  
-  
   // Handle comparison
   const handleCompare = async () => {
     // Validate inputs for both cars
@@ -253,17 +244,17 @@ function Compare() {
           {/* Car 1 Card */}
           <div
             className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
-              ${isCar1Better ? 'bg-green-200' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
+              ${isCar1Better ? 'bg-green-500' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold font-mono">Car 1: {car1.make} {car1.model} ({car1.year})</h4>
+            <h4 className="font-semibold font-mono">{car1.make} {car1.model} ({car1.year})</h4>
             <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
           {/* Car 2 Card */}
           <div
             className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
-              ${isCar2Better ? 'bg-green-200' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
+              ${isCar2Better ? 'bg-green-500' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold font-mono">Car 2: {car2.make} {car2.model} ({car2.year})</h4>
+            <h4 className="font-semibold font-mono">{car2.make} {car2.model} ({car2.year})</h4>
             <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
         </div>
@@ -461,7 +452,7 @@ function Compare() {
           <div className="w-1/2">{metricComponent}</div>
 
           {/* Chart */}
-          <div className="w-1/2">
+          <div className="w-1/2 flex flex-col gap-6">
             <SingleMetricChart comparisonData={metricComponent.props} />
           </div>
         </div>
