@@ -22,7 +22,7 @@ function Homepage() {
       </p>
       {!isLoggedIn &&
         <Link 
-        to="/loginpage" 
+        to="/login" 
         className="general-button-styling"
       >
         Sign up/login
