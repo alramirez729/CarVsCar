@@ -11,12 +11,18 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
             const response = await axios.post('http://localhost:3000/users/login', { email, password });
-            setMessage(response.data.message);
-            setIsLoggedIn(true); // Update login state in context
-            console.log('Login successful:', response.data.user);
+            const { token, message } = response.data;
+    
+            setMessage(message);
+            if (token) {
+                localStorage.setItem('token', token); // Save token to localStorage
+                setIsLoggedIn(true); // Update login state in context
+            } else {
+                setMessage('Login failed: No token received');
+            }
         } catch (error) {
             if (error.response) {
                 setMessage(error.response.data.message);
@@ -26,6 +32,7 @@ function LoginPage() {
             console.error(error);
         }
     };
+    
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center">

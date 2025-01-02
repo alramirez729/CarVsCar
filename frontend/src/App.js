@@ -9,6 +9,7 @@ import Compare from './pages/compare';
 import Homepage from './pages/homepage';
 import Loginpage from './pages/loginpage';
 import Registerpage from './pages/registerPage';
+import AccountPage from './pages/accountPage';
 
 function App() {
   return (
@@ -21,8 +22,10 @@ function App() {
               <Route path="/" element={<Homepage />} />  {/* Default route */}
               <Route path="/homepage" element={<Homepage />} />  
               <Route path="/compare" element={<Compare />} />
-              <Route path="/loginpage" element={<Loginpage />} />
+              <Route path="/login" element={<Loginpage />} />
               <Route path="/register" element= {<Registerpage />} />
+              <Route path="/account" element={<AccountPage />} />
+
             </Routes>
           </div>
         </div>

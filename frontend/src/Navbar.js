@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCodeCompare, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,7 @@ import { AuthContext } from './AuthContext';
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -36,7 +37,7 @@ function Navbar() {
           </li>
           {!isLoggedIn ? (
             <li>
-              <Link to="/loginpage" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
+              <Link to="/login" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
                 <FontAwesomeIcon icon={faUserCircle} />
                 <span className="hidden sm:block font-mono hover:scale-105">Login / Sign up</span>
               </Link>
@@ -44,12 +45,32 @@ function Navbar() {
           ) : (
             <li>
               <button
-                onClick={handleLogout}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="hover:text-cyan-400 transition hover:scale-125 duration-300 flex items-center space-x-2"
               >
-                <FontAwesomeIcon icon={faSignOutAlt} />
-                <span className="hidden sm:block font-mono hover:scale-105">Logout</span>
+                <FontAwesomeIcon icon={faUserCircle} />
+                <span className="hidden sm:block font-mono hover:scale-105">Account</span>
               </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-md">
+                  <Link
+                    to="/account"
+                    className="block px-4 py-2 hover:bg-gray-200"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Account Page
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-200"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </li>
           )}
         </ul>

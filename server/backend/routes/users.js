@@ -1,8 +1,11 @@
-// routes/users.js
 const express = require('express');
 const bcrypt = require('bcrypt');
-const User = require('../models/User');  // Import your User model
+const jwt = require('jsonwebtoken');
+const User = require('../models/User'); // Import your User model
 const router = express.Router();
+
+// JWT secret key
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // POST /register
 router.post('/register', async (req, res) => {
@@ -29,7 +32,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// POST /login (Make sure this route exists)
+// POST /login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -39,7 +42,6 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'User not found' });
         }
 
-        // Log the password comparison
         const isMatch = await bcrypt.compare(password, user.password);
         console.log('Password match result:', isMatch);
 
@@ -47,12 +49,42 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        res.status(200).json({ message: 'Login successful', user });
+        // Generate a JWT
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+
+        res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
+// Middleware for authenticating the user
+const authenticate = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.userId = decoded.userId;
+        next();
+    } catch (error) {
+        console.error('Authentication error:', error);
+        res.status(401).json({ message: 'Invalid or expired token' });
+    }
+};
+
+// GET /me - Retrieve the currently logged-in user's information
+router.get('/me', authenticate, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json({ user });
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 module.exports = router;
