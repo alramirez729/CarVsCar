@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 function RegisterPage() {
-    const [name, setName] = useState('');
+    const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [age, setAge] = useState('');
@@ -13,7 +13,7 @@ function RegisterPage() {
 
         try {
             const response = await axios.post('http://localhost:3000/users/register', {
-                name,
+                username,
                 email,
                 password,
                 age
@@ -36,12 +36,12 @@ function RegisterPage() {
                 <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
                 <form onSubmit={handleRegister} className="space-y-4">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">user name</label>
                         <input 
                             type="text" 
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUserName(e.target.value)}
                             required
                             className="mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full"
                         />

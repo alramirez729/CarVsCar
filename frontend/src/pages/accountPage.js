@@ -45,6 +45,7 @@ function AccountPage() {
 
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
     navigate('/login');
     console.log('User logged out');
@@ -57,11 +58,19 @@ function AccountPage() {
 
   const handleSaveClick = async (field) => {
     try {
-      const response = await axios.put('http://localhost:3000/users/update', {
-        [field]: editedValue,
-      });
+      const token = localStorage.getItem('token'); // Ensure the token is valid
+      const response = await axios.put(
+        'http://localhost:3000/users/update',
+        { [field]: editedValue }, // Sends { biography: "Updated bio text" }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       console.log('Update successful:', response.data);
-
+  
       // Update the local state with the new value
       setUserInfo({ ...userInfo, [field]: editedValue });
       setEditField(null); // Exit edit mode
@@ -69,6 +78,8 @@ function AccountPage() {
       console.error('Error updating user info:', error);
     }
   };
+  
+  
 
   const profileSection = (
     <div className="space-y-4">

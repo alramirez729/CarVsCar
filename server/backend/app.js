@@ -34,13 +34,13 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 // Use the combined user routes
 app.use('/users', userRoutes);
 
+
 // Fetch car data from the free test API and serve it
 app.get('/api/cars', async (req, res) => {
     try {
         const apiKey = process.env.API_KEY;
         const { make, model, allMakes } = req.query;
 
-        //this
         if (allMakes === 'true') {
             const response = await axios.get(`https://api.api-ninjas.com/v1/carmakes`, {
                 headers: { 'X-Api-Key': apiKey }
@@ -55,8 +55,6 @@ app.get('/api/cars', async (req, res) => {
             headers: { 'X-Api-Key': apiKey }
         });
 
-        
-        //this is kept to test the .json:
         console.log(response.data);
         console.log('Fetching data from:', apiUrl); // Log the API URL for debugging
 
@@ -95,9 +93,6 @@ app.get('/api/cars', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
 
 // Default route for health check or home
 app.get('/', (req, res) => {

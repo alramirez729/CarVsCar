@@ -9,6 +9,7 @@ function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
     console.log('User logged out');
   };

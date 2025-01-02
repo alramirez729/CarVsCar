@@ -11,27 +11,32 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-    
+        console.log('Submitting login with:', { email, password });
+      
         try {
-            const response = await axios.post('http://localhost:3000/users/login', { email, password });
-            const { token, message } = response.data;
-    
-            setMessage(message);
-            if (token) {
-                localStorage.setItem('token', token); // Save token to localStorage
-                setIsLoggedIn(true); // Update login state in context
-            } else {
-                setMessage('Login failed: No token received');
-            }
+          const response = await axios.post('http://localhost:3000/users/login', { email, password });
+          console.log('Login response:', response.data);
+      
+          const { token, message } = response.data;
+          setMessage(message);
+      
+          if (token) {
+            localStorage.setItem('token', token);
+            setIsLoggedIn(true);
+          } else {
+            setMessage('Login failed: No token received');
+          }
         } catch (error) {
-            if (error.response) {
-                setMessage(error.response.data.message);
-            } else {
-                setMessage('Server error');
-            }
-            console.error(error);
+          if (error.response) {
+            console.error('Login error response:', error.response.data);
+            setMessage(error.response.data.message);
+          } else {
+            console.error('Login server error:', error);
+            setMessage('Server error');
+          }
         }
-    };
+      };
+      
     
 
     return (
