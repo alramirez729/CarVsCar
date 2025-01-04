@@ -21,6 +21,8 @@ function Compare() {
   const [yearSuggestions2, setYearSuggestions2] = useState([]);
 
   const [comparisonResult, setComparisonResult] = useState([]);
+  const [nonNumericalComparison, setNonNumericalComparison] = useState(null);
+
 
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
@@ -58,8 +60,6 @@ function Compare() {
     }
   }, [comparisonResult]);
   
-  
-
 
   // Function to fetch data for a given make, model, and year
   const fetchCarData = async (make, model, year) => {
@@ -129,18 +129,76 @@ function Compare() {
     }
   };
   
-  
+  //Box above the graphs
+  const generateNonNumericalComparison = (data1, data2) => {
+    const nonNumericalMetrics = ["transmission", "drive", "fuel_type"];
+    const labels = {
+        transmission: "Transmission",
+        drive: "Drive Type",
+        fuel_type: "Fuel Type"
+    };
+
+    const formatTransmission = (value) => {
+        return value === 'm' ? "Manual" : value === 'a' ? "Automatic" : value;
+    };
+
+    const formatDriveType = (value) => {
+        const driveMap = {
+            'fwd': 'Front-wheel drive',
+            'rwd': 'Rear-wheel drive',
+            'awd': 'All-wheel drive',
+            '4wd': 'Four-wheel drive'
+        };
+        return driveMap[value] || value;
+    };
+
+    return (
+      <div className="flex flex-col items-center p-5 bg-gray-100 rounded-lg shadow-md w-1/2">
+        {/* Headers for Car 1 and Car 2 */}
+        <div className="text-2xl font-mono">Car Feature Overview</div>
+            <div className="flex justify-between w-full p-3 mb-3">
+                <p className="font-bold font-mono text-lg italic">Spec.</p>
+                <p className="font-bold font-mono text-lg italic">{data1[0]?.make.charAt(0).toUpperCase() + data1[0]?.make.slice(1)}:</p>
+                <p className="font-bold font-mono text-lg italic">{data2[0]?.make.charAt(0).toUpperCase() + data2[0]?.make.slice(1)}:</p>
+            </div>           
+       {nonNumericalMetrics.map((metric) => {
+                const car1Value = 
+                    metric === 'transmission' ? formatTransmission(data1[0][metric]) :
+                    metric === 'drive' ? formatDriveType(data1[0][metric]) : 
+                    data1[0][metric];
+
+                const car2Value = 
+                    metric === 'transmission' ? formatTransmission(data2[0][metric]) :
+                    metric === 'drive' ? formatDriveType(data2[0][metric]) : 
+                    data2[0][metric];
+
+                return (
+                    <div
+                        key={metric}
+                        className={"flex justify-between w-full p-3 rounded-lg shadow-md mb-2 bg-blue-200"}
+                    >
+                        <p className="font-semibold text-lg">{labels[metric]}</p>
+                        <p className="font-mono text-lg">{car1Value || 'N/A'}</p>
+                        <p className="font-mono text-lg">{car2Value || 'N/A'}</p>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
+
   // Handle comparison
   const handleCompare = async () => {
     // Validate inputs for both cars
     if (!make1 || !model1 || !year1) {
       setAlertMessage('Please fill in all fields for Car 1.');
-      setAlertType('error'); // Optional
+      setAlertType('error');
       return;
     }
     if (!make2 || !model2 || !year2) {
       setAlertMessage('Please fill in all fields for Car 2.');
-      setAlertType('error'); // Optional
+      setAlertType('error');
       return;
     }
   
@@ -151,17 +209,21 @@ function Compare() {
   
       if (data1.length === 0 || data2.length === 0) {
         setAlertMessage('Invalid car details. Please check your inputs.');
-        setAlertType('error'); // Optional
+        setAlertType('error');
         return;
       }
   
-      generateComparison(data1, data2);
+      // Generate comparisons
+      setComparisonResult(generateComparison(data1, data2)); // Numerical
+      setNonNumericalComparison(generateNonNumericalComparison(data1, data2)); // Non-Numerical
+  
     } catch (error) {
       console.error('Error comparing cars:', error);
       setAlertMessage('An error occurred during comparison. Please try again.');
-      setAlertType('error'); // Optional
+      setAlertType('error');
     }
   };
+  
 
   const handleAISuggestion = () => {
     setShowAlert(true); // Show alert
@@ -179,11 +241,12 @@ function Compare() {
       cylinders: "Cylinders",
       displacement: "Displacement (L)"
     };
-
-    const boxes = metrics.map((metric) => {
+  
+    // Only returns the component array instead of modifying state directly
+    return metrics.map((metric) => {
       const avg1 = calculateAverageMetric(data1, metric);
       const avg2 = calculateAverageMetric(data2, metric);
-
+  
       return (
         <MetricComparisonRow
           key={metric}
@@ -194,9 +257,8 @@ function Compare() {
         />
       );
     });
-
-    setComparisonResult(boxes);
   };
+  
 
   // General function to calculate the average of any given metric
   const calculateAverageMetric = (cars, metric) => {
@@ -450,23 +512,29 @@ function Compare() {
         )}
       </div>
   
-      {/* Comparison Results */}
+      {/* Non-Numerical Comparison Box */}
+      {nonNumericalComparison && nonNumericalComparison}
+
+      {/* Numerical Comparison Results */}
       <div ref={resultsRef} className="mt-5 w-full max-w-4xl flex flex-col gap-6">
-      {comparisonResult.map((metricComponent, index) => (
-        <div key={index} className="flex flex-row items-center gap-10">
-          {/* Metric */}
-          <div className="w-1/2">{metricComponent}</div>
+        {comparisonResult.length > 0 ? (
+          comparisonResult.map((metricComponent, index) => (
+            <div key={index} className="flex flex-row items-center gap-10">
+              <div className="w-1/2">{metricComponent}</div>
+              {metricComponent.props.car1?.value && (
+                <div className="w-1/2 flex flex-col gap-6">
+                  <SingleMetricChart comparisonData={metricComponent.props} />
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No comparison results to display yet.</p>
+        )}
+      </div>
 
-          {/* Chart */}
-          <div className="w-1/2 flex flex-col gap-6">
-            <SingleMetricChart comparisonData={metricComponent.props} />
-          </div>
-        </div>
-      ))}
-    </div>
-
-    </div>
-  );
+</div>
+);
   
 }
 
