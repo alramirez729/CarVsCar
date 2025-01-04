@@ -240,21 +240,21 @@ function Compare() {
           </p>
         )}
         {/* Car 1 and Car 2 Cards */}
-        <div className="flex flex-row w-full gap-4">
+        <div className="flex flex-row w-full gap-4 ">
           {/* Car 1 Card */}
           <div
             className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
               ${isCar1Better ? 'bg-green-500 scale-110' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold font-mono">{car1.make} {car1.model} ({car1.year})</h4>
+            <h4 className="font-semibold font-mono">{car1.make} - {car1.model} ({car1.year})</h4>
             <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
           {/* Car 2 Card */}
           <div
-            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
+            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono 
               ${isCar2Better ? 'bg-green-500 scale-110' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
           >
-            <h4 className="font-semibold font-mono">{car2.make} {car2.model} ({car2.year})</h4>
+            <h4 className="font-semibold font-mono">{car2.make} - {car2.model} ({car2.year})</h4>
             <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
           </div>
         </div>
@@ -284,6 +284,7 @@ function Compare() {
 
           {/* Make Dropdown */}
           <div className="relative w-full">
+            <h1 className="font-thin italic font-mono">Select vehicle make:</h1>
             <select
               value={make1}
               onChange={(e) => {
@@ -303,6 +304,7 @@ function Compare() {
 
           {/* Model Dropdown */}
           <div className="relative w-full">
+          <h1 className="font-thin italic font-mono">Select vehicle model:</h1>
             <select
               value={model1}
               onChange={(e) => {
@@ -321,6 +323,7 @@ function Compare() {
 
           {/* Year Dropdown */}
           <div className="relative w-full">
+          <h1 className="font-thin italic font-mono">Select vehicle year:</h1>
             <select
               value={year1}
               onChange={(e) => setYear1(e.target.value)}
@@ -345,6 +348,7 @@ function Compare() {
   
           {/* Make 2 Input with Dropdown */}
           <div className="relative w-full">
+          <h1 className="font-thin italic font-mono">Select vehicle make:</h1>
             <select
               value={make2}
               onChange={(e) => {
@@ -364,6 +368,7 @@ function Compare() {
   
           {/* Model 2 Input with Dropdown */}
           <div className="relative w-full">
+          <h1 className="font-thin italic font-mono">Select vehicle model:</h1>
             <select
               value={model2}
               onChange={(e) => {
@@ -383,6 +388,7 @@ function Compare() {
   
           {/* Year 2 Input */}
           <div className="relative w-full">
+          <h1 className="font-thin italic font-mono">Select vehicle year:</h1>
             <select
               value={year2}
               onChange={(e) => setYear2(e.target.value)}
