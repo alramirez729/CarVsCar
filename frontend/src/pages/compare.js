@@ -64,7 +64,7 @@ function Compare() {
   // Function to fetch data for a given make, model, and year
   const fetchCarData = async (make, model, year) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cars?limit=10make=${make}&model=${model}&year=${year}`);
+      const response = await fetch(`http://localhost:3000/api/cars?limit=20make=${make}&model=${model}&year=${year}`);
       const contentType = response.headers.get('content-type');
       if (response.ok && contentType && contentType.includes('application/json')) {
         return await response.json();
@@ -92,7 +92,7 @@ function Compare() {
         endpoint = `http://localhost:3000/api/cars?make=${make}&model=${model}`;
       }
   
-      console.log('Fetching suggestions from:', endpoint); // Debugging log
+      //console.log('Fetching suggestions from:', endpoint); // Debugging log
   
       const response = await fetch(endpoint);
       if (!response.ok) {
@@ -154,15 +154,17 @@ function Compare() {
     };
 
     return (
-      <div className="flex flex-col items-center p-5 bg-gray-100 rounded-lg shadow-md w-1/2">
-        {/* Headers for Car 1 and Car 2 */}
-        <div className="text-2xl font-mono">Car Feature Overview</div>
-            <div className="flex justify-between w-full p-3 mb-3">
-                <p className="font-bold font-mono text-lg italic">Spec.</p>
-                <p className="font-bold font-mono text-lg italic">{data1[0]?.make.charAt(0).toUpperCase() + data1[0]?.make.slice(1)}:</p>
-                <p className="font-bold font-mono text-lg italic">{data2[0]?.make.charAt(0).toUpperCase() + data2[0]?.make.slice(1)}:</p>
-            </div>           
-       {nonNumericalMetrics.map((metric) => {
+      <div className="flex flex-col items-center p-6 bg-gradient-to-br from-blue-100 to-gray-50 rounded-lg shadow-md border border-gray-200 w-2/3 mx-auto">
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-gray-700 mb-4 font-mono text-center">Car Feature Overview</h2>
+            
+            {/* Header Row */}
+            <div className="grid grid-cols-3 w-full bg-blue-300 py-2 rounded-t-lg text-center font-semibold text-gray-700">
+                <p className="font-bold font-mono text-lg italic text-gray-600">Spec.</p>
+                <p className="font-bold font-mono text-lg italic text-gray-700">{data1[0]?.make.charAt(0).toUpperCase() + data1[0]?.make.slice(1)}:</p>
+                <p className="font-bold font-mono text-lg italic text-gray-700">{data2[0]?.make.charAt(0).toUpperCase() + data2[0]?.make.slice(1)}:</p>
+            </div>            
+       {nonNumericalMetrics.map((metric, index) => {
                 const car1Value = 
                     metric === 'transmission' ? formatTransmission(data1[0][metric]) :
                     metric === 'drive' ? formatDriveType(data1[0][metric]) : 
@@ -174,13 +176,16 @@ function Compare() {
                     data2[0][metric];
 
                 return (
-                    <div
-                        key={metric}
-                        className={"flex justify-between w-full p-3 rounded-lg shadow-md mb-2 bg-blue-200"}
-                    >
-                        <p className="font-semibold text-lg">{labels[metric]}</p>
-                        <p className="font-mono text-lg">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
-                        <p className="font-mono text-lg">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
+                  <div
+                      key={metric}
+                      className={`grid grid-cols-3 w-full py-3 px-4 t ext-center items-center
+                          ${index % 2 === 0 ? 'bg-blue-200' : 'bg-blue-100'}
+                          border-b border-gray-300
+                      `}
+                  >
+                        <p className="text-lg font-mono font-medium text-gray-800">{labels[metric]}</p>
+                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
+                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
                     </div>
                 );
             })}
