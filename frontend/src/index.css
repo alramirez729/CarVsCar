@@ -23,7 +23,7 @@ body {
 }
 
 .box_with_shadow{
-    @apply my-0 flex flex-col items-center bg-slate-200 ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-slate-300;
+    @apply my-0 flex flex-col items-center bg-white ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-slate-50;
 }
 
 .heading{
@@ -40,4 +40,8 @@ body {
 
 .subtitle{
     @apply text-xl text-slate-900 font-mono mb-3;
+}
+
+.dropdown_input_styling{
+    @apply w-full p-3 border border-gray-300 rounded-lg bg-slate-200 text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1;
 }

@@ -23,13 +23,16 @@ function Compare() {
   const [comparisonResult, setComparisonResult] = useState([]);
   const [nonNumericalComparison, setNonNumericalComparison] = useState(null);
 
+  const [carLogo1, setCarLogo1] = useState(null);  // New state for car logos
+  const [carLogo2, setCarLogo2] = useState(null);  
+
 
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
 
   const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState(''); // New state for alert message
-  const [alertType, setAlertType] = useState('info'); // Optional: for different alert styles
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('info'); 
 
   const resultsRef = useRef(null);
 
@@ -128,6 +131,31 @@ function Compare() {
       console.error(`Error fetching ${type} suggestions:`, error);
     }
   };
+
+  const fetchCarLogo = async (make, setLogoState) => {
+    try {
+        const slug = make.toLowerCase().replace(/ /g, "-"); // Convert make into a slug
+        const logoUrl = `https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/${slug}.png`;
+        const response = await fetch(logoUrl);
+        if (response.ok) {
+            setLogoState(logoUrl); 
+        } else {
+            setLogoState(null); // If not found, fallback to default
+        }
+    } catch (error) {
+        console.error('Error fetching car logo:', error);
+        setLogoState(null);
+    }
+};
+
+  useEffect(() => {
+    if (make1) fetchCarLogo(make1, setCarLogo1);
+  }, [make1]);
+
+  useEffect(() => {
+    if (make2) fetchCarLogo(make2, setCarLogo2);
+  }, [make2]);
+
   
   //Box above the graphs
   const generateNonNumericalComparison = (data1, data2) => {
@@ -347,7 +375,11 @@ function Compare() {
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 my-10">
         {/* Car 1 Input */}
         <div className="box_with_shadow">
-          <FontAwesomeIcon icon={faCarSide} size="3x" />
+        {carLogo1 ? (
+            <img src={carLogo1} alt="Car 1 Logo" className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform" />
+          ) : (
+            <FontAwesomeIcon icon={faCarSide} size="3x" />
+          )}
           <h2 className="title">Car 1</h2>
 
           {/* Make Dropdown */}
@@ -359,7 +391,7 @@ function Compare() {
                 setMake1(e.target.value);
                 fetchSuggestions('', 'model', e.target.value, '', 1);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
+              className="dropdown_input_styling"
             >
               <option value="" disabled>Select Car Make</option>
               {carMakes.map((make, index) => (
@@ -380,7 +412,7 @@ function Compare() {
                 setModel1(selectedModel);  
                 fetchSuggestions('', 'year', make1, selectedModel, 1);            
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
+              className="dropdown_input_styling"
             >
               <option value="" disabled>Select Car Model</option>
               {modelSuggestions1.map((model, index) => (
@@ -397,7 +429,7 @@ function Compare() {
               onChange={(e) => setYear1(e.target.value)}
               onFocus={() => {
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
+              className="dropdown_input_styling"
             >
               <option value="" disabled>Select Year</option>
               {yearSuggestions1.map((year, index) => (
@@ -411,7 +443,11 @@ function Compare() {
   
         {/* Car 2 Input */}
         <div className="box_with_shadow">
-          <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
+        {carLogo2 ? (
+            <img src={carLogo2} alt="Car 2 Logo" className="w-36 h-36 object-contain mx-auto  hover:scale-125 transition-transform" />
+          ) : (
+            <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
+          )}
           <h2 className="title">Car 2</h2>
   
           {/* Make 2 Input with Dropdown */}
@@ -423,7 +459,7 @@ function Compare() {
                 setMake2(e.target.value);
                 fetchSuggestions('', 'model', e.target.value, '', 2); // Fetch models for the selected make
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
+              className="dropdown_input_styling"
             >
               <option value="" disabled>Select Car Make</option>
               {carMakes.map((make, index) => (
@@ -443,7 +479,7 @@ function Compare() {
                 setModel2(e.target.value)
                 fetchSuggestions('', 'year', make2, e.target.value, 2);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
+              className="dropdown_input_styling"
             >
               <option value="" disabled>Select Car Model</option>
               {modelSuggestions2.map((model, index) => (
@@ -465,7 +501,7 @@ function Compare() {
                   fetchSuggestions('', 'year', make2, model2, 2); // Fetch years for selected make and model
                 }
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1"
+              className="dropdown_input_styling"
             >
               <option value="" disabled>Select Year</option>
               {yearSuggestions2.map((year, index) => (
