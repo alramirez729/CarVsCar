@@ -131,8 +131,9 @@ function Compare() {
   
   //Box above the graphs
   const generateNonNumericalComparison = (data1, data2) => {
-    const nonNumericalMetrics = ["transmission", "drive", "fuel_type"];
+    const nonNumericalMetrics = ["class", "transmission", "drive", "fuel_type"];
     const labels = {
+        class: "Class",
         transmission: "Transmission",
         drive: "Drive Type",
         fuel_type: "Fuel Type"
@@ -178,8 +179,8 @@ function Compare() {
                         className={"flex justify-between w-full p-3 rounded-lg shadow-md mb-2 bg-blue-200"}
                     >
                         <p className="font-semibold text-lg">{labels[metric]}</p>
-                        <p className="font-mono text-lg">{car1Value || 'N/A'}</p>
-                        <p className="font-mono text-lg">{car2Value || 'N/A'}</p>
+                        <p className="font-mono text-lg">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
+                        <p className="font-mono text-lg">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
                     </div>
                 );
             })}
