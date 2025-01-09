@@ -182,7 +182,7 @@ function Compare() {
     };
 
     return (
-      <div className="flex flex-col items-center p-6 bg-gradient-to-br from-blue-100 to-gray-50 rounded-lg shadow-md border border-gray-200 w-2/3 mx-auto">
+      <div className="flex flex-col items-center p-6 bg-gradient-to-br from-blue-100 to-gray-50 rounded-lg shadow-md border border-gray-200 w-2/3 mx-auto my-10">
             {/* Title */}
             <h2 className="text-2xl font-bold text-gray-700 mb-4 font-mono text-center">Car Feature Overview</h2>
             
