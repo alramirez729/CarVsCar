@@ -189,8 +189,8 @@ function Compare() {
             {/* Header Row */}
             <div className="grid grid-cols-3 w-full bg-blue-300 py-2 rounded-t-lg text-center font-semibold text-gray-700">
                 <p className="font-bold font-mono text-lg italic text-gray-600">Spec.</p>
-                <p className="font-bold font-mono text-lg italic text-gray-700">{data1[0]?.make.charAt(0).toUpperCase() + data1[0]?.make.slice(1)}:</p>
-                <p className="font-bold font-mono text-lg italic text-gray-700">{data2[0]?.make.charAt(0).toUpperCase() + data2[0]?.make.slice(1)}:</p>
+                <p className="font-bold font-mono text-lg italic text-gray-700">{make1}:</p>
+                <p className="font-bold font-mono text-lg italic text-gray-700">{make2}:</p>
             </div>            
        {nonNumericalMetrics.map((metric, index) => {
                 const car1Value = 
