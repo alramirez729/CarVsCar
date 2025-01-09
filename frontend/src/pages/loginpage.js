@@ -73,7 +73,7 @@ function LoginPage() {
                         Login
                     </button>
                 </form>
-                {message && <p className="font-mono mt-4 text-center text-red-500">{message}</p>}
+                {message && <p className="font-mono mt-4 text-center font-medium text-blue-400">{message}!</p>}
                 <p className="font-mono mt-6 text-center">
                     Don't have an account? <Link to="/register" className="font-mono text-cyan-600 hover:underline">Register here</Link>.
                 </p>
