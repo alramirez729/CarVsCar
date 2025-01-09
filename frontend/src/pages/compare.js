@@ -375,12 +375,26 @@ function Compare() {
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="box_with_shadow">
-        {carLogo1 ? (
-            <img src={carLogo1} alt="Car 1 Logo" className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform" />
-          ) : (
-            <FontAwesomeIcon icon={faCarSide} size="3x" />
-          )}
-          <h2 className="title">Car 1</h2>
+        <div className="w-36 min-h-36 flex items-center justify-center">
+            {carLogo1 ? (
+                <img 
+                    src={carLogo1} 
+                    alt="Car 1 Logo" 
+                    className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform"
+                />
+            ) : (
+                <FontAwesomeIcon icon={faCarSide} size="5x" />
+            )}
+        </div>
+          <h2 className="title">
+            {make1 
+              ? model1 
+                ? `${make1.charAt(0).toUpperCase() + make1.slice(1)} - ${model1.charAt(0).toUpperCase() + model1.slice(1)}` // If both make and model are selected
+                : make1                // If only make is selected
+              : "Car 1"                // Default when neither make nor model is selected
+            }
+          </h2>
+
 
           {/* Make Dropdown */}
           <div className="relative w-full">
@@ -443,12 +457,26 @@ function Compare() {
   
         {/* Car 2 Input */}
         <div className="box_with_shadow">
-        {carLogo2 ? (
-            <img src={carLogo2} alt="Car 2 Logo" className="w-36 h-36 object-contain mx-auto  hover:scale-125 transition-transform" />
-          ) : (
-            <FontAwesomeIcon icon={faCarSide} size="3x" className="transform scale-x-[-1]" />
-          )}
-          <h2 className="title">Car 2</h2>
+        <div className="w-36 min-h-36 flex items-center justify-center ">
+            {carLogo2 ? (
+                <img 
+                    src={carLogo2} 
+                    alt="Car 1 Logo" 
+                    className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform "
+                />
+            ) : (
+                <FontAwesomeIcon icon={faCarSide} size="5x" className="transform scale-x-[-1]"/>
+            )}
+        </div>
+          <h2 className="title">
+            {make2 
+              ? model2 
+                ? `${make2.charAt(0).toUpperCase() + make2.slice(1)} - ${model2.charAt(0).toUpperCase() + model2.slice(1)}` // If both make and model are selected
+                : make2                // If only make is selected
+              : "Car 2"                // Default when neither make nor model is selected
+            }
+          </h2>
+
   
           {/* Make 2 Input with Dropdown */}
           <div className="relative w-full">
