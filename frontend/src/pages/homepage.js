@@ -18,7 +18,10 @@ function Homepage() {
         className="max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] mb-5 border-4 border-gray-300 rounded-lg object-contain"
       />
       <p className="text-left text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
-        Two cars of your choice go head to head, see which one suites your needs using Car vs. Car! 
+        Two cars of your choice go head to head. See which one suites your needs using 
+      </p>
+      <p className="text-center text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
+        Car vs. Car! 
       </p>
       {!isLoggedIn &&
         <Link 
