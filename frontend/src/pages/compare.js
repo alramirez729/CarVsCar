@@ -372,7 +372,7 @@ function Compare() {
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
   
-      <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 my-10">
+      <div className="flex flex-col md:flex-row md:justify-between w-full max-w-4xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="box_with_shadow">
         {carLogo1 ? (
@@ -515,7 +515,7 @@ function Compare() {
         </div>
       </div>
   
-      <div className="flex flex-row gap-5 my-10 justify-center">
+      <div className="flex flex-row gap-5 my-0 justify-center">
         <button onClick={handleCompare} className="general-button-styling">
           Compare
         </button>
