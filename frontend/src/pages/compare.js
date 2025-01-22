@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
-import carMakes from './carMakes';
 import SingleMetricChart from './SingleMetricChart';
 import { AuthContext } from '../AuthContext';
 
@@ -23,7 +22,9 @@ function Compare() {
   const [comparisonResult, setComparisonResult] = useState([]);
   const [nonNumericalComparison, setNonNumericalComparison] = useState(null);
 
-  const [carLogo1, setCarLogo1] = useState(null);  // New state for car logos
+  const [carMakes, setCarMakes] = useState([]);
+
+  const [carLogo1, setCarLogo1] = useState(null);  
   const [carLogo2, setCarLogo2] = useState(null);  
 
 
@@ -48,6 +49,29 @@ function Compare() {
       return () => clearTimeout(timer); // Cleanup on unmount or message change
     }
   }, [alertMessage]);
+
+
+  // Currently only fetches car brands that were produced in 2022
+  useEffect(() => {
+    const fetchCarMakes = async () => {
+      try {
+        const response = await fetch('https://api.api-ninjas.com/v1/carmakes?year=2022', {
+          method: 'GET',
+          headers: { 'X-Api-Key': process.env.REACT_APP_API_KEY },
+        });
+        if (response.ok) {
+          const makes = await response.json();
+          setCarMakes(makes); // Store the car makes in state
+        } else {
+          console.error('Failed to fetch car makes:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching car makes:', error);
+      }
+    };
+
+    fetchCarMakes();
+  }, []);
 
 
   //autoscroll when clicking the compare button
