@@ -67,70 +67,93 @@ function Compare() {
   // Function to fetch data for a given make, model, and year
   const fetchCarData = async (make, model, year) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cars?limit=20make=${make}&model=${model}&year=${year}`);
-      const contentType = response.headers.get('content-type');
-      if (response.ok && contentType && contentType.includes('application/json')) {
-        return await response.json();
-      } else {
-        console.error('Error fetching car data:', await response.text());
-        return [];
-      }
+        const response = await fetch(
+            `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&year=${year}&limit=75`,
+            {
+              method: 'GET',
+              headers: { 'X-Api-Key': process.env.REACT_APP_API_KEY },
+            }
+        );
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error('Error fetching car data:', await response.text());
+            return [];
+        }
     } catch (error) {
-      console.error('Error fetching car data:', error);
-      return [];
+        console.error('Error fetching car data:', error);
+        return [];
     }
-  };
+};
 
-  const fetchSuggestions = async (query = '', type, make = '', model = '', carNumber) => {
-    if (!carNumber) {
+
+const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
+  if (!carNumber) {
       console.error('carNumber is missing. You must pass carNumber explicitly (1 or 2).');
       return;
-    }
-    try {
-      let endpoint = `http://localhost:3000/api/cars?${type}=${query}`;
+  }
+
+  try {
+      let endpoint = '';
+
+      // Adjust endpoint based on type
       if (type === 'model') {
-        endpoint = `http://localhost:3000/api/cars?make=${make}`;
-      }
-      if (type === 'year') {
-        endpoint = `http://localhost:3000/api/cars?make=${make}&model=${model}`;
-      }
-  
-      //console.log('Fetching suggestions from:', endpoint); // Debugging log
-  
-      const response = await fetch(endpoint);
-      if (!response.ok) {
-        console.error(`Error fetching ${type} suggestions: ${response.statusText}`);
-        return;
-      }
-  
-      const data = await response.json();
-  
-      // Update the correct suggestion state
-      if (type === 'model') {
-        if (carNumber === 1) {
-          setModelSuggestions1((prev) => {
-            console.log('Updating model suggestions for Car 1:', data);
-            return [...new Set(data.map((car) => car.model))];
-          });
-        } else if (carNumber === 2) {
-          setModelSuggestions2((prev) => {
-            console.log('Updating model suggestions for Car 2:', data);
-            return [...new Set(data.map((car) => car.model))];
-          });
-        }
+          if (!make) {
+              console.error('Make is required for fetching models.');
+              return;
+          }
+          endpoint = `https://api.api-ninjas.com/v1/carmodels?make=${make}`;
       } else if (type === 'year') {
-        if (carNumber === 1) {
-          setYearSuggestions1([...new Set(data.map((car) => car.year))].sort((a, b) => b - a));
-          console.log('Updating year suggestions for Car 1');
-        } else if (carNumber === 2) {
-          setYearSuggestions2([...new Set(data.map((car) => car.year))].sort((a, b) => b - a));
-          console.log('Updating year suggestions for Car 2');
-        }
+          if (!make || !model) {
+              console.error('Make and Model are required for fetching years.');
+              return;
+          }
+          endpoint = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
+      } else {
+          console.error(`Invalid type: ${type}`);
+          return;
       }
-    } catch (error) {
-      console.error(`Error fetching ${type} suggestions:`, error);
-    }
-  };
+
+      // Make the API request
+      const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+              'X-Api-Key': process.env.REACT_APP_API_KEY,
+          },
+      });
+
+      if (!response.ok) {
+          console.error(`Error fetching ${type} suggestions: ${response.statusText}`);
+          return;
+      }
+
+      const data = await response.json();
+
+      // Update the state based on type
+      if (type === 'model') {
+          if (carNumber === 1) {
+              setModelSuggestions1(data);
+              console.log('Model suggestions for Car 1:', data);
+          } else if (carNumber === 2) {
+              setModelSuggestions2(data);
+              console.log('Model suggestions for Car 2:', data);
+          }
+      } else if (type === 'year') {
+          const years = [...new Set(data.map((car) => car.year))].sort((a, b) => b - a);
+          if (carNumber === 1) {
+              setYearSuggestions1(years);
+              console.log('Year suggestions for Car 1:', years);
+          } else if (carNumber === 2) {
+              setYearSuggestions2(years);
+              console.log('Year suggestions for Car 2:', years);
+          }
+      }
+  } catch (error) {
+      console.error(`Error fetching ${type} suggestions for Car ${carNumber}:`, error);
+  }
+};
+
+
 
   const fetchCarLogo = async (make, setLogoState) => {
     try {
@@ -403,7 +426,7 @@ function Compare() {
               value={make1}
               onChange={(e) => {
                 setMake1(e.target.value);
-                fetchSuggestions('', 'model', e.target.value, '', 1);
+                fetchSuggestions('model', e.target.value, '', 1);
               }}
               className="dropdown_input_styling"
             >
@@ -424,7 +447,7 @@ function Compare() {
               onChange={(e) => {
                 const selectedModel = e.target.value;
                 setModel1(selectedModel);  
-                fetchSuggestions('', 'year', make1, selectedModel, 1);            
+                fetchSuggestions('year', make1, selectedModel, 1);            
               }}
               className="dropdown_input_styling"
             >
@@ -485,7 +508,7 @@ function Compare() {
               value={make2}
               onChange={(e) => {
                 setMake2(e.target.value);
-                fetchSuggestions('', 'model', e.target.value, '', 2); // Fetch models for the selected make
+                fetchSuggestions('model', e.target.value, '', 2); // Fetch models for the selected make
               }}
               className="dropdown_input_styling"
             >
@@ -505,7 +528,7 @@ function Compare() {
               value={model2}
               onChange={(e) => {
                 setModel2(e.target.value)
-                fetchSuggestions('', 'year', make2, e.target.value, 2);
+                fetchSuggestions('year', make2, e.target.value, 2);
               }}
               className="dropdown_input_styling"
             >

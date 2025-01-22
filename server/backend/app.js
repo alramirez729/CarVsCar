@@ -2,19 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const axios = require('axios'); // Import axios for HTTP requests
-const userRoutes = require('./routes/users'); // Import the combined user routes
+const axios = require('axios');
+const userRoutes = require('./routes/users');
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-
-// Enable CORS
 app.use(cors());
 
-// MongoDB connection string from environment variable
 const dbURI = process.env.DB_URL;
 
 if (!dbURI) {
@@ -31,34 +27,63 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     })
     .catch(err => console.log(err));
 
-// Use the combined user routes
 app.use('/users', userRoutes);
 
-
-// Fetch car data from the free test API and serve it
-app.get('/api/cars', async (req, res) => {
+// Fetch car makes
+app.get('/api/carmakes', async (req, res) => {
     try {
         const apiKey = process.env.API_KEY;
-        const { make, model, allMakes } = req.query;
 
-        if (allMakes === 'true') {
-            const response = await axios.get(`https://api.api-ninjas.com/v1/carmakes`, {
-                headers: { 'X-Api-Key': apiKey }
+        const response = await axios.get(`https://api.api-ninjas.com/v1/carmakes`, {
+            headers: { 'X-Api-Key': apiKey },
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching car makes:', error.message);
+
+        if (error.response) {
+            return res.status(error.response.status).json({
+                message: error.response.data || 'Error fetching car makes',
             });
         }
 
-        let apiUrl = `https://api.api-ninjas.com/v1/cars?`;
-        if (make) apiUrl += `make=${make}&`;
-        if (model) apiUrl += `model=${model}&`;
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Fetch car models
+app.get('/api/carmodels', async (req, res) => {
+    try {
+        const { make } = req.query;
+        const response = await axios.get(`https://api.api-ninjas.com/v1/carmodels?make=${make}`, {
+            headers: { 'X-Api-Key': process.env.API_KEY },
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching car models:', error.message);
+        res.status(500).json({ error: 'Failed to fetch car models' });
+    }
+});
+
+
+// Fetch car details
+app.get('/api/cars', async (req, res) => {
+    try {
+        const apiKey = process.env.API_KEY;
+        const { make, model, year, limit = 10, offset = 0 } = req.query;
+
+        if (!make || !model) {
+            return res.status(400).json({ message: 'Make and Model are required to fetch car details' });
+        }
+
+        let apiUrl = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${model}&limit=${limit}&offset=${offset}`;
+        if (year) apiUrl += `&year=${year}`;
 
         const response = await axios.get(apiUrl, {
-            headers: { 'X-Api-Key': apiKey }
+            headers: { 'X-Api-Key': apiKey },
         });
 
-        console.log(response.data);
-        console.log('Fetching data from:', apiUrl); // Log the API URL for debugging
-
-        // Only return the necessary fields for comparison
         const carData = response.data.map(car => ({
             make: car.make,
             model: car.model,
@@ -74,7 +99,6 @@ app.get('/api/cars', async (req, res) => {
             class: car.class,
         }));
 
-        // Check if data exists
         if (carData.length === 0) {
             return res.status(404).json({ message: 'No cars found.' });
         }
@@ -84,9 +108,8 @@ app.get('/api/cars', async (req, res) => {
         console.error('Error fetching car data:', error.message);
 
         if (error.response) {
-            // Provide more specific error messages for failed external API calls
             return res.status(error.response.status).json({
-                message: error.response.data || 'Error fetching data from external API'
+                message: error.response.data || 'Error fetching car data',
             });
         }
 
@@ -94,7 +117,7 @@ app.get('/api/cars', async (req, res) => {
     }
 });
 
-// Default route for health check or home
+// Default route for health check
 app.get('/', (req, res) => {
     res.send('Backend server is running');
 });
