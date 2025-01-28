@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import SingleMetricChart from './SingleMetricChart';
 import { AuthContext } from '../AuthContext';
+import ReactSpeedometer from "react-d3-speedometer";
+
 
 function Compare() {
 
@@ -37,6 +39,19 @@ function Compare() {
 
   const resultsRef = useRef(null);
 
+  const [fuelEfficiency1, setFuelEfficiency1] = useState(0);
+  const [power1, setPower1] = useState(0);
+  const [overallRating1, setOverallRating1] = useState(0);
+
+  const [fuelEfficiency2, setFuelEfficiency2] = useState(0);
+  const [power2, setPower2] = useState(0);
+  const [overallRating2, setOverallRating2] = useState(0);
+
+  const [comparisonData, setComparisonData] = useState([]);
+
+
+
+
 
   //alerts for button if input fields are incomplete/incorrect
   useEffect(() => {
@@ -49,6 +64,57 @@ function Compare() {
       return () => clearTimeout(timer); // Cleanup on unmount or message change
     }
   }, [alertMessage]);
+
+
+  //Speedometer
+  useEffect(() => {
+    if (comparisonData.length === 2) {
+      const car1 = comparisonData[0];
+      const car2 = comparisonData[1];
+  
+      const maxMpg = 50; // Maximum MPG for scaling
+      const maxCylinders = 12; // Maximum cylinders for scaling
+  
+      // Weights for metrics
+      const weightFuelEfficiency = 0.7;
+      const weightPower = 0.3;
+  
+      // Calculate normalized scores
+      const calculateFuelEfficiencyScore = (mpg) => Math.min((mpg / maxMpg) * 100, 100);
+      const calculatePowerScore = (cylinders) => Math.min((cylinders / maxCylinders) * 100, 100);
+  
+      // Calculate overall rating
+      const calculateOverallRating = (fuelEfficiency, power) => {
+        const fuelEfficiencyScore = calculateFuelEfficiencyScore(fuelEfficiency);
+        const powerScore = calculatePowerScore(power);
+  
+        return Math.round(
+          (fuelEfficiencyScore * weightFuelEfficiency + powerScore * weightPower) /
+            (weightFuelEfficiency + weightPower)
+        );
+      };
+  
+      // Update speedometer values
+      setFuelEfficiency1(car1?.combination_mpg || 0);
+      setFuelEfficiency2(car2?.combination_mpg || 0);
+  
+      setPower1(car1?.cylinders || 0);
+      setPower2(car2?.cylinders || 0);
+  
+      setOverallRating1(
+        calculateOverallRating(car1?.combination_mpg || 0, car1?.cylinders || 0)
+      );
+      setOverallRating2(
+        calculateOverallRating(car2?.combination_mpg || 0, car2?.cylinders || 0)
+      );
+    }
+  }, [comparisonData]);
+  
+  
+  
+  
+  
+  
 
 
   // Currently only fetches car brands that were produced in 2022
@@ -294,9 +360,14 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         return;
       }
   
+
+      setComparisonData([data1[0], data2[0]]);
+
       // Generate comparisons
       setComparisonResult(generateComparison(data1, data2)); // Numerical
       setNonNumericalComparison(generateNonNumericalComparison(data1, data2)); // Non-Numerical
+      console.log('Comparison Result:', comparisonResult);
+
   
     } catch (error) {
       console.error('Error comparing cars:', error);
@@ -649,6 +720,87 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           <p>No comparison results to display yet.</p>
         )}
       </div>
+      
+      <div className="my-24 font-mono font-bold text-6xl">Overall Ratings: </div>
+      <div className="flex justify-between ">
+        {/* Car 1 Speedometers */}
+        <div className="flex flex-col items-center space-y-6 space-x-10">
+          <h3 className="text-lg font-bold">Car 1</h3>
+          <ReactSpeedometer
+            value={fuelEfficiency1}
+            minValue={0}
+            maxValue={100}
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Fuel Efficiency: ${value}"
+          />
+          <ReactSpeedometer
+            value={power1}
+            minValue={0}
+            maxValue={10} // Assuming 10 cylinders max
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Power: ${value}"
+          />
+          <ReactSpeedometer
+            value={overallRating1}
+            minValue={0}
+            maxValue={100}
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Overall Rating: ${value}"
+          />
+        </div>
+
+        {/* Car 2 Speedometers */}
+        <div className="flex flex-col items-center space-y-6 space-x-10">
+          <h3 className="text-lg font-bold">Car 2</h3>
+          <ReactSpeedometer
+            value={fuelEfficiency2}
+            minValue={0}
+            maxValue={100}
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Fuel Efficiency: ${value}"
+          />
+          <ReactSpeedometer
+            value={power2}
+            minValue={0}
+            maxValue={10} // Assuming 10 cylinders max
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Power: ${value}"
+          />
+          <ReactSpeedometer
+            value={overallRating2}
+            minValue={0}
+            maxValue={100}
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Overall Rating: ${value}"
+          />
+        </div>
+      </div>
+
+
 
 </div>
 );
