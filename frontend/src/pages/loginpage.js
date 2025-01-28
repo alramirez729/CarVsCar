@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../AuthContext'; // Import AuthContext
 
@@ -8,6 +8,7 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,6 +24,7 @@ function LoginPage() {
           if (token) {
             localStorage.setItem('token', token);
             setIsLoggedIn(true);
+            navigate('/compare');
           } else {
             setMessage('Login failed: No token received');
           }

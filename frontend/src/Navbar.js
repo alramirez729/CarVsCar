@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCodeCompare, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from './AuthContext';
@@ -7,10 +7,12 @@ import { AuthContext } from './AuthContext';
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate('');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
+    navigate('/login')
     console.log('User logged out');
   };
 
