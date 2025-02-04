@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
-import SingleMetricChart from './SingleMetricChart';
 import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
 
 function Compare() {
@@ -48,9 +48,6 @@ function Compare() {
   const [overallRating2, setOverallRating2] = useState(0);
 
   const [comparisonData, setComparisonData] = useState([]);
-
-
-
 
 
   //alerts for button if input fields are incomplete/incorrect
@@ -437,44 +434,158 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       return words.slice(1).join(" ") || metricLabel;
     };
   
-    return (
-      <div className="animate-fade-in flex flex-col items-start p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
-        {/* Metric Label and Explanation */}
-        <div className="flex items-center mb-2 w-full justify-between">
-          <h3 className="text-xl font-bold font-mono">{metricLabel}</h3>
-          <FontAwesomeIcon 
-            icon={faQuestionCircle} 
-            className="ml-2 text-blue-600 cursor-pointer " 
-            onClick={toggleExplanation} 
-          />
-        </div>
-        {explanationVisible && (
-          <p className="text-sm text-gray-600 mb-3 font-mono">
-            {metricExplanations[metric]}
-          </p>
-        )}
-        {/* Car 1 and Car 2 Cards */}
-        <div className="flex flex-row w-full gap-4">
-          {/* Car 1 Card */}
-          <div
-            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono
-              ${isCar1Better ? 'bg-green-500 scale-110' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}
-          >
-            <h4 className="font-semibold font-mono">{car1.make} - {car1.model} ({car1.year})</h4>
-            <p className="mt-1">{car1.value + " " + getShortMetricLabel(metricLabel)}</p>
+    // ✅ Bar Chart method (no separate file)
+  const renderBarChart = () => {
+    const data = [
+      {
+        metric: metricLabel,
+        [car1.make]: car1Value,
+        [car2.make]: car2Value,
+      },
+    ];
+
+    // Custom Axis Tick for Tailwind Styling
+    const CustomTick = ({ x, y, payload }) => (
+      <text
+        x={x}
+        y={y}
+        dy={16} // Adjust vertical positioning
+        textAnchor="middle"
+        className="text-gray-600 text-sm font-mono"
+      >
+        {payload.value}
+      </text>
+    );
+
+    // Custom Y-Axis Label
+    const CustomYAxisTick = ({ x, y, payload }) => (
+      <text
+        x={x}
+        y={y}
+        dx={-8} // Adjust horizontal positioning
+        textAnchor="end"
+        className="text-gray-600 text-sm font-mono"
+      >
+        {payload.value}
+      </text>
+    );
+
+    const CustomLegend = ({ payload }) => (
+      <div className="flex justify-center gap-4 mt-4">
+        {payload.map((entry, index) => (
+          <div key={`legend-item-${index}`} className="flex items-center gap-2">
+            <span
+              className="block w-4 h-4 rounded-full ring-0 ring-slate-500"
+              style={{ backgroundColor: entry.color }}
+            ></span>
+            <span className="text-sm font-mono text-gray-700">{entry.value.charAt(0).toUpperCase() + entry.value?.slice(1)}</span>
           </div>
-          {/* Car 2 Card */}
-          <div
-            className={`animate-fade-in flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-900 font-mono 
-              ${isCar2Better ? 'bg-green-500 scale-110' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}
-          >
-            <h4 className="font-semibold font-mono">{car2.make} - {car2.model} ({car2.year})</h4>
-            <p className="mt-1">{car2.value + " " + getShortMetricLabel(metricLabel)}</p>
-          </div>
-        </div>
+        ))}
       </div>
     );
+
+    const CustomTooltip = ({ active, payload, label, coordinate }) => {
+  
+      if (active && payload && payload.length) {
+        const tooltipStyle = {
+          position: 'absolute',
+          left: `${coordinate.x + 100}px`, // 20px offset to the right of the bar
+          top: `${coordinate.y - 10}px`, // Slight adjustment vertically
+          transform: 'translateX(0)', // Prevent shifting
+          zIndex: 10,
+          width: '250px',
+        };
+        return (
+          <div
+          style={tooltipStyle} 
+          className="bg-white border border-gray-300 p-4 rounded-lg shadow-md font-mono ring-2 ring-slate-500">
+            <p className="font-bold text-lg mb-2 italic">{label}</p>
+            {payload.map((entry, index) => (
+              <div key={`item-${index}`} className="text-sm">
+                <span
+                  className="font-medium italic font-bold font-mono"
+                  style={{ color: entry.color }}
+                >
+                  {entry.name}
+                </span>: {entry.value} {label}
+              </div>
+            ))}
+          </div>
+        );
+      }
+      return null;
+    };
+
+    return (
+      <BarChart barGap={30} width={500} height={250} data={data}>
+        <XAxis dataKey="metric" 
+              tick={<CustomTick />} // Custom Tick Component for X-Axis
+        />
+        <YAxis 
+          tick={<CustomYAxisTick />} // Custom Tick Component for Y-Axis
+        />
+        <Tooltip content={<CustomTooltip />}/>
+        <Legend content={<CustomLegend />} />
+        <Bar
+          className="font-mono"
+          dataKey={car1.make}
+          fill={isCar1Better ? 'green' : isCar2Better ? 'pink' : 'gray'}
+          barSize={70}
+        />
+        <Bar
+          className="font-mono"
+          dataKey={car2.make}
+          fill={isCar2Better ? 'green' : isCar1Better ? 'pink' : 'gray'}
+          barSize={70}
+        />
+      </BarChart>
+    );
   };
+
+  return (
+    <div className="flex flex-col p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
+      {/* Metric Label and Explanation */}
+      <div className="flex items-center justify-between w-full mb-2">
+        <h3 className="text-xl font-bold font-mono">{metricLabel}</h3>
+        <FontAwesomeIcon 
+          icon={faQuestionCircle} 
+          className="ml-2 text-blue-600 cursor-pointer" 
+          onClick={toggleExplanation} 
+        />
+      </div>
+
+      {/* Explanation Toggle */}
+      {explanationVisible && (
+        <p className="text-sm text-gray-600 mb-3 font-mono">
+          {metricExplanations[metric]}
+        </p>
+      )}
+
+      {/* Car 1 and Car 2 Cards */}
+      <div className="flex flex-row w-full gap-4">
+        {/* Car 1 Box */}
+        <div className={`flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono
+            ${isCar1Better ? 'bg-green-500 scale-105 text-white' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}>
+          <h4 className="font-semibold">{car1.make} - {car1.model} ({car1.year})</h4>
+          <p className="mt-1 text-lg font-bold">{car1.value} {getShortMetricLabel(metricLabel)}</p>
+        </div>
+
+        {/* Car 2 Box */}
+        <div className={`flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono
+            ${isCar2Better ? 'bg-green-500 scale-105 text-white' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}>
+          <h4 className="font-semibold">{car2.make} - {car2.model} ({car2.year})}</h4>
+          <p className="mt-1 text-lg font-bold">{car2.value} {getShortMetricLabel(metricLabel)}</p>
+        </div>
+      </div>
+
+      {/* Bar Chart Appears Below the Metric Row (Centered) */}
+      <div className="flex justify-center items-center w-full mt-4">
+        {renderBarChart()}
+      </div>
+
+    </div>
+  );
+};
 
   // Explanations for each metric in layman's terms
   const metricExplanations = {
@@ -704,16 +815,11 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       {nonNumericalComparison && nonNumericalComparison}
 
       {/* Numerical Comparison Results */}
-      <div ref={resultsRef} className="mt-5 w-full max-w-4xl flex flex-col gap-6">
+      <div ref={resultsRef} className="w-full max-w-4xl flex flex-col gap-6 items-center">
         {comparisonResult.length > 0 ? (
           comparisonResult.map((metricComponent, index) => (
-            <div key={index} className="flex flex-row items-center gap-10">
-              <div className="w-1/2">{metricComponent}</div>
-              {metricComponent.props.car1?.value && (
-                <div className="w-1/2 flex flex-col gap-6">
-                  <SingleMetricChart comparisonData={metricComponent.props} />
-                </div>
-              )}
+            <div key={index} className="flex flex-row items-center">
+              <div className>{metricComponent}</div>
             </div>
           ))
         ) : (
