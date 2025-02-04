@@ -573,7 +573,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         {/* Car 2 Box */}
         <div className={`flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono
             ${isCar2Better ? 'bg-green-500 scale-105 text-white' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}>
-          <h4 className="font-semibold">{car2.make} - {car2.model} ({car2.year})}</h4>
+          <h4 className="font-semibold">{car2.make} - {car2.model} ({car2.year})</h4>
           <p className="mt-1 text-lg font-bold">{car2.value} {getShortMetricLabel(metricLabel)}</p>
         </div>
       </div>
