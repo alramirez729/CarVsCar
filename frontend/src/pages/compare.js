@@ -727,6 +727,17 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <div className="flex flex-col items-center space-y-6 space-x-10">
           <h3 className="text-lg font-bold">Car 1</h3>
           <ReactSpeedometer
+            value={overallRating1}
+            minValue={0}
+            maxValue={100}
+            needleColor="red"
+            startColor="green"
+            endColor="red"
+            segments={10}
+            textColor="#000"
+            currentValueText="Overall Rating: ${value}"
+          />
+          <ReactSpeedometer
             value={fuelEfficiency1}
             minValue={0}
             maxValue={100}
@@ -748,8 +759,14 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             textColor="#000"
             currentValueText="Power: ${value}"
           />
+          
+        </div>
+
+        {/* Car 2 Speedometers */}
+        <div className="flex flex-col items-center space-y-6 space-x-10">
+          <h3 className="text-lg font-bold">Car 2</h3>
           <ReactSpeedometer
-            value={overallRating1}
+            value={overallRating2}
             minValue={0}
             maxValue={100}
             needleColor="red"
@@ -759,11 +776,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             textColor="#000"
             currentValueText="Overall Rating: ${value}"
           />
-        </div>
-
-        {/* Car 2 Speedometers */}
-        <div className="flex flex-col items-center space-y-6 space-x-10">
-          <h3 className="text-lg font-bold">Car 2</h3>
           <ReactSpeedometer
             value={fuelEfficiency2}
             minValue={0}
@@ -786,17 +798,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             textColor="#000"
             currentValueText="Power: ${value}"
           />
-          <ReactSpeedometer
-            value={overallRating2}
-            minValue={0}
-            maxValue={100}
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Overall Rating: ${value}"
-          />
+          
         </div>
       </div>
 
