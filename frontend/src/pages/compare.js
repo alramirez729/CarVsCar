@@ -549,8 +549,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <h3 className="text-xl font-bold font-mono">{metricLabel}</h3>
         <FontAwesomeIcon 
           icon={faQuestionCircle} 
-          className="ml-2 text-blue-600 cursor-pointer" 
-          onClick={toggleExplanation} 
+          className="ml-2 text-blue-600 cursor-pointer transition-transform duration-200 hover:scale-110"           onClick={toggleExplanation} 
         />
       </div>
 
