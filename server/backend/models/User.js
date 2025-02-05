@@ -17,9 +17,9 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    age: {
-        type: Number,
-        required: true
+    birthdate: {
+        type: Date,
+        required: false,
     },
     biography: {
         type: String, // Adding biography field
@@ -40,6 +40,22 @@ userSchema.pre('save', async function (next) {
     } catch (error) {
       next(error);
     }
+});
+
+// Virtual Field to Calculate Age
+userSchema.virtual('calculatedAge').get(function () {
+    if (this.birthdate) {
+        const today = new Date();
+        const birthDate = new Date(this.birthdate);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+    return null;
 });
   
 

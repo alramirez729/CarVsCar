@@ -5,19 +5,23 @@ function RegisterPage() {
     const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [age, setAge] = useState('');
+    const [birthdate, setBirthdate] = useState('');
     const [message, setMessage] = useState('');
 
     const handleRegister = async (e) => {
         e.preventDefault();
-
+    
         try {
+            // Convert birthdate to correct format
+            const formattedBirthdate = birthdate ? new Date(birthdate).toISOString().split('T')[0] : null;
+    
             const response = await axios.post('http://localhost:3000/users/register', {
                 username,
                 email,
                 password,
-                age
+                birthdate: formattedBirthdate  // Sends YYYY-MM-DD format
             });
+    
             setMessage(response.data.message);
             console.log('Registration successful:', response.data.user);
         } catch (error) {
@@ -29,6 +33,7 @@ function RegisterPage() {
             console.error(error);
         }
     };
+    
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
@@ -69,14 +74,14 @@ function RegisterPage() {
                         />
                     </div>
                     <div>
-                        <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age</label>
+                        <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">Birthdate</label>
                         <input 
-                            type="number" 
-                            id="age"
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
+                            type="date"  
+                            id="birthdate"
+                            value={birthdate}
+                            onChange={(e) => setBirthdate(e.target.value)}
                             required
-                            className="mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            className="mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full cursor-pointer"
                         />
                     </div>
                     <button 

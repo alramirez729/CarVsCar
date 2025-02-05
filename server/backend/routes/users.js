@@ -10,18 +10,28 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // POST /register
 router.post('/register', async (req, res) => {
-    const { username, email, password, age } = req.body;
-  
-    try {
-      console.log('Raw password:', password); // Log the raw password
-      const newUser = new User({ username, email, password, age }); // Pass the raw password
-      await newUser.save(); // `pre('save')` middleware will hash the password
-      res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
+  const { username, email, password, birthdate } = req.body;
+
+  try {
+      const formattedBirthdate = birthdate ? new Date(birthdate) : null;
+
+      const newUser = new User({ 
+          username, 
+          email, 
+          password, 
+          birthdate: formattedBirthdate  // Ensure birthdate is stored correctly
+      });
+
+      await newUser.save();
+      res.status(201).json({ message: 'User registered successfully', user: newUser });
+
+  } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+
   
   
 // POST /login
@@ -59,9 +69,20 @@ router.post('/login', async (req, res) => {
 // GET /me
 router.get('/me', authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('username email biography -_id');
+    const user = await User.findById(req.userId).select('username email biography birthdate -_id');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+
+    let age = null;
+    if (user.birthdate) {
+      const today = new Date();
+      const birthDate = new Date(user.birthdate);
+      age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--; // Adjust if birthday hasn't occurred yet this year
+      }
     }
 
     res.status(200).json({ user });
@@ -73,16 +94,21 @@ router.get('/me', authenticate, async (req, res) => {
 
 // PUT /update
 router.put('/update', authenticate, async (req, res) => {
-    const allowedUpdates = ['username', 'email', 'biography'];
+    const allowedUpdates = ['username', 'email', 'biography', 'birthdate'];
     const updates = req.body;
   
     try {
       const filteredUpdates = {};
       Object.keys(updates).forEach((key) => {
         if (allowedUpdates.includes(key)) {
-          filteredUpdates[key] = updates[key];
+          if (key === 'birthdate' && updates[key]) {
+            filteredUpdates[key] = new Date(updates[key]); // Ensure date format
+          } else {
+            filteredUpdates[key] = updates[key];
+          }
         }
       });
+
   
       console.log('Updating user:', req.userId, 'with updates:', filteredUpdates); // Debug log
   
