@@ -83,7 +83,7 @@ function AccountPage() {
       {Object.keys(userInfo).map((field) => (
         <div key={field} className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-center">
-            <label className="font-semibold text-gray-700 capitalize">{field}:</label>
+            <label className="font-semibold text-gray-700 capitalize font-mono text-xl">{field}:</label>
             {editField === field ? (
               <div className="flex items-center space-x-2">
                 <input
@@ -94,7 +94,7 @@ function AccountPage() {
                 />
                 <button
                   onClick={() => handleSaveClick(field)}
-                  className="text-green-500 hover:text-green-700"
+                  className="font-mono text-green-500 hover:text-green-700"
                 >
                   <FontAwesomeIcon icon={faSave} />
                 </button>
@@ -128,7 +128,7 @@ function AccountPage() {
     Security: <div className="bg-white p-6 rounded-lg shadow-md">Security and Password Options</div>,
     Logout: (
       <button
-        className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
         onClick={handleLogout}
       >
         Logout
@@ -137,15 +137,15 @@ function AccountPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-800 text-white p-6 space-y-4">
-        <h2 className="text-xl font-bold mb-6">Account</h2>
-        <ul className="space-y-2">
+      <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
+        <h2 className="font-mono text-3xl font-bold mb-6 underline">Account Page:</h2>
+        <ul className="space-y-2 -mx-2 text-xl">
           {Object.keys(sections).map((section) => (
             <li
               key={section}
-              className={`cursor-pointer p-3 rounded-lg transition duration-300 ${
+              className={`font-mono cursor-pointer p-3 rounded-lg transition duration-300 ${
                 selectedSection === section ? 'bg-cyan-500' : 'hover:bg-gray-700'
               }`}
               onClick={() => setSelectedSection(section)}
@@ -157,9 +157,9 @@ function AccountPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
-        <h1 className="text-2xl font-semibold mb-6 text-gray-800">{selectedSection}</h1>
-        <div className="space-y-6">{sections[selectedSection]}</div>
+      <main className="flex-1 p-8 ml-72 h-screen overflow-y-auto flex flex-col items-center">
+      <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-mono p-2">{selectedSection}</h1>
+        <div className="font-mono space-y-6">{sections[selectedSection]}</div>
       </main>
     </div>
   );
