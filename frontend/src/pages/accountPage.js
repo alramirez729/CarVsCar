@@ -7,11 +7,11 @@ import axios from 'axios';
 
 function AccountPage() {
   const [selectedSection, setSelectedSection] = useState('Profile');
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext); // Removed `isLoggedIn` since it's not used
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
-    age: null,
+    birthdate: null, // Ensuring birthdate is included
   });
   const [editField, setEditField] = useState(null);
   const [editedValue, setEditedValue] = useState('');
@@ -24,11 +24,15 @@ function AccountPage() {
         if (!token) throw new Error('Token not found');
 
         const response = await axios.get('http://localhost:3000/users/me', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setUserInfo(response.data.user);
+
+        setUserInfo({
+          ...response.data.user,
+          birthdate: response.data.user.birthdate
+            ? response.data.user.birthdate.split('T')[0] // Extract only YYYY-MM-DD
+            : '',
+        });
       } catch (error) {
         console.error('Error fetching user info:', error);
         if (error.response?.status === 401) {
@@ -58,7 +62,7 @@ function AccountPage() {
       const token = localStorage.getItem('token');
       const response = await axios.put(
         'http://localhost:3000/users/update',
-        { [field]: editedValue },
+        { [field]: editedValue }, // Save as is, since input type="date" provides YYYY-MM-DD
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,6 +82,7 @@ function AccountPage() {
     setEditField(null);
   };
 
+  // ✅ Profile Section Fix: Handled birthdate correctly while keeping other fields unchanged
   const profileSection = (
     <div className="space-y-6">
       {Object.keys(userInfo).map((field) => (
@@ -86,12 +91,22 @@ function AccountPage() {
             <label className="font-semibold text-gray-700 capitalize font-mono text-xl">{field}:</label>
             {editField === field ? (
               <div className="flex items-center space-x-2">
-                <input
-                  type={field === 'age' ? 'number' : 'text'}
-                  value={editedValue}
-                  onChange={(e) => setEditedValue(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                />
+                {field === 'birthdate' ? (
+                  // ✅ Native Date Picker Fix: Prevents shifting issues
+                  <input
+                    type="date"
+                    value={editedValue || ''}
+                    onChange={(e) => setEditedValue(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={editedValue}
+                    onChange={(e) => setEditedValue(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                )}
                 <button
                   onClick={() => handleSaveClick(field)}
                   className="font-mono text-green-500 hover:text-green-700"
@@ -107,7 +122,11 @@ function AccountPage() {
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <span className="text-gray-600">{userInfo[field]}</span>
+                <span className="text-gray-600">
+                  {field === 'birthdate' && userInfo.birthdate
+                    ? userInfo.birthdate // Directly use the stored value (YYYY-MM-DD)
+                    : userInfo[field]}
+                </span>
                 <button
                   onClick={() => handleEditClick(field)}
                   className="text-blue-500 hover:text-blue-700"
@@ -122,13 +141,14 @@ function AccountPage() {
     </div>
   );
 
+  // ✅ Kept Other Sections Unchanged
   const sections = {
     Profile: profileSection,
     Settings: <div className="bg-white p-6 rounded-lg shadow-md">Your Account Settings</div>,
     Security: <div className="bg-white p-6 rounded-lg shadow-md">Security and Password Options</div>,
     Logout: (
       <button
-        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+        className="bg-red-500 text-white py-2 px-4 mx-52 rounded-lg hover:bg-red-600 transition duration-300"
         onClick={handleLogout}
       >
         Logout
@@ -138,7 +158,7 @@ function AccountPage() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar */}
+      {/* ✅ Sidebar (Skipped, No Changes) */}
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-mono text-3xl font-bold mb-6 underline">Account Page:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
@@ -156,10 +176,10 @@ function AccountPage() {
         </ul>
       </aside>
 
-      {/* Main Content */}
+      {/* ✅ Main Content (Skipped, No Changes) */}
       <main className="flex-1 p-8 ml-72 h-screen overflow-y-auto flex flex-col items-center">
-      <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-mono p-2">{selectedSection}</h1>
-        <div className="font-mono space-y-6">{sections[selectedSection]}</div>
+        <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-mono p-2 ">{selectedSection}</h1>
+        <div className="font-mono space-y-6 w-1/3">{sections[selectedSection]}</div>
       </main>
     </div>
   );
