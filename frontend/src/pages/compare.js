@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
@@ -48,6 +49,19 @@ function Compare() {
   const [overallRating2, setOverallRating2] = useState(0);
 
   const [comparisonData, setComparisonData] = useState([]);
+
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'tab'
+  const [activeTab, setActiveTab] = useState(0);
+  const sections = ['Overall Ratings', 'Car Features', 'Performance Charts'];
+  
+  const handleNextTab = () => {
+    setActiveTab((prev) => (prev + 1) % sections.length);
+  };
+  
+  const handlePrevTab = () => {
+    setActiveTab((prev) => (prev - 1 + sections.length) % sections.length);
+  };
+  
 
 
   //alerts for button if input fields are incomplete/incorrect
@@ -140,7 +154,7 @@ function Compare() {
   //autoscroll when clicking the compare button
   useEffect(() => {
     if (comparisonResult.length > 0 && resultsRef.current) {
-      const offset = -100; // Adjust this value to move the scroll position up
+      const offset = -1600; // Adjust this value to move the scroll position up
       const top = resultsRef.current.getBoundingClientRect().top + window.pageYOffset + offset;
   
       window.scrollTo({
@@ -292,7 +306,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     };
 
     return (
-      <div className="flex flex-col items-center p-6 bg-gradient-to-br from-blue-100 to-gray-50 rounded-lg shadow-md border border-gray-200 w-2/3 mx-auto my-10">
+      <div className="flex flex-col items-center p-6 bg-gradient-to-br from-blue-100 to-gray-50 
+                  rounded-lg shadow-md border border-gray-200 
+                  w-full max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto my-10">
             {/* Title */}
             <h2 className="text-2xl font-bold text-gray-700 mb-4 font-mono text-center">Car Feature Overview</h2>
             
@@ -378,6 +394,48 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     setShowAlert(true); // Show alert
     setTimeout(() => setShowAlert(false), 3000); // Hide after 3 seconds
   };
+
+  const renderSpeedometers = (title, overallRating, fuelEfficiency, power) => {
+    return (
+      <div className="flex flex-col items-center space-y-6">
+        <h3 className="text-lg font-bold">{title}</h3>
+        <ReactSpeedometer
+          value={overallRating}
+          minValue={0}
+          maxValue={100}
+          needleColor="red"
+          startColor="green"
+          endColor="red"
+          segments={10}
+          textColor="#000"
+          currentValueText="Overall Rating: ${value}"
+        />
+        <ReactSpeedometer
+          value={fuelEfficiency}
+          minValue={0}
+          maxValue={100}
+          needleColor="red"
+          startColor="green"
+          endColor="red"
+          segments={10}
+          textColor="#000"
+          currentValueText="Fuel Efficiency: ${value}"
+        />
+        <ReactSpeedometer
+          value={power}
+          minValue={0}
+          maxValue={10} // Assuming 10 cylinders max
+          needleColor="red"
+          startColor="green"
+          endColor="red"
+          segments={10}
+          textColor="#000"
+          currentValueText="Power: ${value}"
+        />
+      </div>
+    );
+  };
+  
 
 
   // Function to generate comparison
@@ -775,14 +833,28 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <button onClick={handleCompare} className="general-button-styling">
           Compare
         </button>
-
-        
-  
         {isLoggedIn && (
         <button className="general-button-styling" onClick={handleAISuggestion}>
           🪄 AI suggestion
         </button>
       )}
+      </div>
+
+      {/* Toggle Button for View Mode */}
+      <div className="flex flex-row space-x-4 my-4">
+        <button
+          className={`mt-8 text-blue font-mono py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+          onClick={() => setViewMode('list')}
+        >
+          List View
+        </button>
+        <button
+          className={`mt-8 text-blue font-mono py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+          onClick={() => setViewMode('tab')}
+        >
+          Tab View
+        </button>
+      </div>
   
         {/* Custom Alert */}
         {alertMessage && (
@@ -808,108 +880,90 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             <span className="font-medium ">Sorry!</span> Still working on this feature :)
           </div>
         )}
-      </div>
+      
   
-      {/* Non-Numerical Comparison Box */}
-      {nonNumericalComparison && nonNumericalComparison}
+      
 
-      {/* Numerical Comparison Results */}
-      <div className="my-24 font-mono font-bold text-6xl">Overall Ratings: </div>
-      <div className="flex justify-between ">
-        {/* Car 1 Speedometers */}
-        <div className="flex flex-col items-center space-y-6 space-x-10">
-          <h3 className="text-lg font-bold">Car 1</h3>
-          <ReactSpeedometer
-            value={overallRating1}
-            minValue={0}
-            maxValue={100}
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Overall Rating: ${value}"
-          />
-          <ReactSpeedometer
-            value={fuelEfficiency1}
-            minValue={0}
-            maxValue={100}
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Fuel Efficiency: ${value}"
-          />
-          <ReactSpeedometer
-            value={power1}
-            minValue={0}
-            maxValue={10} // Assuming 10 cylinders max
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Power: ${value}"
-          />
-          
-        </div>
 
-        {/* Car 2 Speedometers */}
-        <div className="flex flex-col items-center space-y-6 space-x-10">
-          <h3 className="text-lg font-bold">Car 2</h3>
-          <ReactSpeedometer
-            value={overallRating2}
-            minValue={0}
-            maxValue={100}
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Overall Rating: ${value}"
-          />
-          <ReactSpeedometer
-            value={fuelEfficiency2}
-            minValue={0}
-            maxValue={100}
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Fuel Efficiency: ${value}"
-          />
-          <ReactSpeedometer
-            value={power2}
-            minValue={0}
-            maxValue={10} // Assuming 10 cylinders max
-            needleColor="red"
-            startColor="green"
-            endColor="red"
-            segments={10}
-            textColor="#000"
-            currentValueText="Power: ${value}"
-          />
-          
-        </div>
-      </div>
-      <div ref={resultsRef} className="w-full max-w-4xl flex flex-col gap-6 items-center">
-        {comparisonResult.length > 0 ? (
-          comparisonResult.map((metricComponent, index) => (
-            <div key={index} className="flex flex-row items-center">
-              <div className>{metricComponent}</div>
+      {viewMode === 'list' ? (
+        <>
+          {/* Non-Numerical Comparison Box */}
+          {nonNumericalComparison && nonNumericalComparison}
+          {/* Numerical Comparison Results */}
+
+          <div className="font-mono font-bold text-6xl underline">Overall Ratings:</div>
+            <div className="flex justify-between my-10">
+              {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
+              {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
             </div>
-          ))
-        ) : (
-          <p>No comparison results to display yet.</p>
+          <div ref={resultsRef} className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full justify-center items-center">
+            {comparisonResult.length > 0 ? (
+              comparisonResult.map((metricComponent, index) => (
+                <div key={index} className="flex flex-row items-center">
+                  <div className>{metricComponent}</div>
+                </div>
+              ))
+            ) : (
+              <p>No comparison results to display yet.</p>
+            )}
+          </div>
+            </>
+          ) : (
+          <>
+            {/* Tab View */}
+            <div className="w-full flex flex-col items-center">
+              <h2 className="text-2xl font-bold mb-4">{sections[activeTab]}</h2>
+
+              <div className="flex flex-row items-center justify-between w-full max-w-4xl">
+                {/* Left Arrow */}
+                <button onClick={handlePrevTab} className="text-2xl p-2">
+                  <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
+
+                {/* Tab Content */}
+                <div className="w-full flex justify-center">
+                {activeTab === 0 && (
+                    <>
+                      <div className="flex justify-between w-full">
+                        {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
+                        {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
+                      </div>
+                    </>
+                  )}
+                  {activeTab === 1 && (
+                    <div className="w-full flex flex-col items-center">
+                      {/* Ensure nonNumericalComparison remains large */}
+                      <div className="w-full max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto">
+                        {nonNumericalComparison}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 2 && (
+                    <>
+                      <div className="grid grid-cols-2 md:grid-cols-2 gap-6 w-full items-center">
+                        {comparisonResult.map((metricComponent, index) => (
+                          <div key={index} className="flex flex-row items-center">
+                            {metricComponent}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Right Arrow */}
+                <button onClick={handleNextTab} className="text-2xl p-2">
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </button>
+              </div>
+            </div>
+          </>
         )}
-      </div>
+
+
+
       
-      
-
-
-
 </div>
 );
   
