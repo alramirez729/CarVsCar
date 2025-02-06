@@ -814,18 +814,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       {nonNumericalComparison && nonNumericalComparison}
 
       {/* Numerical Comparison Results */}
-      <div ref={resultsRef} className="w-full max-w-4xl flex flex-col gap-6 items-center">
-        {comparisonResult.length > 0 ? (
-          comparisonResult.map((metricComponent, index) => (
-            <div key={index} className="flex flex-row items-center">
-              <div className>{metricComponent}</div>
-            </div>
-          ))
-        ) : (
-          <p>No comparison results to display yet.</p>
-        )}
-      </div>
-      
       <div className="my-24 font-mono font-bold text-6xl">Overall Ratings: </div>
       <div className="flex justify-between ">
         {/* Car 1 Speedometers */}
@@ -906,6 +894,19 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           
         </div>
       </div>
+      <div ref={resultsRef} className="w-full max-w-4xl flex flex-col gap-6 items-center">
+        {comparisonResult.length > 0 ? (
+          comparisonResult.map((metricComponent, index) => (
+            <div key={index} className="flex flex-row items-center">
+              <div className>{metricComponent}</div>
+            </div>
+          ))
+        ) : (
+          <p>No comparison results to display yet.</p>
+        )}
+      </div>
+      
+      
 
 
 
