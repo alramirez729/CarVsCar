@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+
 
 function UserPreferencesForm() {
+  const [showExplanation, setShowExplanation] = useState(false);
+
   const [preferences, setPreferences] = useState({
     occupation: '',
     annualMiles: '',
@@ -63,8 +68,30 @@ function UserPreferencesForm() {
   if (loading) return <p>Loading preferences...</p>;
 
   return (
+    
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+      {/* 🔹 Why Are We Asking This? Section */}
       <h2 className="text-2xl font-semibold mb-4 text-gray-900">Your Car Preferences</h2>
+      {/* 🔹 Why Are We Asking This? Section */}
+        <div className="flex items-center justify-between bg-gray-100 p-3 rounded-lg mb-4">
+          <p className="text-gray-700 font-semibold">Why are we asking for this info?</p>
+          <FontAwesomeIcon 
+            icon={faQuestionCircle} 
+            className="text-blue-600 cursor-pointer transition-transform duration-200 hover:scale-110 ml-2" 
+            onClick={() => setShowExplanation(!showExplanation)}
+          />
+        </div>
+
+        {/* 🔹 Explanation Box (Only shows when clicked) */}
+        {showExplanation && (
+          <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4 shadow-md">
+            <p>
+              To use the AI comparison tool feature on the compare page, we will use this information 
+              to tailor the response to your actual needs and preferences. 
+              Feel free to share as much or as little information as you want.
+            </p>
+          </div>
+        )}
 
       {message && <p className="text-green-500 text-sm">{message}</p>}
 
@@ -126,6 +153,7 @@ function UserPreferencesForm() {
         </form>
       )}
     </div>
+    
   );
 }
 
