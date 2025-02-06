@@ -7,14 +7,15 @@ import axios from 'axios';
 
 function AccountPage() {
   const [selectedSection, setSelectedSection] = useState('Profile');
-  const { setIsLoggedIn } = useContext(AuthContext); // Removed `isLoggedIn` since it's not used
+  const { setIsLoggedIn } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
-    birthdate: null, // Ensuring birthdate is included
+    birthdate: null,
   });
   const [editField, setEditField] = useState(null);
   const [editedValue, setEditedValue] = useState('');
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function AccountPage() {
         setUserInfo({
           ...response.data.user,
           birthdate: response.data.user.birthdate
-            ? response.data.user.birthdate.split('T')[0] // Extract only YYYY-MM-DD
+            ? response.data.user.birthdate.split('T')[0]
             : '',
         });
       } catch (error) {
@@ -62,7 +63,7 @@ function AccountPage() {
       const token = localStorage.getItem('token');
       const response = await axios.put(
         'http://localhost:3000/users/update',
-        { [field]: editedValue }, // Save as is, since input type="date" provides YYYY-MM-DD
+        { [field]: editedValue },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -82,7 +83,6 @@ function AccountPage() {
     setEditField(null);
   };
 
-  // ✅ Profile Section Fix: Handled birthdate correctly while keeping other fields unchanged
   const profileSection = (
     <div className="space-y-6">
       {Object.keys(userInfo).map((field) => (
@@ -92,7 +92,6 @@ function AccountPage() {
             {editField === field ? (
               <div className="flex items-center space-x-2">
                 {field === 'birthdate' ? (
-                  // ✅ Native Date Picker Fix: Prevents shifting issues
                   <input
                     type="date"
                     value={editedValue || ''}
@@ -123,9 +122,7 @@ function AccountPage() {
             ) : (
               <div className="flex items-center space-x-2">
                 <span className="text-gray-600">
-                  {field === 'birthdate' && userInfo.birthdate
-                    ? userInfo.birthdate // Directly use the stored value (YYYY-MM-DD)
-                    : userInfo[field]}
+                  {field === 'birthdate' && userInfo.birthdate ? userInfo.birthdate : userInfo[field]}
                 </span>
                 <button
                   onClick={() => handleEditClick(field)}
@@ -141,28 +138,12 @@ function AccountPage() {
     </div>
   );
 
-  // ✅ Kept Other Sections Unchanged
-  const sections = {
-    Profile: profileSection,
-    Settings: <div className="bg-white p-6 rounded-lg shadow-md">Your Account Settings</div>,
-    Security: <div className="bg-white p-6 rounded-lg shadow-md">Security and Password Options</div>,
-    Logout: (
-      <button
-        className="bg-red-500 text-white py-2 px-4 mx-52 rounded-lg hover:bg-red-600 transition duration-300"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
-    ),
-  };
-
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* ✅ Sidebar (Skipped, No Changes) */}
+    <body className="bg-gray-50 overflow-hidden">
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-mono text-3xl font-bold mb-6 underline">Account Page:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
-          {Object.keys(sections).map((section) => (
+          {['Profile', 'Settings', 'Security'].map((section) => (
             <li
               key={section}
               className={`font-mono cursor-pointer p-3 rounded-lg transition duration-300 ${
@@ -173,15 +154,48 @@ function AccountPage() {
               {section}
             </li>
           ))}
+          <li
+            className="font-mono cursor-pointer p-3 rounded-lg bg-red-500 hover:bg-red-600 transition duration-300 text-center"
+            onClick={() => setShowLogoutModal(true)}
+          >
+            Logout
+          </li>
         </ul>
       </aside>
-
-      {/* ✅ Main Content (Skipped, No Changes) */}
       <main className="flex-1 p-8 ml-72 h-screen overflow-y-auto flex flex-col items-center">
         <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-mono p-2 ">{selectedSection}</h1>
-        <div className="font-mono space-y-6 w-1/3">{sections[selectedSection]}</div>
+        <div className="font-mono space-y-6 w-1/2">
+          {selectedSection === 'Profile' && profileSection}
+          {selectedSection === 'Settings' && <div className="bg-white p-6 rounded-lg shadow-md">Your Account Settings</div>}
+          {selectedSection === 'Security' && <div className="bg-white p-6 rounded-lg shadow-md">Security and Password Options</div>}
+        </div>
       </main>
-    </div>
+
+      {/* Logout Confirmation Modal */}
+      {/* Logout Confirmation Modal */}
+        {showLogoutModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center w-96">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Are you sure you want to logout?</h2>
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition"
+                >
+                  Logout
+                </button>
+                <button
+                  onClick={() => setShowLogoutModal(false)}
+                  className="bg-gray-300 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+    </body>
   );
 }
 

@@ -8,6 +8,8 @@ function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate('');
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -65,19 +67,43 @@ function Navbar() {
                   </Link>
                   <button
                     onClick={() => {
-                      handleLogout();
+                      setShowLogoutModal(true);
                       setDropdownOpen(false);
                     }}
                     className="block w-full text-left px-4 py-2 hover:bg-gray-200"
                   >
                     Logout
                   </button>
+
                 </div>
               )}
             </li>
           )}
         </ul>
       </div>
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center w-96">
+            <h2 className="text-2xl font-semibold mb-4 text-black">Are you sure you want to logout?</h2>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="bg-gray-300 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+        )}
+
     </nav>
   );
 }
