@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import UserPreferencesForm from './UserPreferencesForm';
 import axios from 'axios';
 
 function AccountPage() {
@@ -143,7 +144,7 @@ function AccountPage() {
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-mono text-3xl font-bold mb-6 underline">Account Page:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
-          {['Profile', 'Settings', 'Security'].map((section) => (
+          {['Profile', 'Preferences', 'Settings', 'Security'].map((section) => (
             <li
               key={section}
               className={`font-mono cursor-pointer p-3 rounded-lg transition duration-300 ${
@@ -166,12 +167,11 @@ function AccountPage() {
         <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-mono p-2 ">{selectedSection}</h1>
         <div className="font-mono space-y-6 w-1/2">
           {selectedSection === 'Profile' && profileSection}
+          {selectedSection === 'Preferences' && <UserPreferencesForm />} 
           {selectedSection === 'Settings' && <div className="bg-white p-6 rounded-lg shadow-md">Your Account Settings</div>}
           {selectedSection === 'Security' && <div className="bg-white p-6 rounded-lg shadow-md">Security and Password Options</div>}
         </div>
       </main>
-
-      {/* Logout Confirmation Modal */}
       {/* Logout Confirmation Modal */}
         {showLogoutModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

@@ -24,6 +24,15 @@ const userSchema = new Schema({
     biography: {
         type: String, // Adding biography field
         default: '', // Default value to avoid undefined
+    },
+    preferences: {  
+        occupation: { type: String, default: '' },
+        annualMiles: { type: Number, default: 0 },
+        safetyImportance: { type: Number, min: 1, max: 10, default: 5 },
+        fuelEfficiencyImportance: { type: Number, min: 1, max: 10, default: 5 },
+        horsepowerImportance: { type: Number, min: 1, max: 10, default: 5 },
+        speedImportance: { type: Number, min: 1, max: 10, default: 5 },
+        carUsage: { type: String, default: '' },
     }
 }, { timestamps: true });
 

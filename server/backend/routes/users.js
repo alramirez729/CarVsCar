@@ -123,6 +123,61 @@ router.put('/update', authenticate, async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+  // PUT /preferences - Save or Update User Preferences
+router.put('/preferences', authenticate, async (req, res) => {
+  try {
+    const {
+      occupation,
+      annualMiles,
+      safetyImportance,
+      fuelEfficiencyImportance,
+      horsepowerImportance,
+      speedImportance,
+      carUsage
+    } = req.body;
+
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update preferences inside the User schema
+    user.preferences = {
+      occupation,
+      annualMiles,
+      safetyImportance,
+      fuelEfficiencyImportance,
+      horsepowerImportance,
+      speedImportance,
+      carUsage
+    };
+
+    await user.save();
+
+    res.status(200).json({ message: 'Preferences saved successfully', preferences: user.preferences });
+  } catch (error) {
+    console.error('Error saving preferences:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+// GET /preferences - Retrieve User Preferences
+router.get('/preferences', authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('preferences -_id');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ preferences: user.preferences });
+  } catch (error) {
+    console.error('Error fetching preferences:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
   
 
 module.exports = router;
