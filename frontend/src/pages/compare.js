@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faCarSide, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
@@ -29,6 +29,10 @@ function Compare() {
 
   const [carLogo1, setCarLogo1] = useState(null);  
   const [carLogo2, setCarLogo2] = useState(null);  
+
+  const [aiSuggestion, setAiSuggestion] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [showAiBox, setShowAiBox] = useState(false);
 
 
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -121,12 +125,8 @@ function Compare() {
     }
   }, [comparisonData]);
   
-  
-  
-  
-  
-  
 
+  
 
   // Currently only fetches car brands that were produced in 2022
   useEffect(() => {
@@ -388,11 +388,101 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       setAlertType('error');
     }
   };
+
+  // User Preferences
+  const fetchUserPreferences = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error("No token found. User is not authenticated.");
+        return null;
+      }
+  
+      console.log("Sending request to fetch user preferences...");
+  
+      const response = await fetch('http://localhost:3000/users/preferences', {  
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+  
+      console.log("Response Status:", response.status);
+      
+      // Read raw text response for debugging
+      const textResponse = await response.text();
+      console.log("Raw Response:", textResponse);
+  
+      // Try parsing JSON manually
+      const data = JSON.parse(textResponse);
+      console.log("Fetched Preferences:", data);
+  
+      return data.preferences;
+    } catch (error) {
+      console.error('Error fetching user preferences:', error);
+      return null;
+    }
+  };
+  
   
 
-  const handleAISuggestion = () => {
-    setShowAlert(true); // Show alert
-    setTimeout(() => setShowAlert(false), 3000); // Hide after 3 seconds
+  const handleAISuggestion = async () => {
+    if (!make1 || !model1 || !year1 || !make2 || !model2 || !year2) {
+      alert("Please select two cars before requesting AI suggestions.");
+      return;
+    }
+
+    setAiSuggestion('');
+    setShowAiBox(true);
+    setAiLoading(true);
+
+    try {
+      const userPreferences = await fetchUserPreferences();
+      if (!userPreferences) {
+        alert("Error fetching user preferences.");
+        setAiLoading(false);
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/api/ai-suggestion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          car1: { make: make1, model: model1, year: year1 },
+          car2: { make: make2, model: model2, year: year2 },
+          userPreferences
+        })
+      });
+
+      const data = await response.json();
+      setAiLoading(false);
+
+      if (data.suggestion) {
+        displayTextCharacterByCharacter(data.suggestion);
+      } else {
+        setAiSuggestion('Error retrieving AI suggestion.');
+      }
+    } catch (error) {
+      console.error("Error fetching AI suggestion:", error);
+      setAiSuggestion("Failed to get AI response.");
+      setAiLoading(false);
+    }
+  };
+
+  // Function to display text character by character
+  const displayTextCharacterByCharacter = (text) => {
+    let index = 0;
+    setAiSuggestion('');
+    const interval = setInterval(() => {
+      if (index < text.length) {
+        setAiSuggestion((prev) => prev + text[index]);
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 10); // Adjust speed (lower is faster)
   };
 
   const renderSpeedometers = (title, overallRating, fuelEfficiency, power) => {
@@ -839,6 +929,28 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </button>
       )}
       </div>
+
+      {/* AI Suggestion Box */}
+      {showAiBox && (
+        <div className="mt-6 p-4 w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg relative">
+          {/* Close Button */}
+          <button 
+            onClick={() => setShowAiBox(false)} 
+            className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
+          >
+            <FontAwesomeIcon icon={faTimes} size="lg" />
+          </button>
+
+          {/* AI Text Display */}
+          <div className="text-gray-800 text-lg whitespace-pre-wrap font-mono">
+            {aiLoading ? (
+              <div className="animate-pulse">Thinking...</div>
+            ) : (
+              aiSuggestion || "No suggestion available."
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Toggle Button for View Mode */}
       <div className="flex flex-row space-x-4 my-4">
