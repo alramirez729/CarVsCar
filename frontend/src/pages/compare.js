@@ -67,7 +67,6 @@ function Compare() {
   };
   
 
-
   //alerts for button if input fields are incomplete/incorrect
   useEffect(() => {
     if (alertMessage) {
@@ -124,8 +123,6 @@ function Compare() {
       );
     }
   }, [comparisonData]);
-  
-
   
 
   // Currently only fetches car brands that were produced in 2022
@@ -254,8 +251,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   }
 };
 
-
-
   const fetchCarLogo = async (make, setLogoState) => {
     try {
         const slug = make.toLowerCase().replace(/ /g, "-"); // Convert make into a slug
@@ -347,7 +342,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     );
 };
 
-
   // Handle comparison
   const handleCompare = async () => {
     // Validate inputs for both cars
@@ -372,7 +366,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         setAlertType('error');
         return;
       }
-  
 
       setComparisonData([data1[0], data2[0]]);
 
@@ -381,7 +374,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       setNonNumericalComparison(generateNonNumericalComparison(data1, data2)); // Non-Numerical
       console.log('Comparison Result:', comparisonResult);
 
-  
     } catch (error) {
       console.error('Error comparing cars:', error);
       setAlertMessage('An error occurred during comparison. Please try again.');
@@ -408,7 +400,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         }
       });
       
-  
       console.log("Response Status:", response.status);
       
       // Read raw text response for debugging
@@ -425,7 +416,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       return null;
     }
   };
-  
   
 
   const handleAISuggestion = async () => {
@@ -525,8 +515,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       </div>
     );
   };
-  
-
 
   // Function to generate comparison
   const generateComparison = (data1, data2) => {
@@ -852,7 +840,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               : "Car 2"                // Default when neither make nor model is selected
             }
           </h2>
-
   
           {/* Make 2 Input with Dropdown */}
           <div className="relative w-full">
@@ -992,10 +979,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             <span className="font-medium ">Sorry!</span> Still working on this feature :)
           </div>
         )}
-      
-  
-      
-
 
       {viewMode === 'list' ? (
         <>
@@ -1072,13 +1055,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             </div>
           </>
         )}
-
-
-
-      
 </div>
 );
-  
 }
 
 export default Compare;
