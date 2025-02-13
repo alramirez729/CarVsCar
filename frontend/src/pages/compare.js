@@ -478,14 +478,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const renderSpeedometers = (title, overallRating, fuelEfficiency, power) => {
     return (
       <div className="flex flex-col items-center space-y-6">
-        <h3 className="text-lg font-bold">{title}</h3>
         <ReactSpeedometer
           value={overallRating}
           minValue={0}
           maxValue={100}
           needleColor="red"
-          startColor="green"
-          endColor="red"
+          startColor="red"
+          endColor="green"
           segments={10}
           textColor="#000"
           currentValueText="Overall Rating: ${value}"
@@ -495,8 +494,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           minValue={0}
           maxValue={100}
           needleColor="red"
-          startColor="green"
-          endColor="red"
+          startColor="red"
+          endColor="green"
           segments={10}
           textColor="#000"
           currentValueText="Fuel Efficiency: ${value}"
@@ -506,8 +505,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           minValue={0}
           maxValue={10} // Assuming 10 cylinders max
           needleColor="red"
-          startColor="green"
-          endColor="red"
+          startColor="red"
+          endColor="green"
           segments={10}
           textColor="#000"
           currentValueText="Power: ${value}"
@@ -986,12 +985,11 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {nonNumericalComparison && nonNumericalComparison}
           {/* Numerical Comparison Results */}
 
-          <div className="font-mono font-bold text-6xl underline">Overall Ratings:</div>
-            <div className="flex justify-between my-10">
+            <div className="flex justify-between gap-12 my-10">
               {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
               {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
             </div>
-          <div ref={resultsRef} className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full justify-center items-center">
+          <div ref={resultsRef} className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full justify-center items-center">
             {comparisonResult.length > 0 ? (
               comparisonResult.map((metricComponent, index) => (
                 <div key={index} className="flex flex-row items-center">
