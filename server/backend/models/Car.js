@@ -32,4 +32,4 @@ const carSchema = new Schema({
 
 const Car = mongoose.model('Car', carSchema);
 
-module.exports = Car;
+export default Car;

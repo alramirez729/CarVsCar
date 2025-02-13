@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
     username: {
@@ -70,4 +70,4 @@ userSchema.virtual('calculatedAge').get(function () {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;

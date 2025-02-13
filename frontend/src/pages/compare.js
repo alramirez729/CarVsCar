@@ -36,7 +36,6 @@ function Compare() {
 
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
-
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('info'); 
@@ -93,8 +92,8 @@ function Compare() {
       const weightPower = 0.3;
   
       // Calculate normalized scores
-      const calculateFuelEfficiencyScore = (mpg) => Math.min((mpg / maxMpg) * 100, 100);
-      const calculatePowerScore = (cylinders) => Math.min((cylinders / maxCylinders) * 100, 100);
+      const calculateFuelEfficiencyScore = (mpg) => (mpg / maxMpg) * 100;
+      const calculatePowerScore = (cylinders) => (cylinders / maxCylinders) * 100;
   
       // Calculate overall rating
       const calculateOverallRating = (fuelEfficiency, power) => {

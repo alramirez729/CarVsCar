@@ -1,12 +1,15 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Import your User model
-const authenticate = require('../middleware/authenticate'); // Import middleware
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js'; // Ensure the `.js` extension is included
+import authenticate from '../middleware/authenticate.js'; // Ensure the `.js` extension
+
+
 const router = express.Router();
 
 // JWT secret key
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
 
 // POST /register
 router.post('/register', async (req, res) => {
@@ -180,4 +183,4 @@ router.get('/preferences', authenticate, async (req, res) => {
 
   
 
-module.exports = router;
+export default router;
