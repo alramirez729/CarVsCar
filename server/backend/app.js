@@ -1,11 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const axios = require('axios');
-const userRoutes = require('./routes/users');
-const OpenAI = require('openai');
-const { generateText } = require('./openAIService');
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import axios from 'axios';
+import OpenAI from 'openai';
+
+import userRoutes from './routes/users.js';  // Add .js extension
+import { generateText } from './openAIService.js';  // Add .js extension
 
 
 dotenv.config();
