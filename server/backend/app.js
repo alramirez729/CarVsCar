@@ -48,6 +48,8 @@ app.post('/api/ai-suggestion', async (req, res) => {
     try {
         const { car1, car2, userPreferences } = req.body;
 
+        console.log("Request Body:", req.body);
+
         if (!car1 || !car2 || !userPreferences) {
             return res.status(400).json({ message: "Missing car details or user preferences." });
         }
@@ -77,6 +79,8 @@ app.post('/api/ai-suggestion', async (req, res) => {
         - Fuel Type: ${car2.fuel_type || 'N/A'}
         - Class: ${car2.class || 'N/A'}
 
+        The user has set up their preferences in their profile, they are as such:
+
         **User Preferences (Importance Scale 1-10):**
         - Occupation: ${userPreferences.occupation || 'Not specified'}
         - Annual Miles Driven: ${userPreferences.annualMiles} miles
@@ -87,6 +91,8 @@ app.post('/api/ai-suggestion', async (req, res) => {
         - Primary Car Usage: ${userPreferences.carUsage || 'Not specified'}
 
         **AI Recommendation:**
+        - Keep the response as brief as you can
+        - Firstly talk as though you know of the user's preferences (which I just gave you)
         - Prioritize the car that best matches the user's **top preferences**.
         - If safety is the highest priority, lean toward the car with better safety indicators.
         - If fuel efficiency matters most, favor the vehicle with better MPG.
@@ -95,8 +101,7 @@ app.post('/api/ai-suggestion', async (req, res) => {
         - Use **natural, engaging language** rather than robotic or overly technical phrasing.
         - **Make a confident choice** and justify it clearly.
         - Avoid excessive numeric data; focus on **practical benefits** (e.g., "better for daily commutes" rather than "3 MPG more").
-        - Keep the response as brief as you can
-        - **ENSURE TO End with a definitive statement:** "**Final Recommendation: [Car Choice]**".   
+        - **ENSURE TO End with a definitive statement:** "**Final Recommendation: [Car Choice]**". In this statement, feel free to use appropriate emojis instead of '*'.  
         `;
 
         // Call OpenAI API
@@ -105,6 +110,8 @@ app.post('/api/ai-suggestion', async (req, res) => {
             messages: [{ role: "system", content: prompt }],
             max_tokens: 200,
         });
+
+        console.log("OpenAI API Response:", aiResponse);
 
         const suggestion = aiResponse.choices[0].message.content;
         res.json({ suggestion });
