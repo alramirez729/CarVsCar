@@ -8,7 +8,7 @@ function Homepage() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   return (
-    <div className="flex rounded-lg flex-col items-center justify-center p-3 text-center font-mono">
+    <div className="flex rounded-lg flex-col items-center justify-center p-3 text-center font-sans">
       <h1 className="my-5 heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">
         Welcome to Car vs. Car!
       </h1>
@@ -17,10 +17,10 @@ function Homepage() {
         alt="CarVsCar" 
         className="max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] mb-5 border-4 border-gray-300 rounded-lg object-contain"
       />
-      <p className="text-left text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
+      <p className="text-left text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-sans leading-relaxed max-w-xl mx-0 px-5">
         Two cars of your choice go head to head. See which one suites your needs using 
       </p>
-      <p className="text-center text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-mono leading-relaxed max-w-xl mx-0 px-5">
+      <p className="text-center text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-sans leading-relaxed max-w-xl mx-0 px-5">
         Car vs. Car! 
       </p>
       {!isLoggedIn &&

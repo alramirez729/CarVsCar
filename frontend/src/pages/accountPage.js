@@ -89,7 +89,7 @@ function AccountPage() {
       {Object.keys(userInfo).map((field) => (
         <div key={field} className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-center">
-            <label className="font-semibold text-gray-700 capitalize font-mono text-xl">{field}:</label>
+            <label className="font-semibold text-gray-700 capitalize font-sans text-xl">{field}:</label>
             {editField === field ? (
               <div className="flex items-center space-x-2">
                 {field === 'birthdate' ? (
@@ -109,7 +109,7 @@ function AccountPage() {
                 )}
                 <button
                   onClick={() => handleSaveClick(field)}
-                  className="font-mono text-green-500 hover:text-green-700"
+                  className="font-sans text-green-500 hover:text-green-700"
                 >
                   <FontAwesomeIcon icon={faSave} />
                 </button>
@@ -142,12 +142,12 @@ function AccountPage() {
   return (
     <body className="bg-gray-50 overflow-hidden">
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
-        <h2 className="font-mono text-3xl font-bold mb-6 underline">Account Page:</h2>
+        <h2 className="font-sans text-3xl font-bold mb-6 underline">Account Page:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
           {['Profile', 'Preferences', 'Settings', 'Security'].map((section) => (
             <li
               key={section}
-              className={`font-mono cursor-pointer p-3 rounded-lg transition duration-300 ${
+              className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 ${
                 selectedSection === section ? 'bg-cyan-500' : 'hover:bg-gray-700'
               }`}
               onClick={() => setSelectedSection(section)}
@@ -156,7 +156,7 @@ function AccountPage() {
             </li>
           ))}
           <li
-            className="font-mono cursor-pointer p-3 rounded-lg bg-red-500 hover:bg-red-600 transition duration-300 text-center"
+            className="font-sans cursor-pointer p-3 rounded-lg bg-red-500 hover:bg-red-600 transition duration-300 text-center"
             onClick={() => setShowLogoutModal(true)}
           >
             Logout
@@ -164,8 +164,8 @@ function AccountPage() {
         </ul>
       </aside>
       <main className="flex-1 p-8 ml-72 h-screen overflow-y-auto flex flex-col items-center">
-        <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-mono p-2 ">{selectedSection}</h1>
-        <div className="font-mono space-y-6 w-1/2">
+        <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-sans p-2 ">{selectedSection}</h1>
+        <div className="font-sans space-y-6 w-1/2">
           {selectedSection === 'Profile' && profileSection}
           {selectedSection === 'Preferences' && <UserPreferencesForm />} 
           {selectedSection === 'Settings' && <div className="bg-white p-6 rounded-lg shadow-md">Your Account Settings</div>}

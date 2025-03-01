@@ -19,7 +19,7 @@ body {
 }
 
 .general-button-styling{
-    @apply mt-8 bg-cyan-500 text-white font-mono py-3 px-4 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
+    @apply mt-8 bg-cyan-500 text-white font-sans py-3 px-4 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
 }
 
 .box_with_shadow{
@@ -27,19 +27,19 @@ body {
 }
 
 .heading{
-    @apply text-6xl font-bold mb-5 text-center text-gray-500 font-mono;
+    @apply text-6xl font-bold mb-5 text-center text-gray-500 font-sans;
 }
 
 .subheading{
-    @apply text-2xl font-bold mb-5 text-center text-gray-500 font-mono;
+    @apply text-2xl font-bold mb-5 text-center text-gray-500 font-sans;
 }
 
 .title{
-    @apply text-2xl font-bold font-mono tracking-wider mb-6 text-center;
+    @apply text-2xl font-bold font-sans tracking-wider mb-6 text-center;
 }
 
 .subtitle{
-    @apply text-xl text-slate-900 font-mono mb-3;
+    @apply text-xl text-slate-900 font-sans mb-3;
 }
 
 .dropdown_input_styling{

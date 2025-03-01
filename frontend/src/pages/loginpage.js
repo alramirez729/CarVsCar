@@ -47,7 +47,7 @@ function LoginPage() {
                 <h1 className="title">Login</h1>
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="font-mono block text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="email" className="font-sans block text-sm font-medium text-gray-700">Email</label>
                         <input 
                             type="email" 
                             id="email"
@@ -58,7 +58,7 @@ function LoginPage() {
                         />
                     </div>
                     <div>
-                        <label htmlFor="password" className="font-mono block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="password" className="font-sans block text-sm font-medium text-gray-700">Password</label>
                         <input 
                             type="password" 
                             id="password"
@@ -70,14 +70,14 @@ function LoginPage() {
                     </div>
                     <button 
                         type="submit"
-                        className="font-mono w-full py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition duration-300"
+                        className="font-sans w-full py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition duration-300"
                     >
                         Login
                     </button>
                 </form>
-                {message && <p className="font-mono mt-4 text-center font-medium text-blue-400">{message}!</p>}
-                <p className="font-mono mt-6 text-center">
-                    Don't have an account? <Link to="/register" className="font-mono text-cyan-600 hover:underline">Register here</Link>.
+                {message && <p className="font-sans mt-4 text-center font-medium text-blue-400">{message}!</p>}
+                <p className="font-sans mt-6 text-center">
+                    Don't have an account? <Link to="/register" className="font-sans text-cyan-600 hover:underline">Register here</Link>.
                 </p>
             </div>
         </div>

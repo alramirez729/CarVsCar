@@ -324,13 +324,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                   rounded-lg shadow-md border border-gray-200 
                   w-full max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto my-10">
             {/* Title */}
-            <h2 className="text-2xl font-bold text-gray-700 mb-4 font-mono text-center">Car Feature Overview</h2>
+            <h2 className="text-2xl font-bold text-gray-700 mb-4 font-sans text-center">Car Feature Overview</h2>
             
             {/* Header Row */}
-            <div className="grid grid-cols-3 w-full bg-blue-300 py-2 rounded-t-lg text-center font-semibold text-gray-700">
-                <p className="font-bold font-mono text-lg italic text-gray-600">Spec.</p>
-                <p className="font-bold font-mono text-lg italic text-gray-700">{make1}:</p>
-                <p className="font-bold font-mono text-lg italic text-gray-700">{make2}:</p>
+            <div className="grid grid-cols-3 w-full bg-blue-300 py-2 rounded-t-lg text-center font-semibold text-gray-700 p-4">
+                <p className="font-bold font-sans text-lg italic text-gray-600 text-left">   Spec.</p>
+                <p className="font-bold font-sans text-lg italic text-gray-700 text-left">{make1}:</p>
+                <p className="font-bold font-sans text-lg italic text-gray-700 text-left">{make2}:</p>
             </div>            
        {nonNumericalMetrics.map((metric, index) => {
                 const car1Value = 
@@ -351,9 +351,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                           border-b border-gray-300
                       `}
                   >
-                        <p className="text-lg font-mono font-medium text-gray-800">{labels[metric]}</p>
-                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
-                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
+                        <p className="text-lg font-sans font-medium text-gray-800">{labels[metric]}</p>
+                        <p className="text-lg font-sans  text-gray-700 font-semibold">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
+                        <p className="text-lg font-sans  text-gray-700 font-semibold">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
                     </div>
                 );
             })}
@@ -607,7 +607,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         y={y}
         dy={16} // Adjust vertical positioning
         textAnchor="middle"
-        className="text-gray-600 text-sm font-mono"
+        className="text-gray-600 text-sm font-sans"
       >
         {payload.value}
       </text>
@@ -620,7 +620,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         y={y}
         dx={0} // Adjust horizontal positioning
         textAnchor="end"
-        className="text-gray-600 text-sm font-mono"
+        className="text-gray-600 text-sm font-sans"
       >
         {payload.value}
       </text>
@@ -634,7 +634,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               className="block w-4 h-4 rounded-full ring-0 ring-slate-500"
               style={{ backgroundColor: entry.color }}
             ></span>
-            <span className="text-sm font-mono text-gray-700">{entry.value.charAt(0).toUpperCase() + entry.value?.slice(1)}</span>
+            <span className="text-sm font-sans text-gray-700">{entry.value.charAt(0).toUpperCase() + entry.value?.slice(1)}</span>
           </div>
         ))}
       </div>
@@ -654,12 +654,12 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         return (
           <div
           style={tooltipStyle} 
-          className="bg-white border border-gray-300 p-4 rounded-lg shadow-md font-mono ring-2 ring-slate-500">
+          className="bg-white border border-gray-300 p-4 rounded-lg shadow-md font-sans ring-2 ring-slate-500">
             <p className="font-bold text-lg mb-2 italic">{label}</p>
             {payload.map((entry, index) => (
               <div key={`item-${index}`} className="text-sm">
                 <span
-                  className="font-medium italic font-bold font-mono"
+                  className="font-medium italic font-bold font-sans"
                   style={{ color: entry.color }}
                 >
                   {entry.name}
@@ -683,13 +683,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <Tooltip content={<CustomTooltip />}/>
         <Legend content={<CustomLegend />} />
         <Bar
-          className="font-mono"
+          className="font-sans"
           dataKey={car1.make}
           fill={'#7dd3fc'}
           barSize={70}
         />
         <Bar
-          className="font-mono"
+          className="font-sans"
           dataKey={car2.make}
           fill={'#cc49ff'}
           barSize={70}
@@ -702,7 +702,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     <div className="flex flex-col p-2 gap-0 bg-gray-100 rounded-lg shadow-md mb-4">
       {/* Metric Label and Explanation */}
       <div className="flex items-center justify-between w-full mb-2">
-        <h3 className="text-xl font-bold font-mono">{metricLabel}</h3>
+        <h3 className="text-xl font-bold font-sans">{metricLabel}</h3>
         <FontAwesomeIcon 
           icon={faQuestionCircle} 
           className="ml-2 text-blue-600 cursor-pointer transition-transform duration-200 hover:scale-110"           onClick={toggleExplanation} 
@@ -778,7 +778,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
           {/* Make Dropdown */}
           <div className="relative w-full">
-            <h1 className="font-thin italic font-mono">Select vehicle make:</h1>
+            <h1 className="font-thin italic font-sans">Select vehicle make:</h1>
             <select
               value={make1}
               onChange={(e) => {
@@ -798,7 +798,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
           {/* Model Dropdown */}
           <div className="relative w-full">
-          <h1 className="font-thin italic font-mono">Select vehicle model:</h1>
+          <h1 className="font-thin italic font-sans">Select vehicle model:</h1>
             <select
               value={model1}
               onChange={(e) => {
@@ -817,7 +817,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
           {/* Year Dropdown */}
           <div className="relative w-full">
-          <h1 className="font-thin italic font-mono">Select vehicle year:</h1>
+          <h1 className="font-thin italic font-sans">Select vehicle year:</h1>
           <select
             value={year1}
             onChange={(e) => setYear1(e.target.value)}
@@ -865,7 +865,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
           {/* Make 2 Input with Dropdown */}
           <div className="relative w-full">
-          <h1 className="font-thin italic font-mono">Select vehicle make:</h1>
+          <h1 className="font-thin italic font-sans">Select vehicle make:</h1>
             <select
               value={make2}
               onChange={(e) => {
@@ -885,7 +885,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
           {/* Model 2 Input with Dropdown */}
           <div className="relative w-full">
-          <h1 className="font-thin italic font-mono">Select vehicle model:</h1>
+          <h1 className="font-thin italic font-sans">Select vehicle model:</h1>
             <select
               value={model2}
               onChange={(e) => {
@@ -905,7 +905,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
           {/* Year 2 Input */}
           <div className="relative w-full">
-          <h1 className="font-thin italic font-mono">Select vehicle year:</h1>
+          <h1 className="font-thin italic font-sans">Select vehicle year:</h1>
           <select
             value={year2}
             onChange={(e) => setYear2(e.target.value)}
@@ -968,13 +968,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       
       <div className="flex flex-row space-x-4 my-4">
         <button
-          className={`mt-8 text-blue font-mono py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
           onClick={() => setViewMode('list')}
         >
           List View
         </button>
         <button
-          className={`mt-8 text-blue font-mono py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
           onClick={() => setViewMode('tab')}
         >
           Tab View
@@ -1013,7 +1013,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           <div className="flex flex-col sm:flex-row justify-between lg:gap-12 md:gap-8 sm:gap-4 gap-2 my-10 items-center">
             {/* Car 1 Speedometer */}
             <div className="flex flex-col items-center">
-              <h4 className="font-semibold text-sm text-center font-mono bg-sky-400 text-white px-4 py-1 rounded-lg">
+              <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 rounded-lg">
                 {make1 && model1 ? `${make1} - ${model1} (${year1})` : "Car 1"}
               </h4>
               {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
@@ -1021,13 +1021,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
             {/* Car 2 Speedometer */}
             <div className="flex flex-col items-center">
-              <h4 className="font-semibold text-sm text-center font-mono bg-fuchsia-500 text-white px-4 py-1 rounded-lg">
+              <h4 className="font-semibold text-sm text-center font-sans bg-fuchsia-500 text-white px-4 py-1 rounded-lg">
                 {make2 && model2 ? `${make2} - ${model2} (${year2})` : "Car 2"}
               </h4>
               {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
             </div>
           </div>
-          <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(401px,1fr))] gap-2 w-full justify-center items-center">
+          <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-2 w-full justify-center items-center">
             {comparisonResult.length > 0 ? (
               comparisonResult.map((metricComponent, index) => (
                 <div key={index} className="flex flex-row items-center">
