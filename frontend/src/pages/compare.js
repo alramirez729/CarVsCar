@@ -498,7 +498,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
   const renderSpeedometers = (title, overallRating, fuelEfficiency, power) => {
     return (
-      <div className="flex flex-col items-center space-y-6">
+      <div className="flex flex-col items-center lg:space-y-6 sm:space-y-0">
         <ReactSpeedometer
           value={overallRating}
           minValue={0}
@@ -590,7 +590,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       return words.slice(1).join(" ") || metricLabel;
     };
   
-    // ✅ Bar Chart method (no separate file)
+    // ✅ Bar Chart method
   const renderBarChart = () => {
     const data = [
       {
@@ -618,7 +618,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       <text
         x={x}
         y={y}
-        dx={-8} // Adjust horizontal positioning
+        dx={0} // Adjust horizontal positioning
         textAnchor="end"
         className="text-gray-600 text-sm font-mono"
       >
@@ -673,7 +673,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     };
 
     return (
-      <BarChart barGap={30} width={500} height={250} data={data}>
+      <BarChart barGap={30} width={400} height={250} data={data}>
         <XAxis dataKey="metric" 
               tick={<CustomTick />} // Custom Tick Component for X-Axis
         />
@@ -685,13 +685,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <Bar
           className="font-mono"
           dataKey={car1.make}
-          fill={isCar1Better ? 'green' : isCar2Better ? 'pink' : 'gray'}
+          fill={'#7dd3fc'}
           barSize={70}
         />
         <Bar
           className="font-mono"
           dataKey={car2.make}
-          fill={isCar2Better ? 'green' : isCar1Better ? 'pink' : 'gray'}
+          fill={'#cc49ff'}
           barSize={70}
         />
       </BarChart>
@@ -699,7 +699,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   };
 
   return (
-    <div className="flex flex-col p-5 bg-gray-100 rounded-lg shadow-md mb-4 w-full">
+    <div className="flex flex-col p-2 gap-0 bg-gray-100 rounded-lg shadow-md mb-4">
       {/* Metric Label and Explanation */}
       <div className="flex items-center justify-between w-full mb-2">
         <h3 className="text-xl font-bold font-mono">{metricLabel}</h3>
@@ -719,22 +719,18 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       {/* Car 1 and Car 2 Cards */}
       <div className="flex flex-row w-full gap-4">
         {/* Car 1 Box */}
-        <div className={`flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono
-            ${isCar1Better ? 'bg-green-600 scale-105 text-white' : isCar2Better ? 'bg-red-200' : 'bg-white'}`}>
-          <h4 className="font-semibold">{car1.make} - {car1.model} ({car1.year})</h4>
-          <p className="mt-1 text-lg font-bold">{car1.value} {getShortMetricLabel(metricLabel)}</p>
+        <div className={"items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono bg-sky-200"}>
+          <h4 className="font-semibold text-sm">{car1.make} - {car1.model} ({car1.year})</h4>
         </div>
 
         {/* Car 2 Box */}
-        <div className={`flex flex-col items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono
-            ${isCar2Better ? 'bg-green-600 scale-105 text-white' : isCar1Better ? 'bg-red-200' : 'bg-white'}`}>
-          <h4 className="font-semibold">{car2.make} - {car2.model} ({car2.year})</h4>
-          <p className="mt-1 text-lg font-bold">{car2.value} {getShortMetricLabel(metricLabel)}</p>
+        <div className={"items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono bg-fuchsia-300"}>
+          <h4 className="font-semibold text-sm">{car2.make} - {car2.model} ({car2.year})</h4>
         </div>
       </div>
 
       {/* Bar Chart Appears Below the Metric Row (Centered) */}
-      <div className="flex justify-center items-center w-full mt-4">
+      <div className="flex justify-center items-center mt-4">
         {renderBarChart()}
       </div>
 
@@ -758,7 +754,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
-        <div className="box_with_shadow">
+        <div className="flex flex-col items-center ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-sky-50 bg-sky-100">
         <div className="w-36 min-h-36 flex items-center justify-center">
             {carLogo1 ? (
                 <img 
@@ -846,7 +842,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
   
         {/* Car 2 Input */}
-        <div className="box_with_shadow">
+        <div className="flex flex-col items-center bg-fuchsia-100 ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-fuchsia-50">
         <div className="w-36 min-h-36 flex items-center justify-center ">
             {carLogo2 ? (
                 <img 
@@ -1014,11 +1010,24 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {nonNumericalComparison && nonNumericalComparison}
           {/* Numerical Comparison Results */}
 
-            <div className="flex justify-between gap-12 my-10">
+          <div className="flex flex-col sm:flex-row justify-between lg:gap-12 md:gap-8 sm:gap-4 gap-2 my-10 items-center">
+            {/* Car 1 Speedometer */}
+            <div className="flex flex-col items-center">
+              <h4 className="font-semibold text-sm text-center font-mono bg-sky-400 text-white px-4 py-1 rounded-lg">
+                {make1 && model1 ? `${make1} - ${model1} (${year1})` : "Car 1"}
+              </h4>
               {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
+            </div>
+
+            {/* Car 2 Speedometer */}
+            <div className="flex flex-col items-center">
+              <h4 className="font-semibold text-sm text-center font-mono bg-fuchsia-500 text-white px-4 py-1 rounded-lg">
+                {make2 && model2 ? `${make2} - ${model2} (${year2})` : "Car 2"}
+              </h4>
               {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
             </div>
-          <div ref={resultsRef} className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full justify-center items-center">
+          </div>
+          <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(401px,1fr))] gap-2 w-full justify-center items-center">
             {comparisonResult.length > 0 ? (
               comparisonResult.map((metricComponent, index) => (
                 <div key={index} className="flex flex-row items-center">
@@ -1063,7 +1072,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
                   {activeTab === 2 && (
                     <>
-                      <div className="grid grid-cols-2 md:grid-cols-2 gap-6 w-full items-center">
+                      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 md:gap-2 sm:gap-0 w-full justify-center items-center">
                         {comparisonResult.map((metricComponent, index) => (
                           <div key={index} className="flex flex-row items-center">
                             {metricComponent}
