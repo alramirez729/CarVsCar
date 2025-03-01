@@ -5,7 +5,6 @@ import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
-
 function Compare() {
 
   const [make1, setMake1] = useState('');
@@ -23,8 +22,6 @@ function Compare() {
 
   const [comparisonResult, setComparisonResult] = useState([]);
   const [nonNumericalComparison, setNonNumericalComparison] = useState(null);
-
-  const [carMakes, setCarMakes] = useState([]);
 
   const [carLogo1, setCarLogo1] = useState(null);  
   const [carLogo2, setCarLogo2] = useState(null);  
@@ -63,6 +60,25 @@ function Compare() {
   const handlePrevTab = () => {
     setActiveTab((prev) => (prev - 1 + sections.length) % sections.length);
   };
+
+  const hardcodedCarMakes = [
+    "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley",
+    "BMW", "Bugatti", "Buick", "Cadillac", "Chevrolet", "Chrysler",
+    "Citroën", "Dacia", "Daewoo", "Daihatsu", "Dodge", "Ferrari",
+    "Fiat", "Fisker", "Ford", "Genesis", "GMC", "Great Wall",
+    "Haval", "Honda", "Hummer", "Hyundai", "Infiniti", "Isuzu",
+    "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini",
+    "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Lucid",
+    "Maserati", "Maybach", "Mazda", "McLaren", "Mercedes-Benz",
+    "Mercury", "Mini", "Mitsubishi", "Nio", "Nissan", "Opel",
+    "Pagani", "Peugeot", "Polestar", "Pontiac", "Porsche", "Ram",
+    "Renault", "Rivian", "Rolls-Royce", "Saab", "Saturn", "Scion",
+    "Seat", "Skoda", "Smart", "SsangYong", "Subaru", "Suzuki",
+    "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo", "Zotye"
+  ];
+  
+  const [carMakes, setCarMakes] = useState(hardcodedCarMakes);
+  
   
 
   //alerts for button if input fields are incomplete/incorrect
@@ -85,15 +101,15 @@ function Compare() {
       const car2 = comparisonData[1];
   
       const maxMpg = 50; // Maximum MPG for scaling
-      const maxCylinders = 12; // Maximum cylinders for scaling
+      const maxCylinders = 16; // Maximum cylinders for scaling
   
       // Weights for metrics
       const weightFuelEfficiency = 0.7;
       const weightPower = 0.3;
   
       // Calculate normalized scores
-      const calculateFuelEfficiencyScore = (mpg) => (mpg / maxMpg) * 100;
-      const calculatePowerScore = (cylinders) => (cylinders / maxCylinders) * 100;
+      const calculateFuelEfficiencyScore = (mpg) => Math.min((mpg / maxMpg) * 100, 100);
+      const calculatePowerScore = (cylinders) => Math.min((cylinders / maxCylinders) * 100, 100);
   
       // Calculate overall rating
       const calculateOverallRating = (fuelEfficiency, power) => {
@@ -124,26 +140,6 @@ function Compare() {
   
 
   // Currently only fetches car brands that were produced in 2022
-  useEffect(() => {
-    const fetchCarMakes = async () => {
-      try {
-        const response = await fetch('https://api.api-ninjas.com/v1/carmakes?year=2022', {
-          method: 'GET',
-          headers: { 'X-Api-Key': process.env.REACT_APP_API_KEY },
-        });
-        if (response.ok) {
-          const makes = await response.json();
-          setCarMakes(makes); // Store the car makes in state
-        } else {
-          console.error('Failed to fetch car makes:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching car makes:', error);
-      }
-    };
-
-    fetchCarMakes();
-  }, []);
 
 
   //autoscroll when clicking the compare button
@@ -171,7 +167,12 @@ function Compare() {
             }
         );
         if (response.ok) {
-            return await response.json();
+            const data = await response.json(); 
+            if(data.length === 0){
+              alert('No data available for  ${make} ${mode} (${year}). Please select another model.');
+              return[];
+            }
+            return data;
         } else {
             console.error('Error fetching car data:', await response.text());
             return [];
@@ -204,8 +205,18 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               console.error('Make and Model are required for fetching years.');
               return;
           }
+          
+
           endpoint = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
-      } else {
+          // ✅ Reset year suggestions before fetching new data
+        if (carNumber === 1) {
+          setYearSuggestions1([]);
+          setYear1(''); // Reset year selection
+        } else if (carNumber === 2) {
+          setYearSuggestions2([]);
+          setYear2(''); // Reset year selection
+        }
+        } else {
           console.error(`Invalid type: ${type}`);
           return;
       }
@@ -235,15 +246,25 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               console.log('Model suggestions for Car 2:', data);
           }
       } else if (type === 'year') {
-          const years = [...new Set(data.map((car) => car.year))].sort((a, b) => b - a);
-          if (carNumber === 1) {
-              setYearSuggestions1(years);
-              console.log('Year suggestions for Car 1:', years);
-          } else if (carNumber === 2) {
-              setYearSuggestions2(years);
-              console.log('Year suggestions for Car 2:', years);
-          }
-      }
+        const years = [...new Set(data.map((car) => car.year))].sort((a, b) => b - a);
+    
+        if (years.length === 0) {
+            setAlertMessage(`No year data available for ${make} ${model}. Please select another model.`);
+            setAlertType('error');
+    
+            // ✅ Instead of empty array, set a placeholder to indicate missing data
+            if (carNumber === 1) setYearSuggestions1(["No available years"]);
+            else if (carNumber === 2) setYearSuggestions2(["No available years"]);
+            return;
+        }
+    
+        if (carNumber === 1) {
+            setYearSuggestions1(years);
+        } else if (carNumber === 2) {
+            setYearSuggestions2(years);
+        }
+    }
+    
   } catch (error) {
       console.error(`Error fetching ${type} suggestions for Car ${carNumber}:`, error);
   }
@@ -344,11 +365,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const handleCompare = async () => {
     // Validate inputs for both cars
     if (!make1 || !model1 || !year1) {
+      console.log("❌ Missing Car 1 details! Triggering alert.");
       setAlertMessage('Please fill in all fields for Car 1.');
       setAlertType('error');
       return;
     }
     if (!make2 || !model2 || !year2) {
+      console.log("❌ Missing Car 2 details! Triggering alert.");
       setAlertMessage('Please fill in all fields for Car 2.');
       setAlertType('error');
       return;
@@ -799,19 +822,25 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {/* Year Dropdown */}
           <div className="relative w-full">
           <h1 className="font-thin italic font-mono">Select vehicle year:</h1>
-            <select
-              value={year1}
-              onChange={(e) => setYear1(e.target.value)}
-              onFocus={() => {
-              }}
-              className="dropdown_input_styling"
-            >
-              <option value="" disabled>Select Year</option>
-              {yearSuggestions1.map((year, index) => (
-                <option key={index + 1} value={year}>
+          <select
+            value={year1}
+            onChange={(e) => setYear1(e.target.value)}
+            onFocus={() => {
+              if (make1 && model1) {
+                fetchSuggestions('year', make1, model1, 1);
+              }
+            }}
+            className="dropdown_input_styling"
+            disabled={yearSuggestions1.length === 1 && yearSuggestions1[0] === "No available years"}
+          >
+            <option value="" disabled>{yearSuggestions1[0] === "No available years" ? "No years available" : "Select Year"}</option>
+            {yearSuggestions1[0] !== "No available years" &&
+              yearSuggestions1.map((year, index) => (
+                <option key={index} value={year}>
                   {year}
                 </option>
-              ))}
+              ))
+            }
             </select>
           </div>
         </div>
@@ -881,22 +910,25 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {/* Year 2 Input */}
           <div className="relative w-full">
           <h1 className="font-thin italic font-mono">Select vehicle year:</h1>
-            <select
-              value={year2}
-              onChange={(e) => setYear2(e.target.value)}
-              onFocus={() => {
-                if (make2 && model2) {
-                  fetchSuggestions('', 'year', make2, model2, 2); // Fetch years for selected make and model
-                }
-              }}
-              className="dropdown_input_styling"
-            >
-              <option value="" disabled>Select Year</option>
-              {yearSuggestions2.map((year, index) => (
+          <select
+            value={year2}
+            onChange={(e) => setYear2(e.target.value)}
+            onFocus={() => {
+              if (make2 && model2) {
+                fetchSuggestions('year', make2, model2, 2);
+              }
+            }}
+            className="dropdown_input_styling"
+            disabled={yearSuggestions2.length === 1 && yearSuggestions2[0] === "No available years"}
+          >
+            <option value="" disabled>{yearSuggestions2[0] === "No available years" ? "No years available" : "Select Year"}</option>
+            {yearSuggestions2[0] !== "No available years" &&
+              yearSuggestions2.map((year, index) => (
                 <option key={index} value={year}>
                   {year}
                 </option>
-              ))}
+              ))
+            }
             </select>
           </div>
 
@@ -937,6 +969,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       )}
 
       {/* Toggle Button for View Mode */}
+      
       <div className="flex flex-row space-x-4 my-4">
         <button
           className={`mt-8 text-blue font-mono py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
@@ -953,21 +986,19 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       </div>
   
         {/* Custom Alert */}
-        {alertMessage && (
-          <div
-            className={`fixed -my-10 -ml-48 z-50 p-4 text-sm rounded-lg shadow-lg ${
-              alertType === 'error'
-                ? 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400'
-                : 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400'
-            }`}
-            role="alert"
-          >
-            <span className="font-medium">
-              {alertType === 'error' ? 'Error!' : 'Info!'}
-            </span>{' '}
-            {alertMessage}
-          </div>
-        )}
+          {alertMessage && (
+            <div
+              className={`left-1/2 transform -translate-x-1/2 z-50 p-4 text-sm rounded-lg shadow-lg 
+                ${alertType === 'error' ? 'text-red-800 bg-red-50' : 'text-blue-800 bg-blue-50'}`}
+              role="alert"
+            >
+              <span className="font-medium">
+                {alertType === 'error' ? 'Error!' : 'Info!'}
+              </span>{' '}
+              {alertMessage}
+            </div>
+          )}
+
         {showAlert && (
           <div
             className="p-4 -my-10 ml-32 fixed text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 shadow-lg"
