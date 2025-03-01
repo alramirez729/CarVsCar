@@ -750,8 +750,22 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   return (
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-5 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
+      
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
-  
+  <div className="flex flex-row space-x-4 my-4">
+        <button
+          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+          onClick={() => setViewMode('list')}
+        >
+          List View
+        </button>
+        <button
+          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+          onClick={() => setViewMode('tab')}
+        >
+          Tab View
+        </button>
+      </div>
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="flex flex-col items-center ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-sky-50 bg-sky-100">
@@ -966,20 +980,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
       {/* Toggle Button for View Mode */}
       
-      <div className="flex flex-row space-x-4 my-4">
-        <button
-          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
-          onClick={() => setViewMode('list')}
-        >
-          List View
-        </button>
-        <button
-          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
-          onClick={() => setViewMode('tab')}
-        >
-          Tab View
-        </button>
-      </div>
+      
   
         {/* Custom Alert */}
           {alertMessage && (
@@ -1013,7 +1014,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           <div className="flex flex-col sm:flex-row justify-between lg:gap-12 md:gap-8 sm:gap-4 gap-2 my-10 items-center">
             {/* Car 1 Speedometer */}
             <div className="flex flex-col items-center">
-              <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 rounded-lg">
+              <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
                 {make1 && model1 ? `${make1} - ${model1} (${year1})` : "Car 1"}
               </h4>
               {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
@@ -1021,7 +1022,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
             {/* Car 2 Speedometer */}
             <div className="flex flex-col items-center">
-              <h4 className="font-semibold text-sm text-center font-sans bg-fuchsia-500 text-white px-4 py-1 rounded-lg">
+              <h4 className="font-semibold text-sm text-center font-sans bg-fuchsia-500 text-white px-4 py-1 my-4 rounded-lg">
                 {make2 && model2 ? `${make2} - ${model2} (${year2})` : "Car 2"}
               </h4>
               {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
