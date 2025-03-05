@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faCarSide, faTimes, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faCarSide, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
@@ -748,23 +748,26 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-5 bg-white">
+    <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
       
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
-  <div className="flex flex-row space-x-4 my-4">
+      <div className="flex flex-row space-x-4 my-4 text-left">
         <button
-          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
-          onClick={() => setViewMode('list')}
-        >
-          List View
-        </button>
-        <button
-          className={`mt-8 text-blue font-sans py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
-          onClick={() => setViewMode('tab')}
-        >
-          Tab View
-        </button>
+        className={`inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+        onClick={() => setViewMode('list')}
+      >
+        <FontAwesomeIcon icon={faList} className="w-4 h-4" /> {/* List View Icon */}
+        <span>List View</span>
+      </button>
+
+      <button
+        className={`inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+        onClick={() => setViewMode('tab')}
+      >
+        <FontAwesomeIcon icon={faThLarge} className="w-4 h-4" /> {/* Tab View Icon */}
+        <span>Tab View</span>
+      </button>
       </div>
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
@@ -1011,7 +1014,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {nonNumericalComparison && nonNumericalComparison}
           {/* Numerical Comparison Results */}
 
-          <div className="flex flex-col sm:flex-row justify-between lg:gap-12 md:gap-8 sm:gap-4 gap-2 my-10 items-center">
+          <div className="flex flex-col sm:flex-row justify-between gap-12 md:gap-8 sm:gap-4 my-10 items-center">
             {/* Car 1 Speedometer */}
             <div className="flex flex-col items-center">
               <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
@@ -1046,7 +1049,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             <div className="w-full flex flex-col items-center">
               <h2 className="text-2xl font-bold mb-4">{sections[activeTab]}</h2>
 
-              <div className="flex flex-row items-center justify-between w-full max-w-4xl">
+              <div className="flex flex-row items-center w-full max-w-4xl">
                 {/* Left Arrow */}
                 <button onClick={handlePrevTab} className="text-2xl p-2">
                   <FontAwesomeIcon icon={faChevronLeft} />
@@ -1073,8 +1076,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
                   {activeTab === 2 && (
                     <>
-                      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 md:gap-2 sm:gap-0 w-full justify-center items-center">
-                        {comparisonResult.map((metricComponent, index) => (
+  <div className={`grid gap-4 w-full items-center ${comparisonResult.length === 1 ? "grid-cols-1 justify-center place-items-center" : "grid-cols-2 lg:grid-cols-2 md:grid-cols-1"}`}>                        {comparisonResult.map((metricComponent, index) => (
                           <div key={index} className="flex flex-row items-center">
                             {metricComponent}
                           </div>
