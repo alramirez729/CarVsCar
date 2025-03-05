@@ -752,7 +752,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
       
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
-      <div className="flex flex-row space-x-4 my-4 text-left">
+      <div className=" w-full flex flex-row space-x-4 my-4 justify-end">
         <button
         className={`inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
         onClick={() => setViewMode('list')}
@@ -948,12 +948,12 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
       </div>
   
-      <div className="flex flex-row gap-5 my-0 justify-center">
-        <button onClick={handleCompare} className="general-button-styling">
+      <div className="flex flex-row gap-5 my-0 justify-center space-x-2 -mr-12">
+        <button onClick={handleCompare} className="compare-page-buttons">
           Compare
         </button>
         {isLoggedIn && (
-        <button className="general-button-styling" onClick={handleAISuggestion}>
+        <button className="compare-page-buttons" onClick={handleAISuggestion}>
           🪄 AI suggestion
         </button>
       )}
