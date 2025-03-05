@@ -1,39 +1,49 @@
-import {React, useContext} from 'react';
+import { React, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import homePageIcon from './images/carvcar.JPG';
 import { AuthContext } from '../AuthContext';
 
 function Homepage() {
-
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <div className="flex rounded-lg flex-col items-center justify-center p-3 text-center font-sans">
-      <h1 className="my-5 heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">
-        Welcome to Car vs. Car!
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center font-sans bg-slate-50">
+      {/* Heading */}
+      <h1 className="my-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
+        Welcome to <span className="text-blue-600">Car vs. Car!</span>
       </h1>
-      <img 
-        src={homePageIcon} 
-        alt="CarVsCar" 
-        className="max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] mb-5 border-4 border-gray-300 rounded-lg object-contain"
+
+      {/* Image */}
+      <img
+        src={homePageIcon}
+        alt="CarVsCar"
+        className="max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
       />
-      <p className="text-left text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-sans leading-relaxed max-w-xl mx-0 px-5">
-        Two cars of your choice go head to head. See which one suites your needs using 
+
+      {/* Description */}
+      <p className="text-base md:text-xl lg:text-2xl text-slate-700 font-medium max-w-2xl leading-relaxed mx-auto px-5">
+        Two cars of your choice go head to head. See which one suits your needs using Car vs. Car!
       </p>
-      <p className="text-center text-base font-medium md:text-xl lg:text-2xl text-slate-900 font-sans leading-relaxed max-w-xl mx-0 px-5">
-        Car vs. Car! 
-      </p>
-      {!isLoggedIn &&
-        <Link 
-        to="/login" 
-        className="general-button-styling"
-      >
-        Sign up/login
-      </Link>
-      }
-      
+
+      {/* Call-to-Action Buttons */}
+      <div className="flex flex-col space-y-4 mt-8">
+        <Link
+          to="/compare"
+          className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+        >
+          Start Comparing
+        </Link>
+        {!isLoggedIn && (
+          <Link
+            to="/login"
+            className="general-button-styling bg-slate-900 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-colors duration-300"
+          >
+            Sign Up / Login
+          </Link>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default Homepage;
