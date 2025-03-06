@@ -324,13 +324,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                   rounded-lg shadow-md border border-gray-200 
                   w-full max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto my-10">
             {/* Title */}
-            <h2 className="text-2xl font-bold text-gray-700 mb-4 font-sans text-center">Car Feature Overview</h2>
+            <h2 className="text-2xl font-bold text-gray-700 mb-4 font-mono text-center">Car Feature Overview</h2>
             
             {/* Header Row */}
             <div className="grid grid-cols-3 w-full bg-blue-300 py-2 rounded-t-lg text-center font-semibold text-gray-700 p-4">
-                <p className="font-bold font-sans text-lg italic text-gray-600 text-left">   Spec.</p>
-                <p className="font-bold font-sans text-lg italic text-gray-700 text-left">{make1}:</p>
-                <p className="font-bold font-sans text-lg italic text-gray-700 text-left">{make2}:</p>
+                <p className="font-bold font-mono text-lg italic text-gray-600 text-left">   Spec.</p>
+                <p className="font-bold font-mono text-lg italic text-gray-700 text-left">{make1}:</p>
+                <p className="font-bold font-mono text-lg italic text-gray-700 text-left">{make2}:</p>
             </div>            
        {nonNumericalMetrics.map((metric, index) => {
                 const car1Value = 
@@ -351,9 +351,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                           border-b border-gray-300
                       `}
                   >
-                        <p className="text-lg font-sans font-medium text-gray-800">{labels[metric]}</p>
-                        <p className="text-lg font-sans  text-gray-700 font-semibold">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
-                        <p className="text-lg font-sans  text-gray-700 font-semibold">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
+                        <p className="text-lg font-mono font-medium text-gray-800">{labels[metric]}</p>
+                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
+                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
                     </div>
                 );
             })}
@@ -487,7 +487,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     let index = 0;
     setAiSuggestion('');
     const interval = setInterval(() => {
-      if (index < text.length) {
+      if (index <= text.length) {
         setAiSuggestion((prev) => prev + text[index]);
         index++;
       } else {
@@ -964,7 +964,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <div className="mt-6 p-4 w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg relative">
           {/* Close Button */}
           <button 
-            onClick={() => setShowAiBox(false)} 
+            onClick={() => setShowAiBox(prev => !prev)} 
             className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
           >
             <FontAwesomeIcon icon={faTimes} size="lg" />
