@@ -9,7 +9,7 @@ function Homepage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center font-sans bg-slate-50">
       {/* Heading */}
-      <h1 className="my-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
+      <h1 className="-mt-12 mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
         Welcome to <span className="text-blue-600">Car vs. Car!</span>
       </h1>
 
@@ -26,7 +26,7 @@ function Homepage() {
       </p>
 
       {/* Call-to-Action Buttons */}
-      <div className="flex flex-col space-y-4 mt-8">
+      <div className="flex flex-col space-y-4 mt-6">
         <Link
           to="/compare"
           className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
