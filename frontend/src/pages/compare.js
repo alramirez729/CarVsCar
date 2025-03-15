@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faCarSide, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
+import carLogoLeft from "./images/CarCompareLeft.png";
+import carLogoRight from "./images/CarCompareRight.png";
 import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
@@ -805,7 +807,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                     className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform"
                 />
             ) : (
-                <FontAwesomeIcon icon={faCarSide} size="5x" />
+                <img src={carLogoRight} size="5x" />
             )}
         </div>
           <h2 className="title">
@@ -893,7 +895,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                     className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform "
                 />
             ) : (
-                <FontAwesomeIcon icon={faCarSide} size="5x" className="transform scale-x-[-1]"/>
+                <img src={carLogoLeft} size="5x" />
             )}
         </div>
           <h2 className="title">
