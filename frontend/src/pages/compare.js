@@ -798,7 +798,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       </div>
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
-        <div className="flex flex-col items-center ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-sky-50 bg-sky-100">
+        <div className="flex flex-col items-center ring-4 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
         <div className="w-36 min-h-36 flex items-center justify-center">
             {carLogo1 ? (
                 <img 
@@ -886,7 +886,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
   
         {/* Car 2 Input */}
-        <div className="flex flex-col items-center bg-fuchsia-100 ring-1 ring-slate-500 shadow-xl p-5 rounded-lg w-full hover:bg-fuchsia-50">
+        <div className="flex flex-col items-center ring-4 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
         <div className="w-36 min-h-36 flex items-center justify-center ">
             {carLogo2 ? (
                 <img 
