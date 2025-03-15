@@ -7,26 +7,19 @@ function Homepage() {
   const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center font-sans bg-slate-50">
+    <div className="my-10 flex flex-col items-center justify-center min-h-screen p-6 text-center font-sans">
       {/* Heading */}
       <h1 className="-mt-12 mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
-        Welcome to <span className="text-blue-600">Car vs. Car!</span>
+        <span className="text-blue-600">Car vs. Car</span> Landing Page
       </h1>
 
-      {/* Image */}
-      <img
-        src={homePageIcon}
-        alt="CarVsCar"
-        className="max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-      />
-
       {/* Description */}
-      <p className="text-base md:text-xl lg:text-2xl text-slate-700 font-medium max-w-2xl leading-relaxed mx-auto px-5">
+      <p className="italic text-base md:text-xl lg:text-2xl text-slate-700 font-medium max-w-2xl leading-relaxed mx-auto px-5">
         Two cars of your choice go head to head. See which one suits your needs using Car vs. Car!
       </p>
 
       {/* Call-to-Action Buttons */}
-      <div className="flex flex-col space-y-4 mt-6">
+      <div className="flex flex-col space-y-4">
         <Link
           to="/compare"
           className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
@@ -42,6 +35,17 @@ function Homepage() {
           </Link>
         )}
       </div>
+
+      {/* Image */}
+      <img
+        src={homePageIcon}
+        alt="CarVsCar"
+        className="my-10 max-w-[60vw] md:max-w-[50vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+      />
+
+      
+
+      
     </div>
   );
 }
