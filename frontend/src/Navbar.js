@@ -14,8 +14,10 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
+    setShowLogoutModal(false);
     navigate('/login')
     console.log('User logged out');
+
   };
 
   return (
@@ -89,6 +91,7 @@ function Navbar() {
             <div className="flex justify-center space-x-4">
               <button
                 onClick={handleLogout}
+                
                 className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition"
               >
                 Logout
