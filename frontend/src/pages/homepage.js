@@ -40,7 +40,7 @@ function Homepage() {
       <img
         src={homePageIcon}
         alt="CarVsCar"
-        className="my-10 max-w-[60vw] md:max-w-[50vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+        className="my-10 max-w-[40vw] md:max-w-[30vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
       />
 
       
