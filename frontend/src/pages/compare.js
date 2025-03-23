@@ -105,16 +105,16 @@ function Compare() {
       const maxCylinders = 16; // Maximum cylinders for scaling
   
       // Weights for metrics
-      const weightFuelEfficiency = 0.7;
+      const weightFuelEfficiency = 1.2;
       const weightPower = 0.3;
   
       // Calculate normalized scores
-      const calculateFuelEfficiencyScore = (mpg) => Math.min((mpg / maxMpg) * 100, 100);
+      const calculateFuelEfficiencyScore = (mpg) => (Math.min((mpg / maxMpg) * 100, 100));
       const calculatePowerScore = (cylinders) => Math.min((cylinders / maxCylinders) * 100, 100);
   
       // Calculate overall rating
       const calculateOverallRating = (fuelEfficiency, power) => {
-        const fuelEfficiencyScore = calculateFuelEfficiencyScore(fuelEfficiency);
+        const fuelEfficiencyScore = calculateFuelEfficiencyScore(fuelEfficiency * 2) ;
         const powerScore = calculatePowerScore(power);
   
         return Math.round(
@@ -523,9 +523,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     }, 10); // Adjust speed (lower is faster)
   };
 
-  const renderSpeedometers = (title, overallRating, fuelEfficiency, power) => {
+  const renderSpeedometers = (title, overallRating, fuelEfficiency, power, make, vehicle_number) => {
     return (
-      <div className="flex flex-col items-center lg:space-y-6 sm:space-y-0">
+      <div className="flex flex-col col-3 md:col-2 sm:col1 items-center lg:space-y-6 sm:space-y-0">
+        <div className="box_with_shadow flex flex-col items-center lg:space-y-6 sm:space-y-0">
+        <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
+                {make ? `${make}` : "Car " + vehicle_number}
+        </h4>
         <ReactSpeedometer
           value={overallRating}
           minValue={0}
@@ -537,6 +541,12 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           textColor="#000"
           currentValueText="Overall Rating: ${value}"
         />
+        </div>
+
+        <div className="box_with_shadow flex flex-col items-center lg:space-y-6 sm:space-y-0">
+        <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
+                {make ? `${make}` : "Car " + vehicle_number}
+        </h4>
         <ReactSpeedometer
           value={fuelEfficiency}
           minValue={0}
@@ -548,6 +558,11 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           textColor="#000"
           currentValueText="Fuel Efficiency: ${value}"
         />
+        </div>
+        <div className="box_with_shadow flex flex-col items-center lg:space-y-6 sm:space-y-0">
+        <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
+                {make ? `${make}` : "Car " + vehicle_number}
+        </h4>
         <ReactSpeedometer
           value={power}
           minValue={0}
@@ -559,6 +574,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           textColor="#000"
           currentValueText="Power: ${value}"
         />
+        </div>
+
+      
       </div>
     );
   };
@@ -606,8 +624,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     // Compare metric values
     const car1Value = parseFloat(car1.value);
     const car2Value = parseFloat(car2.value);
-    const isCar1Better = car1Value > car2Value;
-    const isCar2Better = car2Value > car1Value;
+    
   
     const toggleExplanation = () => setExplanationVisible(!explanationVisible);
   
@@ -798,7 +815,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       </div>
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
-        <div className="flex flex-col items-center ring-4 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
+        <div className="flex flex-col items-center ring-8 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
         <div className="w-36 min-h-36 flex items-center justify-center">
             {carLogo1 ? (
                 <img 
@@ -886,7 +903,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
   
         {/* Car 2 Input */}
-        <div className="flex flex-col items-center ring-4 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
+        <div className="flex flex-col items-center ring-8 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
         <div className="w-36 min-h-36 flex items-center justify-center ">
             {carLogo2 ? (
                 <img 
@@ -1041,21 +1058,15 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {nonNumericalComparison && nonNumericalComparison}
           {/* Numerical Comparison Results */}
 
-          <div className="flex flex-col sm:flex-row justify-between gap-12 md:gap-8 sm:gap-4 my-10 items-center">
+          <div className="flex flex-col col-2 sm:col-1 sm:flex-row justify-between gap-12 md:gap-8 sm:gap-4 my-10 items-center">
             {/* Car 1 Speedometer */}
             <div className="flex flex-col items-center">
-              <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
-                {make1 && model1 ? `${make1} - ${model1} (${year1})` : "Car 1"}
-              </h4>
-              {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
+              {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1, make1, 1)}
             </div>
 
             {/* Car 2 Speedometer */}
             <div className="flex flex-col items-center">
-              <h4 className="font-semibold text-sm text-center font-sans bg-fuchsia-500 text-white px-4 py-1 my-4 rounded-lg">
-                {make2 && model2 ? `${make2} - ${model2} (${year2})` : "Car 2"}
-              </h4>
-              {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
+              {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2, make2, 2)}
             </div>
           </div>
           <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-2 w-full justify-center items-center">
@@ -1087,8 +1098,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                 {activeTab === 0 && (
                     <>
                       <div className="flex justify-between w-full">
-                        {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1)}
-                        {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2)}
+                        {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1, make1)}
+                        {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2, make2)}
                       </div>
                     </>
                   )}
