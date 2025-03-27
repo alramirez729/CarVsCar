@@ -6,6 +6,8 @@ import carLogoRight from "./images/CarCompareRight.png";
 import { AuthContext } from '../AuthContext';
 import ReactSpeedometer from "react-d3-speedometer";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { generatePDF } from "./generatePDF.js";
+
 
 function Compare() {
 
@@ -466,59 +468,98 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   };
   
 // Handles AI Suggestion logic 
-  const handleAISuggestion = async () => {
-    if (!make1 || !model1 || !year1 || !make2 || !model2 || !year2) {
+const handleAISuggestion = async () => {
+  if (!make1 || !model1 || !year1 || !make2 || !model2 || !year2) {
       alert("Please select two cars before requesting AI suggestions.");
       return;
-    }
+  }
 
-    setAiSuggestion('');
-    setShowAiBox(true);
-    setAiLoading(true);
+  setAiSuggestion('');
+  setShowAiBox(true);
+  setAiLoading(true);
 
-    try {
-      const userPreferences = await fetchUserPreferences();
-      if (!userPreferences) {
-        alert("Error fetching user preferences.");
+  try {
+        const userPreferences = await fetchUserPreferences();
+        if (!userPreferences) {
+            alert("Error fetching user preferences.");
+            setAiLoading(false);
+            return;
+        }
+
+        // Fetch the complete car data for both vehicles
+        const data1 = await fetchCarData(make1, model1, year1);
+        const data2 = await fetchCarData(make2, model2, year2);
+
+        if (data1.length === 0 || data2.length === 0) {
+            setAiLoading(false);
+            setAiSuggestion("Error fetching car data.");
+            return;
+        }
+
+        // Extract only the relevant metrics for both cars
+        const car1 = data1[0];  // Assuming you're getting the first entry in the array
+        const car2 = data2[0];  // Assuming you're getting the first entry in the array
+
+        const car1Metrics = {
+            make: car1.make,
+            model: car1.model,
+            year: car1.year,
+            fuel_type: car1.fuel_type,
+            cylinders: car1.cylinders,
+            transmission: car1.transmission,
+            drive: car1.drive,
+            combination_mpg: car1.combination_mpg, 
+        };
+
+        const car2Metrics = {
+          make: car2.make,
+          model: car2.model,
+          year: car2.year,
+          fuel_type: car2.fuel_type,
+          cylinders: car2.cylinders,
+          transmission: car2.transmission,
+          drive: car2.drive,
+          combination_mpg: car2.combination_mpg, 
+        };
+
+        // Send the simplified car details and user preferences to the backend for AI suggestion
+        const response = await fetch('http://localhost:3000/api/ai-suggestion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                car1: car1Metrics,
+                car2: car2Metrics,
+                userPreferences
+            })
+        });
+
+        const data = await response.json();
         setAiLoading(false);
-        return;
-      }
 
-      const response = await fetch('http://localhost:3000/api/ai-suggestion', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          car1: { make: make1, model: model1, year: year1 },
-          car2: { make: make2, model: model2, year: year2 },
-          userPreferences
-        })
-      });
-
-      const data = await response.json();
-      setAiLoading(false);
-
-      if (data.suggestion) {
-        displayTextCharacterByCharacter(data.suggestion);
-      } else {
-        setAiSuggestion('Error retrieving AI suggestion.');
-      }
+        if (data.suggestion) {
+            console.log(data.suggestion);
+            displayTextCharacterByCharacter(data.suggestion);
+        } else {
+            setAiSuggestion('Error retrieving AI suggestion.');
+        }
     } catch (error) {
-      console.error("Error fetching AI suggestion:", error);
-      setAiSuggestion("Failed to get AI response.");
-      setAiLoading(false);
+        console.error("Error fetching AI suggestion:", error);
+        setAiSuggestion("Failed to get AI response.");
+        setAiLoading(false);
     }
   };
+
 
   // Function to display text character by character
   const displayTextCharacterByCharacter = (text) => {
     let index = 0;
     setAiSuggestion('');
     const interval = setInterval(() => {
-      if (index <= text.length) {
+      if (index < text.length) {
         setAiSuggestion((prev) => prev + text[index]);
         index++;
       } else {
-        clearInterval(interval);
+        clearInterval(interval); // Ensure we stop when we reach the end of the text
       }
     }, 10); // Adjust speed (lower is faster)
   };
@@ -813,6 +854,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <span>Tab View</span>
       </button>
       </div>
+      
+
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="flex flex-col items-center ring-8 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
@@ -1002,7 +1045,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </button>
       )}
       </div>
-
+      <button 
+      onClick={() => generatePDF("report-section")}
+      className="general-button-styling">
+        
+        Save as PDF
+      </button>
+      <div id="report-section" className="flex flex-col items-center w-full">
       {/* AI Suggestion Box */}
       {showAiBox && (
         <div className="mt-6 p-4 w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg relative">
@@ -1025,9 +1074,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
       )}
 
+    
+
       {/* Toggle Button for View Mode */}
-      
-      
   
         {/* Custom Alert */}
           {alertMessage && (
@@ -1131,7 +1180,10 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               </div>
             </div>
           </>
+          
         )}
+        
+</div>
 </div>
 );
 }

@@ -43,6 +43,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 })
 
+
 // Route to handle AI suggestions
 app.post('/api/ai-suggestion', async (req, res) => {
     try {
@@ -53,62 +54,98 @@ app.post('/api/ai-suggestion', async (req, res) => {
         if (!car1 || !car2 || !userPreferences) {
             return res.status(400).json({ message: "Missing car details or user preferences." });
         }
+        console.log("Car 1 data:", car1);
+        console.log("Car 2 data:", car2);
+
+// Check the individual metrics for both cars
+        console.log("Car 1 metrics:", {
+            fuel_type: car1.fuel_type,
+            cylinders: car1.cylinders,
+            transmission: car1.transmission,
+            drive: car1.drive,
+            combination_mpg: car1.combination_mpg
+        });
+
+        console.log("Car 2 metrics:", {
+            make: car1.make,
+            
+            fuel_type: car2.fuel_type,
+            cylinders: car2.cylinders,
+            transmission: car2.transmission,
+            drive: car2.drive,
+            combination_mpg: car2.combination_mpg
+        });
 
         // Construct the prompt for OpenAI
         const prompt = `
-        You are an AI car advisor helping users pick the best car based on their unique needs.
-        The user is comparing the following two vehicles:
+            You are an AI car advisor helping users choose between two vehicles based on their preferences. The user is comparing two cars:
 
-        **Car 1: ${car1.make} ${car1.model} (${car1.year})**
-        - Fuel Efficiency: ${car1.combination_mpg} MPG
-        - Power: ${car1.cylinders} cylinders
-        - Displacement: ${car1.displacement || 'N/A'} L
-        - Safety Rating: ${car1.safetyRating || 'Unknown'}
-        - Drive Type: ${car1.drive || 'N/A'}
-        - Transmission: ${car1.transmission || 'N/A'}
-        - Fuel Type: ${car1.fuel_type || 'N/A'}
-        - Class: ${car1.class || 'N/A'}
+            **Car 1: ${car1.make} ${car1.model} (${car1.year})**
+            - Fuel Efficiency: ${car1.combination_mpg || 'N/A'} MPG
+            - Power: ${car1.cylinders || 'N/A'} cylinders
+            - Safety: ${car1.safetyRating || 'N/A'}
 
-        **Car 2: ${car2.make} ${car2.model} (${car2.year})**
-        - Fuel Efficiency: ${car2.combination_mpg} MPG
-        - Power: ${car2.cylinders} cylinders
-        - Displacement: ${car2.displacement || 'N/A'} L
-        - Safety Rating: ${car2.safetyRating || 'Unknown'}
-        - Drive Type: ${car2.drive || 'N/A'}
-        - Transmission: ${car2.transmission || 'N/A'}
-        - Fuel Type: ${car2.fuel_type || 'N/A'}
-        - Class: ${car2.class || 'N/A'}
+            **Car 2: ${car2.make} ${car2.model} (${car2.year})**
+            - Fuel Efficiency: ${car2.combination_mpg || 'N/A'} MPG
+            - Power: ${car2.cylinders || 'N/A'} cylinders
+            - Safety: ${car2.safetyRating || 'N/A'}
 
-        The user has set up their preferences in their profile, they are as such:
+            User Preferences:
+            - Occupation: ${userPreferences.occupation || 'N/A'}
+            - Safety: ${userPreferences.safetyImportance || 'N/A'}/10
+            - Fuel Efficiency: ${userPreferences.fuelEfficiencyImportance || 'N/A'}/10
+            - Horsepower: ${userPreferences.horsepowerImportance || 'N/A'}/10
+            - Primary Usage: ${userPreferences.carUsage || 'N/A'}
 
-        **User Preferences (Importance Scale 1-10):**
-        - Occupation: ${userPreferences.occupation || 'Not specified'}
-        - Annual Miles Driven: ${userPreferences.annualMiles} miles
-        - Safety: ${userPreferences.safetyImportance}/10
-        - Fuel Efficiency: ${userPreferences.fuelEfficiencyImportance}/10
-        - Horsepower: ${userPreferences.horsepowerImportance}/10
-        - Speed: ${userPreferences.speedImportance}/10
-        - Primary Car Usage: ${userPreferences.carUsage || 'Not specified'}
+            Based on the user's preferences, recommend the best car with a clear, short, and confident explanation. Focus on the most important factors like safety, fuel efficiency, and power.
 
-        **AI Recommendation:**
-        - Keep the response as brief as you can
-        - Firstly talk as though you know of the user's preferences (which I just gave you)
-        - Prioritize the car that best matches the user's **top preferences**.
-        - If safety is the highest priority, lean toward the car with better safety indicators.
-        - If fuel efficiency matters most, favor the vehicle with better MPG.
-        - If performance is key, consider horsepower and displacement.
-        - **Do NOT mention missing data explicitly**; instead, phrase it as: "Based on the provided data and user preferences..."
-        - Use **natural, engaging language** rather than robotic or overly technical phrasing.
-        - **Make a confident choice** and justify it clearly.
-        - Avoid excessive numeric data; focus on **practical benefits** (e.g., "better for daily commutes" rather than "3 MPG more").
-        - **ENSURE TO End with a definitive statement:** "**Final Recommendation: [Car Choice]**". In this statement, feel free to use appropriate emojis instead of '*'.  
-        `;
+            **Recommendation:** [Car Choice]. Use emojis (e.g., "🚗 Car 1" or "🌟 Car 2").
+            `;
+
+
 
         // Call OpenAI API
         const aiResponse = await openai.chat.completions.create({
             model: "gpt-4-turbo",
             messages: [{ role: "system", content: prompt }],
-            max_tokens: 200,
+            max_tokens: 350,
+        });
+
+        console.log("OpenAI API Response:", aiResponse);
+        
+
+        const suggestion = aiResponse.choices[0].message.content;
+        res.json({ suggestion });
+
+    } catch (error) {
+        console.error("Error fetching AI suggestion:", error);
+        res.status(500).json({ message: "Error generating AI suggestion" });
+    }
+});
+
+// OpenAI API route 
+app.post('/api/ai-suggestion', async (req, res) => {
+    try {
+        const { car1, car2, userPreferences } = req.body;
+
+        console.log("Request Body:", req.body);
+
+        // Validate car1, car2, and userPreferences data
+        if (!car1 || !car2 || !userPreferences) {
+            return res.status(400).json({ message: "Missing car details or user preferences." });
+        }
+
+        if (!car1.make || !car1.model || !car2.make || !car2.model) {
+            return res.status(400).json({ message: "Car make and model must be provided." });
+        }
+
+        // If everything is fine, proceed with generating the prompt
+        const prompt = `... (as shown above)`;
+
+        const aiResponse = await openai.chat.completions.create({
+            model: "gpt-4-turbo",
+            messages: [{ role: "system", content: prompt }],
+            max_tokens: 175,
         });
 
         console.log("OpenAI API Response:", aiResponse);
@@ -122,22 +159,6 @@ app.post('/api/ai-suggestion', async (req, res) => {
     }
 });
 
-// OpenAI API route 
-app.post("/api/generate", async (req, res) => {
-    const { prompt } = req.body;
-
-    if (!prompt) {
-        return res.status(400).json({ error: "Prompt is required" });
-    }
-
-    try {
-        const response = await generateText(prompt);
-        res.json({ response });
-    } catch (error) {
-        console.error("Error generating AI response:", error);
-        res.status(500).json({ error: "Failed to generate response" });
-    }
-});
 
 // Fetch car makes
 app.get('/api/carmakes', async (req, res) => {
