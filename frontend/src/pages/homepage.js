@@ -10,7 +10,7 @@ function Homepage() {
     <div className="my-10 flex flex-col items-center justify-center min-h-screen p-6 text-center font-sans">
       {/* Heading */}
       <h1 className="-mt-12 mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
-        <span className="text-blue-600">Car vs. Car</span> Landing Page
+        <span className="text-blue-600">Car vs. Car</span>
       </h1>
 
       {/* Description */}
