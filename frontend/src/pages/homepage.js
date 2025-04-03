@@ -1,13 +1,13 @@
 import { React, useContext } from 'react';
+import { AuthContext } from '../AuthContext';
 import { Link } from 'react-router-dom';
 import homePageIcon from './images/carvcar.JPG';
-import { AuthContext } from '../AuthContext';
 
 function Homepage() {
   const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <div className="my-10 flex flex-col items-center justify-center min-h-screen p-6 text-center font-sans">
+    <div className="flex flex-col items-center justify-center my-10 p-6 text-center font-sans">
       {/* Heading */}
       <h1 className="-mt-12 mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
         <span className="text-blue-600">Car vs. Car</span>
@@ -41,11 +41,7 @@ function Homepage() {
         src={homePageIcon}
         alt="CarVsCar"
         className="my-10 max-w-[40vw] md:max-w-[30vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-      />
-
-      
-
-      
+      />      
     </div>
   );
 }
