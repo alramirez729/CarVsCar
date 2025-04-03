@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-
 const { Schema } = mongoose;
+
 
 const userSchema = new Schema({
     username: {
@@ -33,7 +33,14 @@ const userSchema = new Schema({
         horsepowerImportance: { type: Number, min: 1, max: 10, default: 5 },
         speedImportance: { type: Number, min: 1, max: 10, default: 5 },
         carUsage: { type: String, default: '' },
-    }
+    },
+    savedComparisons: [
+        {
+            filePath: String,
+            date: Date,
+        }
+    ],
+      
 }, { timestamps: true });
 
 // Middleware to hash the password before saving the user
@@ -66,7 +73,7 @@ userSchema.virtual('calculatedAge').get(function () {
     }
     return null;
 });
-  
+
 
 const User = mongoose.model('User', userSchema);
 

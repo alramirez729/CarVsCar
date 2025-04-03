@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
 import { generatePDF } from "../components/generatePDF.js";
 import { getAISuggestion } from '../components/getAISuggestion.js';
+import html2pdf from "html2pdf.js";
 import hardcodedCarMakes from "../constants/makes.js";
 import SpeedometerGroup from '../components/SpeedometerGroup.js';
 import carLogoLeft from "./images/CarCompareLeft.png";
@@ -347,9 +348,44 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     setCarLogo2(null);
   };
   
+  // Save comparison using PDF
+  const saveComparison = async () => {
+    const element = document.getElementById("report-section");
+  
+    if (!element) return alert("No comparison to save.");
+  
+    try {
+      const pdfBlob = await html2pdf().from(element).outputPdf('blob');
+  
+      const formData = new FormData();
+      formData.append('pdf', pdfBlob, `comparison-${Date.now()}.pdf`);
+  
+      const token = localStorage.getItem('token');
+  
+      const res = await fetch('http://localhost:3000/users/save-comparison', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        alert('Comparison saved to your profile!');
+      } else {
+        console.error(data.error);
+        alert('Failed to save comparison.');
+      }
+    } catch (err) {
+      console.error('Error saving comparison:', err);
+      alert('An error occurred while saving.');
+    }
+  };
   
 
-  
   //Box above the graphs
   const generateNonNumericalComparison = (data1, data2) => {
     const nonNumericalMetrics = ["class", "transmission", "drive", "fuel_type"];
@@ -868,6 +904,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </button>
         </div>
       )}
+
+      {isLoggedIn && hasCompared && (
+        <button onClick={saveComparison} className="general-button-styling">
+          💾 Save Comparison
+        </button>
+      )}
+
       
       <div id="report-section" className="flex flex-col items-center w-full">
       {/* AI Suggestion Box */}

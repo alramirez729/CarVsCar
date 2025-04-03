@@ -6,6 +6,7 @@ import axios from 'axios';
 import OpenAI from 'openai';
 
 import userRoutes from './routes/users.js';  // Add .js extension
+import compareRoutes from './routes/compareRoutes.js'; // ✅ Import your new route
 import { generateText } from './openAIService.js';  // Add .js extension
 
 
@@ -18,6 +19,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
 }));
+app.use('/compare', compareRoutes); // 👈 available at /compare/save-comparison
+
 
 
 const dbURI = process.env.DB_URL;
@@ -113,42 +116,6 @@ app.post('/api/ai-suggestion', async (req, res) => {
 
         console.log("OpenAI API Response:", aiResponse);
         
-
-        const suggestion = aiResponse.choices[0].message.content;
-        res.json({ suggestion });
-
-    } catch (error) {
-        console.error("Error fetching AI suggestion:", error);
-        res.status(500).json({ message: "Error generating AI suggestion" });
-    }
-});
-
-// OpenAI API route 
-app.post('/api/ai-suggestion', async (req, res) => {
-    try {
-        const { car1, car2, userPreferences } = req.body;
-
-        console.log("Request Body:", req.body);
-
-        // Validate car1, car2, and userPreferences data
-        if (!car1 || !car2 || !userPreferences) {
-            return res.status(400).json({ message: "Missing car details or user preferences." });
-        }
-
-        if (!car1.make || !car1.model || !car2.make || !car2.model) {
-            return res.status(400).json({ message: "Car make and model must be provided." });
-        }
-
-        // If everything is fine, proceed with generating the prompt
-        const prompt = `... (as shown above)`;
-
-        const aiResponse = await openai.chat.completions.create({
-            model: "gpt-4-turbo",
-            messages: [{ role: "system", content: prompt }],
-            max_tokens: 175,
-        });
-
-        console.log("OpenAI API Response:", aiResponse);
 
         const suggestion = aiResponse.choices[0].message.content;
         res.json({ suggestion });
