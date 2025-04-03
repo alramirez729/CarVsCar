@@ -213,8 +213,27 @@ function AccountPage() {
             {Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
               savedComparisons.map((comp, index) => {
                 const dateString = comp?.date ? new Date(comp.date).toLocaleString() : 'Unknown date';
-                const fileName = comp.filePath.split('\\').pop(); // or comp.filePath.split('/').pop();
+                const fileName = comp.filePath.split('\\').pop(); // handle Windows path
                 const fileUrl = `http://localhost:3000/pdfs/${fileName}`;
+
+                const handleDelete = async () => {
+                  try {
+                    const token = localStorage.getItem('token');
+                    const res = await fetch(`http://localhost:3000/users/delete-comparison/${comp._id}`, {
+                      method: 'DELETE',
+                      headers: { Authorization: `Bearer ${token}` },
+                    });
+
+                    if (res.ok) {
+                      setSavedComparisons(prev => prev.filter(c => c._id !== comp._id));
+                      console.log('✅ Deleted successfully');
+                    } else {
+                      console.error('❌ Delete failed');
+                    }
+                  } catch (err) {
+                    console.error('❌ Error deleting comparison:', err);
+                  }
+                };
 
                 return (
                   <div
@@ -222,14 +241,22 @@ function AccountPage() {
                     className="flex justify-between items-center border p-4 rounded-lg shadow-sm"
                   >
                     <span className="text-gray-700 font-sans">{dateString}</span>
-                    <a
-                      href={fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline font-sans"
-                    >
-                      View PDF
-                    </a>
+                    <div className="flex items-center space-x-4">
+                      <a
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline font-sans"
+                      >
+                        View PDF
+                      </a>
+                      <button
+                        onClick={handleDelete}
+                        className="text-red-500 hover:text-red-700 font-sans"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 );
               })

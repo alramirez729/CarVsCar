@@ -3,6 +3,11 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js'; // Ensure the `.js` extension is included
 import authenticate from '../middleware/authenticate.js'; // Ensure the `.js` extension
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 import fs from 'fs';
@@ -38,6 +43,65 @@ router.post('/register', async (req, res) => {
       res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, '../pdfs');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `comparison-${Date.now()}.pdf`);
+  }
+});
+
+const upload = multer({ storage });
+
+// ✅ Save comparison (PDF)
+router.post('/save-comparison', authenticate, upload.single('pdf'), async (req, res) => {
+  try {
+    const userId = req.userId;
+    const filePath = req.file.path;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    user.savedComparisons.push({ filePath, date: new Date() });
+    await user.save();
+
+    res.status(200).json({ message: 'Comparison saved successfully!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Saving comparison failed.' });
+  }
+});
+
+// DELETE /delete-comparison/:id
+// DELETE /delete-comparison/:id
+// DELETE /delete-comparison/:id
+router.delete('/delete-comparison/:id', authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const comparisonId = req.params.id;
+
+    // Filter out the comparison by _id (as string)
+    user.savedComparisons = user.savedComparisons.filter(
+      (comp) => comp._id.toString() !== comparisonId
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: 'Comparison deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting comparison:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 
   
