@@ -38,6 +38,8 @@ const userSchema = new Schema({
         {
             filePath: String,
             date: Date,
+            car1: String,
+            car2: String,
         }
     ],
       

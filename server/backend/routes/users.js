@@ -62,13 +62,19 @@ router.post('/save-comparison', authenticate, upload.single('pdf'), async (req, 
   try {
     const userId = req.userId;
     const filePath = req.file.path;
+    const { car1, car2 } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    user.savedComparisons.push({ filePath, date: new Date() });
+    user.savedComparisons.push({
+      filePath,
+      date: new Date(),
+      car1,
+      car2,
+    });
     await user.save();
 
     res.status(200).json({ message: 'Comparison saved successfully!' });
@@ -78,8 +84,7 @@ router.post('/save-comparison', authenticate, upload.single('pdf'), async (req, 
   }
 });
 
-// DELETE /delete-comparison/:id
-// DELETE /delete-comparison/:id
+
 // DELETE /delete-comparison/:id
 router.delete('/delete-comparison/:id', authenticate, async (req, res) => {
   try {

@@ -241,6 +241,9 @@ function AccountPage() {
                     className="flex justify-between items-center border p-4 rounded-lg shadow-sm"
                   >
                     <span className="text-gray-700 font-sans">{dateString}</span>
+                    <p className="text-sm italic">
+                      {comp.car1 || 'Car 1'} vs {comp.car2 || 'Car 2'}
+                    </p>
                     <div className="flex items-center space-x-4">
                       <a
                         href={fileUrl}

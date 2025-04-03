@@ -349,16 +349,27 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   };
   
   // Save comparison using PDF
-  const saveComparison = async () => {
+  const saveComparison = async (car1, car2) => {
     const element = document.getElementById("report-section");
   
     if (!element) return alert("No comparison to save.");
   
     try {
-      const pdfBlob = await html2pdf().from(element).outputPdf('blob');
+      const pdf_options = {
+        margin: 10,
+        filename: `CarComparison-${Date.now()}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      };
+  
+      // Generate PDF blob using the same settings
+      const pdfBlob = await html2pdf().from(element).set(pdf_options).outputPdf('blob');
   
       const formData = new FormData();
-      formData.append('pdf', pdfBlob, `comparison-${Date.now()}.pdf`);
+      formData.append('pdf', pdfBlob, pdf_options.filename);
+      formData.append('car1', `${car1.make} ${car1.model}`);
+      formData.append('car2', `${car2.make} ${car2.model}`);
   
       const token = localStorage.getItem('token');
   
@@ -369,7 +380,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         },
         body: formData,
       });
-      
   
       const data = await res.json();
   
@@ -906,7 +916,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       )}
 
       {isLoggedIn && hasCompared && (
-        <button onClick={saveComparison} className="general-button-styling">
+        <button 
+        onClick={() => saveComparison({ make: make1, model: model1 }, { make: make2, model: model2 })}
+        className="general-button-styling">
           💾 Save Comparison
         </button>
       )}
