@@ -5,7 +5,7 @@ import { AuthContext } from '../AuthContext';
 import { generatePDF } from "./generatePDF.js";
 import { getAISuggestion } from '../getAISuggestion.js';
 import hardcodedCarMakes from "../makes.js";
-import ReactSpeedometer from "react-d3-speedometer";
+import SpeedometerGroup from '../SpeedometerGroup.js';
 import carLogoLeft from "./images/CarCompareLeft.png";
 import carLogoRight from "./images/CarCompareRight.png";
 import RenderBarChart from '../RenderBarChart.js';
@@ -479,63 +479,7 @@ const handleAISuggestion = async() => {
     }, 10); // Adjust speed (lower is faster)
   };
 
-  const renderSpeedometers = (title, overallRating, fuelEfficiency, power, make, vehicle_number) => {
-    return (
-      <div className="flex flex-col col-3 md:col-2 sm:col1 items-center lg:space-y-6 sm:space-y-0">
-        <div className="box_with_shadow flex flex-col items-center lg:space-y-6 sm:space-y-0">
-        <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
-                {make ? `${make}` : "Car " + vehicle_number}
-        </h4>
-        <ReactSpeedometer
-          value={overallRating}
-          minValue={0}
-          maxValue={100}
-          needleColor="red"
-          startColor="red"
-          endColor="green"
-          segments={10}
-          textColor="#000"
-          currentValueText="Overall Rating: ${value}"
-        />
-        </div>
-
-        <div className="box_with_shadow flex flex-col items-center lg:space-y-6 sm:space-y-0">
-        <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
-                {make ? `${make}` : "Car " + vehicle_number}
-        </h4>
-        <ReactSpeedometer
-          value={fuelEfficiency}
-          minValue={0}
-          maxValue={100}
-          needleColor="red"
-          startColor="red"
-          endColor="green"
-          segments={10}
-          textColor="#000"
-          currentValueText="Fuel Efficiency: ${value}"
-        />
-        </div>
-        <div className="box_with_shadow flex flex-col items-center lg:space-y-6 sm:space-y-0">
-        <h4 className="font-semibold text-sm text-center font-sans bg-sky-400 text-white px-4 py-1 my-4 rounded-lg">
-                {make ? `${make}` : "Car " + vehicle_number}
-        </h4>
-        <ReactSpeedometer
-          value={power}
-          minValue={0}
-          maxValue={10} // Assuming 10 cylinders max
-          needleColor="red"
-          startColor="red"
-          endColor="green"
-          segments={10}
-          textColor="#000"
-          currentValueText="Power: ${value}"
-        />
-        </div>
-
-      
-      </div>
-    );
-  };
+  
 
   // Function to generate comparison
   const generateComparison = (data1, data2) => {
@@ -909,12 +853,27 @@ const handleAISuggestion = async() => {
           <div className="flex flex-col col-2 sm:col-1 sm:flex-row justify-between gap-12 md:gap-8 sm:gap-4 my-10 items-center">
             {/* Car 1 Speedometer */}
             <div className="flex flex-col items-center">
-              {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1, make1, 1)}
+            <SpeedometerGroup
+                title="Car 1"
+                overallRating={overallRating1}
+                fuelEfficiency={fuelEfficiency1}
+                power={power1}
+                make={make1}
+                vehicleNumber={1}
+              />
             </div>
 
             {/* Car 2 Speedometer */}
             <div className="flex flex-col items-center">
-              {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2, make2, 2)}
+            <SpeedometerGroup
+              title="Car 2"
+              overallRating={overallRating2}
+              fuelEfficiency={fuelEfficiency2}
+              power={power2}
+              make={make2}
+              vehicleNumber={2}
+            />
+
             </div>
           </div>
           <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-2 w-full justify-center items-center">
@@ -946,8 +905,22 @@ const handleAISuggestion = async() => {
                 {activeTab === 0 && (
                     <>
                       <div className="flex justify-between w-full">
-                        {renderSpeedometers("Car 1", overallRating1, fuelEfficiency1, power1, make1)}
-                        {renderSpeedometers("Car 2", overallRating2, fuelEfficiency2, power2, make2)}
+                        <SpeedometerGroup
+                          title="Car 1"
+                          overallRating={overallRating1}
+                          fuelEfficiency={fuelEfficiency1}
+                          power={power1}
+                          make={make1}
+                          vehicleNumber={1}
+                        />
+                        <SpeedometerGroup
+                          title="Car 2"
+                          overallRating={overallRating2}
+                          fuelEfficiency={fuelEfficiency2}
+                          power={power2}
+                          make={make2}
+                          vehicleNumber={2}
+                        />
                       </div>
                     </>
                   )}
