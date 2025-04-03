@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import axios from 'axios';
 import OpenAI from 'openai';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
 
 import userRoutes from './routes/users.js';  // Add .js extension
 import compareRoutes from './routes/compareRoutes.js'; // ✅ Import your new route
@@ -13,6 +16,17 @@ import { generateText } from './openAIService.js';  // Add .js extension
 dotenv.config();
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Serve static PDFs
+app.use('/pdfs', express.static(path.join(__dirname, 'pdfs')));
+
+// Attach compare routes
+app.use('/compare', compareRoutes); // now /compare/save-comparison works
+
+
 app.use(express.json());
 app.use(cors({
   origin: 'http://localhost:3001', // Allow requests from React app

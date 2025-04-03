@@ -19,6 +19,9 @@ function AccountPage() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
+  const [savedComparisons, setSavedComparisons] = useState([]);
+
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -84,9 +87,44 @@ function AccountPage() {
     setEditField(null);
   };
 
+  useEffect(() => {
+    const fetchComparisons = async () => {
+      if (selectedSection === 'Comparisons') {
+        try {
+          const token = localStorage.getItem('token');
+          const res = await fetch('http://localhost:3000/users/me', {
+            
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+            
+          });
+          
+
+          const data = await res.json();
+
+          console.log("Full user object from /me:", data.user);
+          if (res.ok) {
+            setSavedComparisons(data.user.savedComparisons || []);
+            console.log("✔️ Saved comparisons:", data.user.savedComparisons);
+          } else {
+            console.error(data.message || 'Error fetching comparisons');
+          }
+        } catch (err) {
+          console.error('Error fetching saved comparisons:', err);
+        }
+      }
+    };
+  
+    fetchComparisons();
+  }, [selectedSection]);
+  
+
   const profileSection = (
     <div className="space-y-6">
-      {Object.keys(userInfo).map((field) => (
+      {Object.keys(userInfo).filter(
+        (field) => typeof userInfo[field] !== 'object' || field === 'birthdate'
+      ).map((field) => (
         <div key={field} className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-center">
             <label className="font-semibold text-gray-700 capitalize font-sans text-xl">{field}:</label>
@@ -138,13 +176,14 @@ function AccountPage() {
       ))}
     </div>
   );
+  
 
   return (
     <body className="bg-gray-50 overflow-hidden">
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-sans text-3xl font-bold mb-6 underline">Account Page:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
-          {['Profile', 'Preferences', 'Settings', 'Security'].map((section) => (
+          {['Profile', 'Preferences', 'Comparisons','Settings', 'Security'].map((section) => (
             <li
               key={section}
               className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 ${
@@ -168,6 +207,38 @@ function AccountPage() {
         <div className="font-sans space-y-6 w-1/2">
           {selectedSection === 'Profile' && profileSection}
           {selectedSection === 'Preferences' && <UserPreferencesForm />} 
+          {selectedSection === 'Comparisons' && (
+          <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 font-sans">Saved Comparisons</h2>
+            {Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
+              savedComparisons.map((comp, index) => {
+                const dateString = comp?.date ? new Date(comp.date).toLocaleString() : 'Unknown date';
+                const fileName = comp.filePath.split('\\').pop(); // or comp.filePath.split('/').pop();
+                const fileUrl = `http://localhost:3000/pdfs/${fileName}`;
+
+                return (
+                  <div
+                    key={comp._id || index}
+                    className="flex justify-between items-center border p-4 rounded-lg shadow-sm"
+                  >
+                    <span className="text-gray-700 font-sans">{dateString}</span>
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline font-sans"
+                    >
+                      View PDF
+                    </a>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="text-gray-500 italic font-sans">No comparisons saved yet.</p>
+            )}
+          </div>
+        )}
+
           {selectedSection === 'Settings' && <div className="bg-white p-6 rounded-lg shadow-md">Your Account Settings</div>}
           {selectedSection === 'Security' && <div className="bg-white p-6 rounded-lg shadow-md">Security and Password Options</div>}
         </div>
