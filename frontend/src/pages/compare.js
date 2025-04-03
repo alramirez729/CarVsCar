@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
-import { generatePDF } from "./generatePDF.js";
-import { getAISuggestion } from '../getAISuggestion.js';
-import hardcodedCarMakes from "../makes.js";
-import SpeedometerGroup from '../SpeedometerGroup.js';
+import { generatePDF } from "../components/generatePDF.js";
+import { getAISuggestion } from '../components/getAISuggestion.js';
+import hardcodedCarMakes from "../constants/makes.js";
+import SpeedometerGroup from '../components/SpeedometerGroup.js';
 import carLogoLeft from "./images/CarCompareLeft.png";
 import carLogoRight from "./images/CarCompareRight.png";
-import RenderBarChart from '../RenderBarChart.js';
+import RenderBarChart from '../components/RenderBarChart.js';
+import metricExplanations from '../constants/metricsExplanation.js';
 
 
 function Compare() {
@@ -401,69 +402,67 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   };
 
   // User Preferences
-  const fetchUserPreferences = async () => {
+  async function fetchUserPreferences() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error("No token found. User is not authenticated.");
         return null;
       }
-  
+
       console.log("Sending request to fetch user preferences...");
-  
-      const response = await fetch('http://localhost:3000/users/preferences', {  
+
+      const response = await fetch('http://localhost:3000/users/preferences', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       console.log("Response Status:", response.status);
-      
+
       // Read raw text response for debugging
       const textResponse = await response.text();
       console.log("Raw Response:", textResponse);
-  
+
       // Try parsing JSON manually
       const data = JSON.parse(textResponse);
       console.log("Fetched Preferences:", data);
-  
+
       return data.preferences;
     } catch (error) {
       console.error('Error fetching user preferences:', error);
       return null;
     }
-  };
-  
-const handleAISuggestion = async() => {
-  setAiSuggestion('');
-  setShowAiBox(true);
-  setAiLoading(true);
-
-  try{
-    const suggestion = await getAISuggestion({
-      make1, 
-      model1,
-      year1,
-      make2,
-      model2, 
-      year2, 
-      fetchCarData,
-      fetchUserPreferences,
-    });
-
-    displayTextCharacterByCharacter(suggestion);
-
-  }catch (error){
-    console.error("AI suggestion Error", error);
-    setAiSuggestion(error.message || "Failed to get AI response.");
-  } finally {
-    setAiLoading(false);
   }
-}
+  
+  const handleAISuggestion = async() => {
+    setAiSuggestion('');
+    setShowAiBox(true);
+    setAiLoading(true);
 
+    try{
+      const suggestion = await getAISuggestion({
+        make1, 
+        model1,
+        year1,
+        make2,
+        model2, 
+        year2, 
+        fetchCarData,
+        fetchUserPreferences,
+      });
 
+      displayTextCharacterByCharacter(suggestion);
+
+    }catch (error){
+      console.error("AI suggestion Error", error);
+      setAiSuggestion(error.message || "Failed to get AI response.");
+    } finally {
+      setAiLoading(false);
+    }
+  }
 
   // Function to display text character by character
   const displayTextCharacterByCharacter = (text) => {
@@ -478,8 +477,6 @@ const handleAISuggestion = async() => {
       }
     }, 10); // Adjust speed (lower is faster)
   };
-
-  
 
   // Function to generate comparison
   const generateComparison = (data1, data2) => {
@@ -574,15 +571,6 @@ const handleAISuggestion = async() => {
       </div>
   );
 };
-
-  // Explanations for each metric in layman's terms
-  const metricExplanations = {
-    combination_mpg: "Combined miles per gallon (MPG) is the average fuel efficiency of the car, combining both city and highway driving.",
-    city_mpg: "City miles per gallon (MPG) is how many miles the car can travel on one gallon of fuel in city driving conditions.",
-    highway_mpg: "Highway miles per gallon (MPG) is how many miles the car can travel on one gallon of fuel on the highway.",
-    cylinders: "Cylinders are the components of an engine that provide power. More cylinders typically mean more power but less fuel efficiency.",
-    displacement: "Displacement is the total volume of all the cylinders in the engine, usually measured in liters. It is an indicator of engine size and power."
-  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">

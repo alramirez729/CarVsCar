@@ -4,7 +4,7 @@ import { AuthProvider } from './AuthContext'; // Import AuthProvider
 import './App.css'; // Make sure Tailwind is loaded here
 
 // Importing components to the website
-import Navbar from './Navbar';
+import Navbar from './components/Navbar.js';
 import Compare from './pages/compare';
 import Homepage from './pages/homepage';
 import Loginpage from './pages/loginpage';

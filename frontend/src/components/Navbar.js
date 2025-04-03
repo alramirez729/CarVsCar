@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCodeCompare, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../AuthContext.js';
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
