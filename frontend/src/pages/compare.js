@@ -61,6 +61,9 @@ function Compare() {
   const sections = ['Overall Ratings', 'Car Features', 'Performance Charts'];
 
   const [hasCompared, setHasCompared] = useState(false);
+
+  const [showResetModal, setShowResetModal] = useState(false);
+
   
   const handleNextTab = () => {
     setActiveTab((prev) => (prev + 1) % sections.length);
@@ -324,6 +327,26 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     setAiSuggestion('');
     setShowAiBox(false);
   };
+
+  //Resetting individual boxes: 
+  const resetCar1 = () => {
+    setMake1('');
+    setModel1('');
+    setYear1('');
+    setModelSuggestions1([]);
+    setYearSuggestions1([]);
+    setCarLogo1(null);
+  };
+  
+  const resetCar2 = () => {
+    setMake2('');
+    setModel2('');
+    setYear2('');
+    setModelSuggestions2([]);
+    setYearSuggestions2([]);
+    setCarLogo2(null);
+  };
+  
   
 
   
@@ -629,6 +652,15 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="flex flex-col items-center ring-8 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
+        <div className="relative w-full">
+          <button
+            onClick={resetCar1}
+            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 transition transform hover:scale-110"
+            title="Reset Car 1"
+          >
+            🔄
+          </button>
+        </div>
         <div className="w-36 min-h-36 flex items-center justify-center">
             {carLogo1 ? (
                 <img 
@@ -716,6 +748,15 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
         {/* Car 2 Input */}
         <div className="flex flex-col items-center ring-8 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
+        <div className="relative w-full">
+          <button
+            onClick={resetCar2}
+            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 transition transform hover:scale-110"
+            title="Reset Car 2"
+          >
+            🔄
+          </button>
+        </div>
         <div className="w-36 min-h-36 flex items-center justify-center ">
             {carLogo2 ? (
                 <img 
