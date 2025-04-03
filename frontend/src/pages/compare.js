@@ -295,6 +295,37 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     if (make2) fetchCarLogo(make2, setCarLogo2);
   }, [make2]);
 
+  //Reset comparison
+  const resetComparison = () => {
+    setMake1('');
+    setModel1('');
+    setYear1('');
+    setModelSuggestions1([]);
+    setYearSuggestions1([]);
+    setCarLogo1(null);
+  
+    setMake2('');
+    setModel2('');
+    setYear2('');
+    setModelSuggestions2([]);
+    setYearSuggestions2([]);
+    setCarLogo2(null);
+  
+    setComparisonResult([]);
+    setNonNumericalComparison(null);
+    setComparisonData([]);
+    setFuelEfficiency1(0);
+    setFuelEfficiency2(0);
+    setPower1(0);
+    setPower2(0);
+    setOverallRating1(0);
+    setOverallRating2(0);
+    setHasCompared(false);
+    setAiSuggestion('');
+    setShowAiBox(false);
+  };
+  
+
   
   //Box above the graphs
   const generateNonNumericalComparison = (data1, data2) => {
@@ -784,11 +815,17 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       )}
       </div>
       {hasCompared &&(
+        <div className="w-full flex flex-col sm:flex-row sm:justify-end sm:items-center gap-2 mt-4">
         <button 
         onClick={() => generatePDF("report-section")}
         className="general-button-styling">
           Save as PDF
         </button>
+        
+        <button onClick={resetComparison} className="compare-page-buttons-red">
+          🔄 Reset Comparison
+        </button>
+        </div>
       )}
       
       <div id="report-section" className="flex flex-col items-center w-full">
