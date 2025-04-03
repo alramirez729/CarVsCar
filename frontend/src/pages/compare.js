@@ -3,6 +3,7 @@ import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThL
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
 import { generatePDF } from "./generatePDF.js";
+import { getAISuggestion } from '../getAISuggestion.js';
 import hardcodedCarMakes from "../makes.js";
 import ReactSpeedometer from "react-d3-speedometer";
 import carLogoLeft from "./images/CarCompareLeft.png";
@@ -66,7 +67,6 @@ function Compare() {
     setActiveTab((prev) => (prev - 1 + sections.length) % sections.length);
   };
   
-
   //alerts for button if input fields are incomplete/incorrect
   useEffect(() => {
     if (alertMessage) {
@@ -78,7 +78,6 @@ function Compare() {
       return () => clearTimeout(timer); // Cleanup on unmount or message change
     }
   }, [alertMessage]);
-
 
   //Speedometer
   useEffect(() => {
@@ -123,10 +122,6 @@ function Compare() {
       );
     }
   }, [comparisonData]);
-  
-
-  // Currently only fetches car brands that were produced in 2022
-
 
   //autoscroll when clicking the compare button
   useEffect(() => {
@@ -141,7 +136,6 @@ function Compare() {
     }
   }, [comparisonResult]);
   
-
   // Function to fetch data for a given make, model, and year
   const fetchCarData = async (make, model, year) => {
     try {
@@ -169,59 +163,52 @@ function Compare() {
     }
 };
 
-
 // Cache for storing year data for models
 const yearDataCache = new Map();
 
 const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   if (!carNumber) {
-      console.error('carNumber is missing. You must pass carNumber explicitly (1 or 2).');
-      return;
+    console.error('carNumber is missing. You must pass carNumber explicitly (1 or 2).');
+    return;
   }
-
   try {
       let endpoint = '';
-
       // Adjust endpoint based on type
       if (type === 'model') {
           if (!make) {
-              console.error('Make is required for fetching models.');
-              return;
+            console.error('Make is required for fetching models.');
+            return;
           }
           endpoint = `https://api.api-ninjas.com/v1/carmodels?make=${make}`;
       } else if (type === 'year') {
           if (!make || !model) {
-              console.error('Make and Model are required for fetching years.');
-              return;
+            console.error('Make and Model are required for fetching years.');
+            return;
           }
-
           endpoint = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
           // ✅ Reset year suggestions before fetching new data
           if (carNumber === 1) {
-              setYearSuggestions1([]);
-              setYear1(''); // Reset year selection
+            setYearSuggestions1([]);
+            setYear1(''); // Reset year selection
           } else if (carNumber === 2) {
-              setYearSuggestions2([]);
-              setYear2(''); // Reset year selection
+            setYearSuggestions2([]);
+            setYear2(''); // Reset year selection
           }
       } else {
-          console.error(`Invalid type: ${type}`);
-          return;
+        console.error(`Invalid type: ${type}`);
+        return;
       }
-
       // Make the API request
       const response = await fetch(endpoint, {
-          method: 'GET',
-          headers: {
-              'X-Api-Key': process.env.REACT_APP_API_KEY,
-          },
+        method: 'GET',
+        headers: {
+          'X-Api-Key': process.env.REACT_APP_API_KEY,
+        },
       });
-
       if (!response.ok) {
-          console.error(`Error fetching ${type} suggestions: ${response.statusText}`);
-          return;
+        console.error(`Error fetching ${type} suggestions: ${response.statusText}`);
+        return;
       }
-
       const data = await response.json();
 
       // Update the state based on type
@@ -230,21 +217,20 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           const modelsWithYears = await Promise.all(data.map(async (modelName) => {
               const cacheKey = `${make}-${modelName}`;
               if (yearDataCache.has(cacheKey)) {
-                  return yearDataCache.get(cacheKey) ? modelName : null;
+                return yearDataCache.get(cacheKey) ? modelName : null;
               }
-
               const yearResponse = await fetch(`https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(modelName)}&limit=1`, {
                   method: 'GET',
                   headers: {
-                      'X-Api-Key': process.env.REACT_APP_API_KEY,
+                    'X-Api-Key': process.env.REACT_APP_API_KEY,
                   },
               });
 
               if (yearResponse.ok) {
-                  const yearData = await yearResponse.json();
-                  const hasYearData = yearData.length > 0;
-                  yearDataCache.set(cacheKey, hasYearData); // Cache the result
-                  return hasYearData ? modelName : null;
+                const yearData = await yearResponse.json();
+                const hasYearData = yearData.length > 0;
+                yearDataCache.set(cacheKey, hasYearData); // Cache the result
+                return hasYearData ? modelName : null;
               }
               return null;
           }));
@@ -252,30 +238,30 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           const filteredModels = modelsWithYears.filter(model => model !== null);
 
           if (carNumber === 1) {
-              setModelSuggestions1(filteredModels);
-              console.log('Model suggestions for Car 1:', filteredModels);
+            setModelSuggestions1(filteredModels);
+            console.log('Model suggestions for Car 1:', filteredModels);
           } else if (carNumber === 2) {
-              setModelSuggestions2(filteredModels);
-              console.log('Model suggestions for Car 2:', filteredModels);
+            setModelSuggestions2(filteredModels);
+            console.log('Model suggestions for Car 2:', filteredModels);
           }
       } else if (type === 'year') {
-          const years = [...new Set(data.map((car) => car.year))].sort((a, b) => b - a);
+        const years = [...new Set(data.map((car) => car.year))].sort((a, b) => b - a);
 
-          if (years.length === 0) {
-              setAlertMessage(`No year data available for ${make} ${model}. Please select another model.`);
-              setAlertType('error');
+        if (years.length === 0) {
+            setAlertMessage(`No year data available for ${make} ${model}. Please select another model.`);
+            setAlertType('error');
 
-              // ✅ Instead of empty array, set a placeholder to indicate missing data
-              if (carNumber === 1) setYearSuggestions1(["No available years"]);
-              else if (carNumber === 2) setYearSuggestions2(["No available years"]);
-              return;
+            // ✅ Instead of empty array, set a placeholder to indicate missing data
+            if (carNumber === 1) setYearSuggestions1(["No available years"]);
+            else if (carNumber === 2) setYearSuggestions2(["No available years"]);
+            return;
           }
 
-          if (carNumber === 1) {
-              setYearSuggestions1(years);
-          } else if (carNumber === 2) {
-              setYearSuggestions2(years);
-          }
+        if (carNumber === 1) {
+          setYearSuggestions1(years);
+        } else if (carNumber === 2) {
+          setYearSuggestions2(years);
+        }
       }
   } catch (error) {
       console.error(`Error fetching ${type} suggestions for Car ${carNumber}:`, error);
@@ -284,14 +270,14 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
   const fetchCarLogo = async (make, setLogoState) => {
     try {
-        const slug = make.toLowerCase().replace(/ /g, "-"); // Convert make into a slug
-        const logoUrl = `https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/${slug}.png`;
-        const response = await fetch(logoUrl);
-        if (response.ok) {
-            setLogoState(logoUrl); 
-        } else {
-            setLogoState(null); // If not found, fallback to default
-        }
+      const slug = make.toLowerCase().replace(/ /g, "-"); // Convert make into a slug
+      const logoUrl = `https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/${slug}.png`;
+      const response = await fetch(logoUrl);
+      if (response.ok) {
+        setLogoState(logoUrl); 
+      } else {
+        setLogoState(null); // If not found, fallback to default
+      }
     } catch (error) {
         console.error('Error fetching car logo:', error);
         setLogoState(null);
@@ -311,24 +297,24 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const generateNonNumericalComparison = (data1, data2) => {
     const nonNumericalMetrics = ["class", "transmission", "drive", "fuel_type"];
     const labels = {
-        class: "Class",
-        transmission: "Transmission",
-        drive: "Drive Type",
-        fuel_type: "Fuel Type"
+      class: "Class",
+      transmission: "Transmission",
+      drive: "Drive Type",
+      fuel_type: "Fuel Type"
     };
 
     const formatTransmission = (value) => {
-        return value === 'm' ? "Manual" : value === 'a' ? "Automatic" : value;
+      return value === 'm' ? "Manual" : value === 'a' ? "Automatic" : value;
     };
 
     const formatDriveType = (value) => {
-        const driveMap = {
-            'fwd': 'Front-wheel drive',
-            'rwd': 'Rear-wheel drive',
-            'awd': 'All-wheel drive',
-            '4wd': 'Four-wheel drive'
-        };
-        return driveMap[value] || value;
+      const driveMap = {
+          'fwd': 'Front-wheel drive',
+          'rwd': 'Rear-wheel drive',
+          'awd': 'All-wheel drive',
+          '4wd': 'Four-wheel drive'
+      };
+      return driveMap[value] || value;
     };
 
     return (
@@ -450,87 +436,33 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     }
   };
   
-// Handles AI Suggestion logic 
-const handleAISuggestion = async () => {
-  if (!make1 || !model1 || !year1 || !make2 || !model2 || !year2) {
-      alert("Please select two cars before requesting AI suggestions.");
-      return;
-  }
-
+const handleAISuggestion = async() => {
   setAiSuggestion('');
   setShowAiBox(true);
   setAiLoading(true);
 
-  try {
-        const userPreferences = await fetchUserPreferences();
-        if (!userPreferences) {
-            alert("Error fetching user preferences.");
-            setAiLoading(false);
-            return;
-        }
+  try{
+    const suggestion = await getAISuggestion({
+      make1, 
+      model1,
+      year1,
+      make2,
+      model2, 
+      year2, 
+      fetchCarData,
+      fetchUserPreferences,
+    });
 
-        // Fetch the complete car data for both vehicles
-        const data1 = await fetchCarData(make1, model1, year1);
-        const data2 = await fetchCarData(make2, model2, year2);
+    displayTextCharacterByCharacter(suggestion);
 
-        if (data1.length === 0 || data2.length === 0) {
-            setAiLoading(false);
-            setAiSuggestion("Error fetching car data.");
-            return;
-        }
+  }catch (error){
+    console.error("AI suggestion Error", error);
+    setAiSuggestion(error.message || "Failed to get AI response.");
+  } finally {
+    setAiLoading(false);
+  }
+}
 
-        // Extract only the relevant metrics for both cars
-        const car1 = data1[0];  // Assuming you're getting the first entry in the array
-        const car2 = data2[0];  // Assuming you're getting the first entry in the array
-
-        const car1Metrics = {
-            make: car1.make,
-            model: car1.model,
-            year: car1.year,
-            fuel_type: car1.fuel_type,
-            cylinders: car1.cylinders,
-            transmission: car1.transmission,
-            drive: car1.drive,
-            combination_mpg: car1.combination_mpg, 
-        };
-
-        const car2Metrics = {
-          make: car2.make,
-          model: car2.model,
-          year: car2.year,
-          fuel_type: car2.fuel_type,
-          cylinders: car2.cylinders,
-          transmission: car2.transmission,
-          drive: car2.drive,
-          combination_mpg: car2.combination_mpg, 
-        };
-
-        // Send the simplified car details and user preferences to the backend for AI suggestion
-        const response = await fetch('http://localhost:3000/api/ai-suggestion', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                car1: car1Metrics,
-                car2: car2Metrics,
-                userPreferences
-            })
-        });
-
-        const data = await response.json();
-        setAiLoading(false);
-
-        if (data.suggestion) {
-            console.log(data.suggestion);
-            displayTextCharacterByCharacter(data.suggestion);
-        } else {
-            setAiSuggestion('Error retrieving AI suggestion.');
-        }
-    } catch (error) {
-        console.error("Error fetching AI suggestion:", error);
-        setAiSuggestion("Failed to get AI response.");
-        setAiLoading(false);
-    }
-  };
 
 
   // Function to display text character by character
@@ -648,8 +580,6 @@ const handleAISuggestion = async () => {
     // Compare metric values
     const car1Value = parseFloat(car1.value);
     const car2Value = parseFloat(car2.value);
-    
-  
     const toggleExplanation = () => setExplanationVisible(!explanationVisible);
   
     // Utility to get the shortened metric label
@@ -657,10 +587,7 @@ const handleAISuggestion = async () => {
       const words = metricLabel.split(" ");
       return words.slice(1).join(" ") || metricLabel;
     };
-  
     // ✅ Bar Chart method
-  
-
   return (
     <div className="flex flex-col p-2 gap-0 bg-gray-100 rounded-lg shadow-md mb-4">
       {/* Metric Label and Explanation */}
@@ -716,7 +643,6 @@ const handleAISuggestion = async () => {
   return (
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
-      
       <h1 className="subheading">Select two vehicles to see how they compare.</h1>
       <div className=" w-full flex flex-row space-x-4 my-4 justify-end">
         <button
@@ -726,7 +652,6 @@ const handleAISuggestion = async () => {
         <FontAwesomeIcon icon={faList} className="w-4 h-4" /> {/* List View Icon */}
         <span>List View</span>
       </button>
-
       <button
         className={`inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
         onClick={() => setViewMode('tab')}
@@ -735,8 +660,6 @@ const handleAISuggestion = async () => {
         <span>Tab View</span>
       </button>
       </div>
-      
-
       <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="flex flex-col items-center ring-8 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
@@ -759,7 +682,6 @@ const handleAISuggestion = async () => {
               : "Car 1"                // Default when neither make nor model is selected
             }
           </h2>
-
 
           {/* Make Dropdown */}
           <div className="relative w-full">
@@ -929,7 +851,6 @@ const handleAISuggestion = async () => {
       <button 
       onClick={() => generatePDF("report-section")}
       className="general-button-styling">
-        
         Save as PDF
       </button>
       <div id="report-section" className="flex flex-col items-center w-full">
@@ -954,9 +875,6 @@ const handleAISuggestion = async () => {
           </div>
         </div>
       )}
-
-    
-
       {/* Toggle Button for View Mode */}
   
         {/* Custom Alert */}
