@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AuthContext } from '../AuthContext';
+import { generatePDF } from "./generatePDF.js";
+import hardcodedCarMakes from "../makes.js";
+import ReactSpeedometer from "react-d3-speedometer";
 import carLogoLeft from "./images/CarCompareLeft.png";
 import carLogoRight from "./images/CarCompareRight.png";
-import { AuthContext } from '../AuthContext';
-import ReactSpeedometer from "react-d3-speedometer";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { generatePDF } from "./generatePDF.js";
+import RenderBarChart from '../RenderBarChart.js';
 
 
 function Compare() {
-
+  //use state for vehicles 
+  const [carMakes, setCarMakes] = useState(hardcodedCarMakes);
+  
   const [make1, setMake1] = useState('');
   const [model1, setModel1] = useState('');
   const [year1, setYear1] = useState('');
@@ -26,7 +29,7 @@ function Compare() {
 
   const [comparisonResult, setComparisonResult] = useState([]);
   const [nonNumericalComparison, setNonNumericalComparison] = useState(null);
-
+  
   const [carLogo1, setCarLogo1] = useState(null);  
   const [carLogo2, setCarLogo2] = useState(null);  
 
@@ -39,19 +42,18 @@ function Compare() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('info'); 
-
+  
   const resultsRef = useRef(null);
-
+  
   const [fuelEfficiency1, setFuelEfficiency1] = useState(0);
   const [power1, setPower1] = useState(0);
   const [overallRating1, setOverallRating1] = useState(0);
-
+  
   const [fuelEfficiency2, setFuelEfficiency2] = useState(0);
   const [power2, setPower2] = useState(0);
   const [overallRating2, setOverallRating2] = useState(0);
-
   const [comparisonData, setComparisonData] = useState([]);
-
+  
   const [viewMode, setViewMode] = useState('list'); 
   const [activeTab, setActiveTab] = useState(0);
   const sections = ['Overall Ratings', 'Car Features', 'Performance Charts'];
@@ -63,25 +65,6 @@ function Compare() {
   const handlePrevTab = () => {
     setActiveTab((prev) => (prev - 1 + sections.length) % sections.length);
   };
-
-  const hardcodedCarMakes = [
-    "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley",
-    "BMW", "Bugatti", "Buick", "Cadillac", "Chevrolet", "Chrysler",
-    "Citroën", "Dacia", "Daewoo", "Daihatsu", "Dodge", "Ferrari",
-    "Fiat", "Fisker", "Ford", "Genesis", "GMC", "Great Wall",
-    "Haval", "Honda", "Hummer", "Hyundai", "Infiniti", "Isuzu",
-    "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini",
-    "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Lucid",
-    "Maserati", "Maybach", "Mazda", "McLaren", "Mercedes-Benz",
-    "Mercury", "Mini", "Mitsubishi", "Nio", "Nissan", "Opel",
-    "Pagani", "Peugeot", "Polestar", "Pontiac", "Porsche", "Ram",
-    "Renault", "Rivian", "Rolls-Royce", "Saab", "Saturn", "Scion",
-    "Seat", "Skoda", "Smart", "SsangYong", "Subaru", "Suzuki",
-    "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo", "Zotye"
-  ];
-  
-  const [carMakes, setCarMakes] = useState(hardcodedCarMakes);
-  
   
 
   //alerts for button if input fields are incomplete/incorrect
@@ -676,112 +659,7 @@ const handleAISuggestion = async () => {
     };
   
     // ✅ Bar Chart method
-  const renderBarChart = () => {
-    const data = [
-      {
-        metric: metricLabel,
-        [car1.make]: car1Value,
-        [car2.make]: car2Value,
-      },
-    ];
-
-    // Custom Axis Tick for Tailwind Styling
-    const CustomTick = ({ x, y, payload }) => (
-      <text
-        x={x}
-        y={y}
-        dy={16} // Adjust vertical positioning
-        textAnchor="middle"
-        className="text-gray-600 text-sm font-sans"
-      >
-        {payload.value}
-      </text>
-    );
-
-    // Custom Y-Axis Label
-    const CustomYAxisTick = ({ x, y, payload }) => (
-      <text
-        x={x}
-        y={y}
-        dx={0} // Adjust horizontal positioning
-        textAnchor="end"
-        className="text-gray-600 text-sm font-sans"
-      >
-        {payload.value}
-      </text>
-    );
-
-    const CustomLegend = ({ payload }) => (
-      <div className="flex justify-center gap-4 mt-4">
-        {payload.map((entry, index) => (
-          <div key={`legend-item-${index}`} className="flex items-center gap-2">
-            <span
-              className="block w-4 h-4 rounded-full ring-0 ring-slate-500"
-              style={{ backgroundColor: entry.color }}
-            ></span>
-            <span className="text-sm font-sans text-gray-700">{entry.value.charAt(0).toUpperCase() + entry.value?.slice(1)}</span>
-          </div>
-        ))}
-      </div>
-    );
-
-    const CustomTooltip = ({ active, payload, label, coordinate }) => {
   
-      if (active && payload && payload.length) {
-        const tooltipStyle = {
-          position: 'absolute',
-          left: `${coordinate.x + 100}px`, // 20px offset to the right of the bar
-          top: `${coordinate.y - 10}px`, // Slight adjustment vertically
-          transform: 'translateX(0)', // Prevent shifting
-          zIndex: 10,
-          width: '250px',
-        };
-        return (
-          <div
-          style={tooltipStyle} 
-          className="bg-white border border-gray-300 p-4 rounded-lg shadow-md font-sans ring-2 ring-slate-500">
-            <p className="font-bold text-lg mb-2 italic">{label}</p>
-            {payload.map((entry, index) => (
-              <div key={`item-${index}`} className="text-sm">
-                <span
-                  className="font-medium italic font-bold font-sans"
-                  style={{ color: entry.color }}
-                >
-                  {entry.name}
-                </span>: {entry.value} {label}
-              </div>
-            ))}
-          </div>
-        );
-      }
-      return null;
-    };
-
-    return (
-      <BarChart barGap={30} width={400} height={250} data={data}>
-        <XAxis dataKey="metric" 
-              tick={<CustomTick />} // Custom Tick Component for X-Axis
-        />
-        <YAxis 
-          tick={<CustomYAxisTick />} // Custom Tick Component for Y-Axis
-        />
-        <Tooltip content={<CustomTooltip />}/>
-        <Legend content={<CustomLegend />} />
-        <Bar
-          className="font-sans"
-          dataKey={car1.make}
-          fill={'#7dd3fc'}
-          barSize={70}
-        />
-        <Bar
-          className="font-sans"
-          dataKey={car2.make}
-          fill={'#cc49ff'}
-          barSize={70}
-        />
-      </BarChart>
-    );
-  };
 
   return (
     <div className="flex flex-col p-2 gap-0 bg-gray-100 rounded-lg shadow-md mb-4">
@@ -816,10 +694,13 @@ const handleAISuggestion = async () => {
 
       {/* Bar Chart Appears Below the Metric Row (Centered) */}
       <div className="flex justify-center items-center mt-4">
-        {renderBarChart()}
+        <RenderBarChart
+          metricLabel={metricLabel}
+          car1={car1}
+          car2={car2}
+        />
       </div>
-
-    </div>
+      </div>
   );
 };
 
