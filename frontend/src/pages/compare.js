@@ -59,6 +59,8 @@ function Compare() {
   const [viewMode, setViewMode] = useState('list'); 
   const [activeTab, setActiveTab] = useState(0);
   const sections = ['Overall Ratings', 'Car Features', 'Performance Charts'];
+
+  const [hasCompared, setHasCompared] = useState(false);
   
   const handleNextTab = () => {
     setActiveTab((prev) => (prev + 1) % sections.length);
@@ -394,6 +396,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       setNonNumericalComparison(generateNonNumericalComparison(data1, data2)); // Non-Numerical
       console.log('Comparison Result:', comparisonResult);
 
+      setHasCompared(true);
     } catch (error) {
       console.error('Error comparing cars:', error);
       setAlertMessage('An error occurred during comparison. Please try again.');
@@ -780,11 +783,14 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </button>
       )}
       </div>
-      <button 
-      onClick={() => generatePDF("report-section")}
-      className="general-button-styling">
-        Save as PDF
-      </button>
+      {hasCompared &&(
+        <button 
+        onClick={() => generatePDF("report-section")}
+        className="general-button-styling">
+          Save as PDF
+        </button>
+      )}
+      
       <div id="report-section" className="flex flex-col items-center w-full">
       {/* AI Suggestion Box */}
       {showAiBox && (
@@ -834,6 +840,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
       {viewMode === 'list' ? (
         <>
+        {hasCompared &&(
+          <>
           {/* Non-Numerical Comparison Box */}
           {nonNumericalComparison && nonNumericalComparison}
           {/* Numerical Comparison Results */}
@@ -861,9 +869,10 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               make={make2}
               vehicleNumber={2}
             />
-
             </div>
           </div>
+          </>
+        )}
           <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-2 w-full justify-center items-center">
             {comparisonResult.length > 0 ? (
               comparisonResult.map((metricComponent, index) => (
@@ -872,7 +881,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                 </div>
               ))
             ) : (
-              <p>No comparison results to display yet.</p>
+              <p className="my-10 font-sans text-lg italic flex justify-center items-center">After selecting both car details, the results will appear below!</p>
             )}
           </div>
             </>
