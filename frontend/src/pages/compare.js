@@ -173,105 +173,135 @@ function Compare() {
 // Cache for storing year data for models
 const yearDataCache = new Map();
 
+// Helpers for TTL-based cache
+const getWithExpiry = (key) => {
+  const cached = localStorage.getItem(key);
+  if (!cached) return null;
+  try {
+    const { value, expiry } = JSON.parse(cached);
+    if (Date.now() > expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return value;
+  } catch (err) {
+    return null;
+  }
+};
+
+const setWithExpiry = (key, value, ttl = 86400000) => {
+  const data = {
+    value,
+    expiry: Date.now() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
 const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   if (!carNumber) {
     console.error('carNumber is missing. You must pass carNumber explicitly (1 or 2).');
     return;
   }
+
   try {
-      let endpoint = '';
-      // Adjust endpoint based on type
-      if (type === 'model') {
-          if (!make) {
-            console.error('Make is required for fetching models.');
-            return;
-          }
-          endpoint = `https://api.api-ninjas.com/v1/carmodels?make=${make}`;
-      } else if (type === 'year') {
-          if (!make || !model) {
-            console.error('Make and Model are required for fetching years.');
-            return;
-          }
-          endpoint = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
-          // ✅ Reset year suggestions before fetching new data
-          if (carNumber === 1) {
-            setYearSuggestions1([]);
-            setYear1(''); // Reset year selection
-          } else if (carNumber === 2) {
-            setYearSuggestions2([]);
-            setYear2(''); // Reset year selection
-          }
-      } else {
-        console.error(`Invalid type: ${type}`);
+    if (type === 'model') {
+      if (!make) {
+        console.error('Make is required for fetching models.');
         return;
       }
-      // Make the API request
+
+      const cacheKey = `models-with-years-${make}`;
+      const cachedModels = getWithExpiry(cacheKey);
+      if (cachedModels) {
+        if (carNumber === 1) setModelSuggestions1(cachedModels);
+        else setModelSuggestions2(cachedModels);
+        return;
+      }
+
+      // Fetch all cars for this make in one go
+      const bulkRes = await fetch(`https://api.api-ninjas.com/v1/cars?make=${make}&limit=1000`, {
+        method: 'GET',
+        headers: {
+          'X-Api-Key': process.env.REACT_APP_API_KEY,
+        },
+      });
+
+      if (!bulkRes.ok) {
+        console.error(`Failed to fetch car data for ${make}`);
+        return;
+      }
+
+      const carData = await bulkRes.json();
+
+      // Group by model and ensure they have year data
+      const modelMap = new Map();
+      carData.forEach(car => {
+        if (!modelMap.has(car.model)) {
+          modelMap.set(car.model, new Set());
+        }
+        modelMap.get(car.model).add(car.year);
+      });
+
+      const validModels = Array.from(modelMap.entries())
+        .filter(([_, years]) => years.size > 0)
+        .map(([model]) => model)
+        .sort();
+
+      setWithExpiry(cacheKey, validModels); // cache for 24h
+
+      if (carNumber === 1) {
+        setModelSuggestions1(validModels);
+      } else {
+        setModelSuggestions2(validModels);
+      }
+
+    } else if (type === 'year') {
+      if (!make || !model) {
+        console.error('Make and Model are required for fetching years.');
+        return;
+      }
+
+      const endpoint = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
+
+      if (carNumber === 1) {
+        setYearSuggestions1([]);
+        setYear1('');
+      } else if (carNumber === 2) {
+        setYearSuggestions2([]);
+        setYear2('');
+      }
+
       const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
           'X-Api-Key': process.env.REACT_APP_API_KEY,
         },
       });
+
       if (!response.ok) {
-        console.error(`Error fetching ${type} suggestions: ${response.statusText}`);
+        console.error(`Error fetching year suggestions: ${response.statusText}`);
         return;
       }
+
       const data = await response.json();
+      const years = [...new Set(data.map(car => car.year))].sort((a, b) => b - a);
 
-      // Update the state based on type
-      if (type === 'model') {
-          // Check the cache first before making API calls
-          const modelsWithYears = await Promise.all(data.map(async (modelName) => {
-              const cacheKey = `${make}-${modelName}`;
-              if (yearDataCache.has(cacheKey)) {
-                return yearDataCache.get(cacheKey) ? modelName : null;
-              }
-              const yearResponse = await fetch(`https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(modelName)}&limit=1`, {
-                  method: 'GET',
-                  headers: {
-                    'X-Api-Key': process.env.REACT_APP_API_KEY,
-                  },
-              });
+      if (years.length === 0) {
+        setAlertMessage(`No year data available for ${make} ${model}. Please select another model.`);
+        setAlertType('error');
 
-              if (yearResponse.ok) {
-                const yearData = await yearResponse.json();
-                const hasYearData = yearData.length > 0;
-                yearDataCache.set(cacheKey, hasYearData); // Cache the result
-                return hasYearData ? modelName : null;
-              }
-              return null;
-          }));
-
-          const filteredModels = modelsWithYears.filter(model => model !== null);
-
-          if (carNumber === 1) {
-            setModelSuggestions1(filteredModels);
-            console.log('Model suggestions for Car 1:', filteredModels);
-          } else if (carNumber === 2) {
-            setModelSuggestions2(filteredModels);
-            console.log('Model suggestions for Car 2:', filteredModels);
-          }
-      } else if (type === 'year') {
-        const years = [...new Set(data.map((car) => car.year))].sort((a, b) => b - a);
-
-        if (years.length === 0) {
-            setAlertMessage(`No year data available for ${make} ${model}. Please select another model.`);
-            setAlertType('error');
-
-            // ✅ Instead of empty array, set a placeholder to indicate missing data
-            if (carNumber === 1) setYearSuggestions1(["No available years"]);
-            else if (carNumber === 2) setYearSuggestions2(["No available years"]);
-            return;
-          }
-
-        if (carNumber === 1) {
-          setYearSuggestions1(years);
-        } else if (carNumber === 2) {
-          setYearSuggestions2(years);
-        }
+        if (carNumber === 1) setYearSuggestions1(['No available years']);
+        else setYearSuggestions2(['No available years']);
+        return;
       }
+
+      if (carNumber === 1) setYearSuggestions1(years);
+      else setYearSuggestions2(years);
+    } else {
+      console.error(`Invalid type: ${type}`);
+    }
   } catch (error) {
-      console.error(`Error fetching ${type} suggestions for Car ${carNumber}:`, error);
+    console.error(`Error fetching ${type} suggestions for Car ${carNumber}:`, error);
   }
 };
 
