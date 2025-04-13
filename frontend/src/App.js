@@ -9,7 +9,7 @@ import Compare from './pages/compare';
 import Homepage from './pages/homepage';
 import Loginpage from './pages/loginpage';
 import Registerpage from './pages/registerPage';
-import AccountPage from './pages/accountPage';
+import UserDashboard from './pages/userDashboard.js';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
               <Route path="/compare" element={<Compare />} />
               <Route path="/login" element={<Loginpage />} />
               <Route path="/register" element= {<Registerpage />} />
-              <Route path="/account" element={<AccountPage />} />
+              <Route path="/userDashboard" element={<UserDashboard />} />
 
             </Routes>
           </div>

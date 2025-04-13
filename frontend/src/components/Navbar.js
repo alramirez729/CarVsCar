@@ -56,16 +56,16 @@ function Navbar() {
                 className="hover:text-cyan-400 transition hover:scale-125 duration-300 flex items-center space-x-2"
               >
                 <FontAwesomeIcon icon={faUserCircle} />
-                <span className="hidden sm:block font-sans hover:scale-105">Account</span>
+                <span className="hidden sm:block font-sans hover:scale-105">User Dashboard</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-md">
                   <Link
-                    to="/account"
+                    to="/userDashboard"
                     className="block px-4 py-2 hover:bg-gray-200"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    Account Page
+                    User Dashboard
                   </Link>
                   <button
                     onClick={() => {

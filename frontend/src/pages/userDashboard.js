@@ -6,7 +6,7 @@ import { faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import UserPreferencesForm from './UserPreferencesForm';
 import axios from 'axios';
 
-function AccountPage() {
+function UserDashboard() {
   const [selectedSection, setSelectedSection] = useState('Profile');
   const { setIsLoggedIn } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({
@@ -181,7 +181,7 @@ function AccountPage() {
   return (
     <body className="bg-gray-50 overflow-hidden">
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
-        <h2 className="font-sans text-3xl font-bold mb-6 underline">Account Page:</h2>
+        <h2 className="font-sans text-3xl font-bold mb-6 underline">User Dashboard:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
           {['Profile', 'Preferences', 'Comparisons','Settings', 'Security'].map((section) => (
             <li
@@ -300,4 +300,4 @@ function AccountPage() {
   );
 }
 
-export default AccountPage;
+export default UserDashboard;
