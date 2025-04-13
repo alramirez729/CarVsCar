@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCodeCompare, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -19,6 +19,18 @@ function Navbar() {
     console.log('User logged out');
 
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if(dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+}, []);
 
   return (
     <nav className="bg-gray-800 text-white w-full py-4 shadow-lg fixed top-0 left-0 z-50">
@@ -50,7 +62,7 @@ function Navbar() {
               </Link>
             </li>
           ) : (
-            <li>
+            <li className='relative' ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="hover:text-cyan-400 transition hover:scale-125 duration-300 flex items-center space-x-2"
@@ -59,7 +71,7 @@ function Navbar() {
                 <span className="hidden sm:block font-sans hover:scale-105">User Dashboard</span>
               </button>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-md">
+                <div className="absolute top-full mt-2 right-0 w-40 bg-white text-black shadow-lg rounded-md z-50">
                   <Link
                     to="/userDashboard"
                     className="block px-4 py-2 hover:bg-gray-200"
