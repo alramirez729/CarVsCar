@@ -10,7 +10,7 @@ function Homepage() {
     <div className="flex flex-col items-center justify-center my-10 p-6 text-center font-sans">
       {/* Heading */}
       <h1 className="-mt-12 mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
-        <span className="text-blue-600">Car vs. Car</span>
+        <span className="text-blue-600">Compare Cars Instantly:</span>
       </h1>
 
       {/* Description */}
@@ -24,7 +24,7 @@ function Homepage() {
           to="/compare"
           className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
         >
-          Start Comparing
+          Try it now
         </Link>
         {!isLoggedIn && (
           <Link
