@@ -753,25 +753,25 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
-      <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5">Car Comparison</h1>
-      <h1 className="subheading">Select two vehicles to see how they compare.</h1>
+      <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5 animate-fade-in-up animation-delay-1000">Car Comparison</h1>
+      <h1 className="subheading animate-fade-in-up animation-delay-1000">Select two vehicles to see how they compare.</h1>
       <div className=" w-full flex flex-row space-x-4 my-4 justify-end">
         <button
-        className={`inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+        className={`animate-fade-in inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
         onClick={() => setViewMode('list')}
       >
         <FontAwesomeIcon icon={faList} className="w-4 h-4" /> {/* List View Icon */}
         <span>List View</span>
       </button>
       <button
-        className={`inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
+        className={`animate-fade-in inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
         onClick={() => setViewMode('tab')}
       >
         <FontAwesomeIcon icon={faThLarge} className="w-4 h-4" /> {/* Tab View Icon */}
         <span>Tab View</span>
       </button>
       </div>
-      <div className="flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
+      <div className="animate-fade-in flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
         <div className="flex flex-col items-center ring-8 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
         <div className="relative w-full">
@@ -869,7 +869,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
   
         {/* Car 2 Input */}
-        <div className="flex flex-col items-center ring-8 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
+        <div className="animate-fade-in flex flex-col items-center ring-8 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
         <div className="relative w-full">
           <button
             onClick={resetCar2}

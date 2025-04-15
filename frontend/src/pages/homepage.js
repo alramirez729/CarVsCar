@@ -22,14 +22,14 @@ function Homepage() {
       <div className="flex flex-col space-y-4">
         <Link
           to="/compare"
-          className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors hover:animate-wiggle transition-all duration-300"
+          className="general-button-styling animate-fade-in bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors hover:animate-wiggle transition-all duration-300"
         >
           Try it now
         </Link>
         {!isLoggedIn && (
           <Link
             to="/login"
-              className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 hover:animate-wiggle transition-all duration-300"
+              className="general-button-styling animate-fade-in bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 hover:animate-wiggle transition-all duration-300"
           >
             Sign Up / Login
           </Link>
@@ -40,7 +40,7 @@ function Homepage() {
       <img
         src={homePageIcon}
         alt="CarVsCar"
-        className="my-10 max-w-[40vw] md:max-w-[30vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+        className="animate-fade-in my-10 max-w-[40vw] md:max-w-[30vw] lg:max-w-[60vw] mb-8 border-4 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
       />      
     </div>
   );
