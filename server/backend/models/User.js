@@ -36,7 +36,7 @@ const userSchema = new Schema({
     },
     savedComparisons: [
         {
-            filePath: String,
+            file: Buffer,
             date: Date,
             car1: String,
             car2: String,

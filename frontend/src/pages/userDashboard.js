@@ -213,8 +213,7 @@ function UserDashboard() {
             {Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
               savedComparisons.map((comp, index) => {
                 const dateString = comp?.date ? new Date(comp.date).toLocaleString() : 'Unknown date';
-                const fileName = comp.filePath.split('\\').pop(); // handle Windows path
-                const fileUrl = `http://localhost:3000/pdfs/${fileName}`;
+                const fileUrl = `http://localhost:3000/compare/view-comparison/${comp._id}`;
 
                 const handleDelete = async () => {
                   try {
@@ -245,14 +244,35 @@ function UserDashboard() {
                       {comp.car1 || 'Car 1'} vs {comp.car2 || 'Car 2'}
                     </p>
                     <div className="flex items-center space-x-4">
-                      <a
-                        href={fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline font-sans"
-                      >
-                        View PDF
-                      </a>
+                    <button
+                      onClick={async () => {
+                        const token = localStorage.getItem('token');
+                        try {
+                          const res = await fetch(`http://localhost:3000/compare/view-comparison/${comp._id}`, {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
+                          });
+
+                          if (!res.ok) {
+                            alert('⚠️ Could not load PDF.');
+                            return;
+                          }
+
+                          const blob = await res.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, '_blank');
+                        } catch (err) {
+                          console.error('Fetch PDF error:', err);
+                          alert('⚠️ Error retrieving the PDF.');
+                        }
+                      }}
+                      className="text-blue-500 hover:underline font-sans"
+                    >
+                      View PDF
+                    </button>
+
+
                       <button
                         onClick={handleDelete}
                         className="text-red-500 hover:text-red-700 font-sans"

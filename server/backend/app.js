@@ -17,25 +17,28 @@ dotenv.config();
 
 const app = express();
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Serve static PDFs
-app.use('/pdfs', express.static(path.join(__dirname, 'pdfs')));
 
-// Attach compare routes
-app.use('/compare', compareRoutes); // now /compare/save-comparison works
-
-
-app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3001', // Allow requests from React app
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
+    origin: 'http://localhost:3001', // Allow requests from React app
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
 }));
-app.use('/compare', compareRoutes); // 👈 available at /compare/save-comparison
+app.use(express.json());
 
 
+app.use('/pdfs', express.static(path.join(__dirname, 'pdfs')));
+app.use('/compare', compareRoutes); 
+app.use('/users', userRoutes);
+app.use((req, res, next) => {
+    console.log(`🔥 ${req.method} ${req.originalUrl}`);
+    console.log('🧾 Headers:', req.headers);
+    next();
+  });
+  
 
 const dbURI = process.env.DB_URL;
 
@@ -53,7 +56,6 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     })
     .catch(err => console.log(err));
 
-app.use('/users', userRoutes);
 
 // initialize AI 
 const openai = new OpenAI({

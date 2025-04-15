@@ -395,15 +395,19 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
       // Generate PDF blob using the same settings
       const pdfBlob = await html2pdf().from(element).set(pdf_options).outputPdf('blob');
-  
+
+
+      const file = new File([pdfBlob], pdf_options.filename, { type: 'application/pdf' });
+
       const formData = new FormData();
-      formData.append('pdf', pdfBlob, pdf_options.filename);
+      formData.append('pdf', file); // <— this is the important change
       formData.append('car1', `${car1.make} ${car1.model}`);
       formData.append('car2', `${car2.make} ${car2.model}`);
+
   
       const token = localStorage.getItem('token');
   
-      const res = await fetch('http://localhost:3000/users/save-comparison', {
+      const res = await fetch('http://localhost:3000/compare/save-comparison', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -525,7 +529,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                         }`}>{car1Value}</p>
 
                         <p className={`text-lg font-mono font-semibold ${
-                          isEngineString(car2Value) ? 'text-purple-500' : 'text-gray-700'
+                          isEngineString(car2Value) ? 'text-purple-700' : 'text-gray-700'
                         }`}>{car2Value}</p>
                     </div>
                 );
