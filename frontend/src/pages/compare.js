@@ -430,15 +430,23 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const generateNonNumericalComparison = (data1, data2) => {
     const nonNumericalMetrics = ["class", "transmission", "drive", "fuel_type"];
     const labels = {
-      class: "Class",
+      class: "Form-Factor",
       transmission: "Transmission",
       drive: "Drive Type",
-      fuel_type: "Fuel Type"
+      fuel_type: "Engine"  
     };
 
     const formatTransmission = (value) => {
       return value === 'm' ? "Manual" : value === 'a' ? "Automatic" : value;
     };
+
+    const formatEngine = (fuel, cylinders, displacement) => {
+      const fuelFormatted = fuel?.charAt(0).toUpperCase() + fuel?.slice(1) || 'Uknown';
+      const cylindersFormatted = cylinders ? `${cylinders} cylinder` : 'n/a cyl.';
+      const displacementFormatted = displacement ? `${displacement}L` : 'n/a size';
+
+      return `${fuelFormatted}, ${cylindersFormatted}, ${displacementFormatted}`;
+    }
 
     const formatDriveType = (value) => {
       const driveMap = {
@@ -450,41 +458,75 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       return driveMap[value] || value;
     };
 
+    const isEngineString = (value) =>{
+      return typeof value === 'string' && /cylinder/i.test(value) && /L/.test(value);
+    }
+
     return (
       <div className="flex flex-col items-center p-6 bg-gradient-to-br from-blue-100 to-gray-50 
                   rounded-lg shadow-md border border-gray-200 
                   w-full max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto my-10">
             {/* Title */}
-            <h2 className="text-2xl font-bold text-gray-700 mb-4 font-mono text-center">Car Feature Overview</h2>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              {carLogo1 && (
+                <img
+                  src={carLogo1}
+                  alt={`${make1} logo`}
+                  className="h-10 w-auto object-contain"
+                />
+              )}
+              <h2 className="text-2xl font-bold text-gray-700 font-mono text-center">
+                Car Feature Overview
+              </h2>
+              {carLogo2 && (
+                <img
+                  src={carLogo2}
+                  alt={`${make2} logo`}
+                  className="h-10 w-auto object-contain"
+                />
+              )}
+            </div>
+
             
             {/* Header Row */}
             <div className="grid grid-cols-3 w-full bg-blue-300 py-2 rounded-t-lg text-center font-semibold text-gray-700 p-4">
-                <p className="font-bold font-mono text-lg italic text-gray-600 text-left">   Spec.</p>
-                <p className="font-bold font-mono text-lg italic text-gray-700 text-left">{make1}:</p>
-                <p className="font-bold font-mono text-lg italic text-gray-700 text-left">{make2}:</p>
+                <p className="font-bold font-mono text-2xl italic text-gray-600 text-left">   Spec.</p>
+                <p className="font-bold font-mono text-2xl italic text-gray-700 text-left">{make1}:</p>
+                <p className="font-bold font-mono text-2xl italic text-gray-700 text-left">{make2}:</p>
             </div>            
        {nonNumericalMetrics.map((metric, index) => {
-                const car1Value = 
-                    metric === 'transmission' ? formatTransmission(data1[0][metric]) :
-                    metric === 'drive' ? formatDriveType(data1[0][metric]) : 
-                    data1[0][metric];
+                let car1Value, car2Value;
 
-                const car2Value = 
-                    metric === 'transmission' ? formatTransmission(data2[0][metric]) :
-                    metric === 'drive' ? formatDriveType(data2[0][metric]) : 
-                    data2[0][metric];
+                if (metric === 'fuel_type') {
+                  car1Value = formatEngine(data1[0].fuel_type, data1[0].cylinders, data1[0].displacement);
+                  car2Value = formatEngine(data2[0].fuel_type, data2[0].cylinders, data2[0].displacement);
+                } else if (metric === 'transmission') {
+                  car1Value = formatTransmission(data1[0][metric]);
+                  car2Value = formatTransmission(data2[0][metric]);
+                } else if (metric === 'drive') {
+                  car1Value = formatDriveType(data1[0][metric]);
+                  car2Value = formatDriveType(data2[0][metric]);
+                } else {
+                  car1Value = data1[0][metric].toUpperCase();
+                  car2Value = data2[0][metric].toUpperCase();
+                }
 
                 return (
                   <div
                       key={metric}
-                      className={`grid grid-cols-3 w-full py-3 px-4 t ext-center items-center
+                      className={`grid grid-cols-3 w-full py-3 px-4 text-left items-center
                           ${index % 2 === 0 ? 'bg-blue-200' : 'bg-blue-100'}
                           border-b border-gray-300
                       `}
                   >
                         <p className="text-lg font-mono font-medium text-gray-800">{labels[metric]}</p>
-                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car1Value?.charAt(0).toUpperCase() + car1Value?.slice(1) || 'N/A'}</p>
-                        <p className="text-lg font-mono  text-gray-700 font-semibold">{car2Value?.charAt(0).toUpperCase() + car2Value?.slice(1) || 'N/A'}</p>
+                        <p className={`text-lg font-mono font-semibold ${
+                          isEngineString(car1Value) ? 'text-purple-700' : 'text-gray-700'
+                        }`}>{car1Value}</p>
+
+                        <p className={`text-lg font-mono font-semibold ${
+                          isEngineString(car2Value) ? 'text-purple-500' : 'text-gray-700'
+                        }`}>{car2Value}</p>
                     </div>
                 );
             })}
