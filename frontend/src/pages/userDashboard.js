@@ -181,12 +181,12 @@ function UserDashboard() {
   return (
     <body className="bg-gray-50 overflow-hidden">
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
-        <h2 className="font-sans text-3xl font-bold mb-6 underline">User Dashboard:</h2>
+        <h2 className="font-sans text-3xl font-bold mb-6 underline animate-fade-in">User Dashboard:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
           {['Profile', 'Preferences', 'Comparisons','Settings', 'Security'].map((section) => (
             <li
               key={section}
-              className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 ${
+              className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 animate-fade-in ${
                 selectedSection === section ? 'bg-cyan-500' : 'hover:bg-gray-700'
               }`}
               onClick={() => setSelectedSection(section)}
@@ -203,13 +203,13 @@ function UserDashboard() {
         </ul>
       </aside>
       <main className="flex-1 p-8 ml-72 h-screen overflow-y-auto flex flex-col items-center">
-        <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-sans p-2 ">{selectedSection}</h1>
-        <div className="font-sans space-y-6 w-1/2">
+        <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-sans p-2 animate-fade-in">{selectedSection}</h1>
+        <div className="font-sans space-y-6 w-1/2 animate-fade-in">
           {selectedSection === 'Profile' && profileSection}
           {selectedSection === 'Preferences' && <UserPreferencesForm />} 
           {selectedSection === 'Comparisons' && (
-          <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 font-sans">Saved Comparisons</h2>
+          <div className="bg-white p-6 rounded-lg shadow-md space-y-4 animate-fade-in">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 font-sans ">Saved Comparisons</h2>
             {Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
               savedComparisons.map((comp, index) => {
                 const dateString = comp?.date ? new Date(comp.date).toLocaleString() : 'Unknown date';
@@ -237,9 +237,9 @@ function UserDashboard() {
                 return (
                   <div
                     key={comp._id || index}
-                    className="flex justify-between items-center border p-4 rounded-lg shadow-sm"
+                    className="flex justify-between items-center border p-4 rounded-lg shadow-sm animate-fade-in"
                   >
-                    <span className="text-gray-700 font-sans">{dateString}</span>
+                    <span className="text-gray-700 font-sans ">{dateString}</span>
                     <p className="text-sm italic">
                       {comp.car1 || 'Car 1'} vs {comp.car2 || 'Car 2'}
                     </p>
@@ -275,7 +275,7 @@ function UserDashboard() {
 
                       <button
                         onClick={handleDelete}
-                        className="text-red-500 hover:text-red-700 font-sans"
+                        className="text-red-500 hover:text-red-700 hover:underline font-sans"
                       >
                         Delete
                       </button>
