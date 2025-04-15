@@ -54,3 +54,4 @@ body {
 .dropdown_input_styling{
     @apply w-full p-3 border border-gray-300 rounded-lg bg-slate-200 text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300 my-1;
 }
+
