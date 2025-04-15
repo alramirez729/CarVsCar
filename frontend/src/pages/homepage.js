@@ -9,12 +9,12 @@ function Homepage() {
   return (
     <div className="flex flex-col items-center justify-center my-10 p-6 text-center font-sans">
       {/* Heading */}
-      <h1 className="-mt-12 mb-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
-        <span className="text-blue-600">Compare Cars Instantly:</span>
+      <h1 className="-mt-10 mb-6 my-10 bvtext-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tightopacity-0 animate-fade-in-up animation-delay-1000">
+        <span className="text-blue-600 ">Compare Cars Instantly:</span>
       </h1>
 
       {/* Description */}
-      <p className="italic text-base md:text-xl lg:text-2xl text-slate-700 font-medium max-w-2xl leading-relaxed mx-auto px-5">
+      <p className="italic text-base md:text-xl lg:text-2xl text-slate-700 font-medium max-w-2xl leading-relaxed mx-auto px-5opacity-0 animate-fade-in-up animation-delay-800">
         Two cars of your choice go head to head. See which one suits your needs using Car vs. Car!
       </p>
 
@@ -22,14 +22,14 @@ function Homepage() {
       <div className="flex flex-col space-y-4">
         <Link
           to="/compare"
-          className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+          className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors hover:animate-wiggle transition-all duration-300"
         >
           Try it now
         </Link>
         {!isLoggedIn && (
           <Link
             to="/login"
-            className="general-button-styling bg-slate-900 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-colors duration-300"
+              className="general-button-styling bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 hover:animate-wiggle transition-all duration-300"
           >
             Sign Up / Login
           </Link>
