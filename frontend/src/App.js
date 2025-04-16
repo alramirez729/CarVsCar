@@ -10,6 +10,7 @@ import Homepage from './pages/homepage';
 import Loginpage from './pages/loginpage';
 import Registerpage from './pages/registerPage';
 import UserDashboard from './pages/userDashboard.js';
+import SearchVehicles from './pages/searchVehicles.js';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/login" element={<Loginpage />} />
               <Route path="/register" element= {<Registerpage />} />
               <Route path="/userDashboard" element={<UserDashboard />} />
+              <Route path="/searchVehicles" element={<SearchVehicles />}/>
 
             </Routes>
           </div>

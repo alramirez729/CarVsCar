@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCodeCompare, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faCodeCompare, faUserCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../AuthContext.js';
 
 function Navbar() {
@@ -42,6 +42,12 @@ function Navbar() {
 
         {/* Navigation Links */}
         <ul className="flex items-center space-x-8">
+          <li>
+            <Link to="/searchVehicles" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
+              <FontAwesomeIcon icon={faSearch}/>
+              <span className="hidden sm:block font-sans hover:scale-105">Search</span>
+            </Link>
+          </li>
           <li>
             <Link to="/homepage" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
               <FontAwesomeIcon icon={faHome} />
