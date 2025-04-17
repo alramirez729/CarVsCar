@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const response = await fetch('http://localhost:3001/auth/check', {
+        const response = await fetch('https://car-vs-car-api.onrender.com/auth/check', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
