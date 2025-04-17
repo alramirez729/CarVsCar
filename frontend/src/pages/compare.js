@@ -147,11 +147,7 @@ function Compare() {
   const fetchCarData = async (make, model, year) => {
     try {
         const response = await fetch(
-            `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&year=${year}&limit=75`,
-            {
-              method: 'GET',
-              headers: { 'X-Api-Key': process.env.REACT_APP_API_KEY },
-            }
+            `https://car-vs-car-api.onrender.com/api/cars?make=${make}&model=${encodeURIComponent(model)}&year=${year}&limit=75`
         );
         if (response.ok) {
             const data = await response.json(); 
@@ -219,12 +215,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       }
 
       // Fetch all cars for this make in one go
-      const bulkRes = await fetch(`https://api.api-ninjas.com/v1/cars?make=${make}&limit=1000`, {
-        method: 'GET',
-        headers: {
-          'X-Api-Key': process.env.REACT_APP_API_KEY,
-        },
-      });
+      const bulkRes = await fetch(`https://car-vs-car-api.onrender.com/api/cars?make=${make}&limit=1000`);
 
       if (!bulkRes.ok) {
         console.error(`Failed to fetch car data for ${make}`);

@@ -47,12 +47,7 @@ function SearchVehicles() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://api.api-ninjas.com/v1/cars?${buildQuery(filters)}`,
-          {
-            headers: {
-              'X-Api-Key': process.env.REACT_APP_API_KEY,
-            },
-          }
+          `https://car-vs-car-api.onrender.com/api/cars?${buildQuery(filters)}`,
         );
         if (!res.ok) throw new Error(await res.text());
 

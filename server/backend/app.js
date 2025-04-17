@@ -191,11 +191,13 @@ app.get('/api/cars', async (req, res) => {
         const apiKey = process.env.API_KEY;
         const { make, model, year, limit = 10, offset = 0 } = req.query;
 
-        if (!make || !model) {
-            return res.status(400).json({ message: 'Make and Model are required to fetch car details' });
+        // Allow make-only queries for model suggestions
+        if (!make) {
+            return res.status(400).json({ message: 'Make is required to fetch car details' });
         }
 
-        let apiUrl = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${model}&limit=${limit}&offset=${offset}`;
+        let apiUrl = `https://api.api-ninjas.com/v1/cars?make=${make}&limit=${limit}&offset=${offset}`;
+        if (model) apiUrl += `&model=${model}`;
         if (year) apiUrl += `&year=${year}`;
 
         const response = await axios.get(apiUrl, {
