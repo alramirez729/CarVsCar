@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: car-vs-car-api
+    runtime: node
+    nodeVersion: 18.17.0
+    rootDirectory: server/backend
+    buildCommand: cd server/backend && npm install
+    startCommand: cd server/backend && node app.js
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: ACCESS_TOKEN_SECRET
+        sync: false
+      - key: API_KEY
+        sync: false
+    plan: free
+    branch: master  # Changed to match your current branch
+    autoDeploy: true
