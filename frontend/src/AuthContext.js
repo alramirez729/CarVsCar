@@ -5,12 +5,35 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check for a token in localStorage when the app loads
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true); // Set logged-in state if token exists
-    }
+    const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3001/auth/check', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          setIsLoggedIn(true);
+        } else {
+          localStorage.removeItem('token');
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Token verification failed:', error);
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+      }
+    };
+
+    verifyToken();
   }, []);
 
   return (

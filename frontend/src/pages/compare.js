@@ -599,11 +599,8 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         }
       });
 
-      console.log("Response Status:", response.status);
-
       // Read raw text response for debugging
       const textResponse = await response.text();
-      console.log("Raw Response:", textResponse);
 
       // Try parsing JSON manually
       const data = JSON.parse(textResponse);

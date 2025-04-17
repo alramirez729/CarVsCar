@@ -10,6 +10,7 @@ import path from 'path';
 
 import userRoutes from './routes/users.js';  // Add .js extension
 import compareRoutes from './routes/compareRoutes.js'; // ✅ Import your new route
+import authRoutes from './routes/authRoutes.js';
 import { generateText } from './openAIService.js';  // Add .js extension
 
 
@@ -33,6 +34,8 @@ app.use(express.json());
 app.use('/pdfs', express.static(path.join(__dirname, 'pdfs')));
 app.use('/compare', compareRoutes); 
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
+
 app.use((req, res, next) => {
     console.log(`🔥 ${req.method} ${req.originalUrl}`);
     console.log('🧾 Headers:', req.headers);
