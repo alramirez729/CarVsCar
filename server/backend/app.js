@@ -23,12 +23,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-app.use(cors({
-    origin: 'https://car-vs-car-webapp.vercel.app', // Allow requests from React app
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    credentials: true // Allow credentials
-}));
+app.use(cors());
+// Configure CORS for specific routes
+app.use((req, res, next) => {
+    const allowedOrigins = ['https://car-vs-car-webapp.vercel.app', 'http://localhost:3001'];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 app.use(express.json());
 
 

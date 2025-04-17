@@ -47,7 +47,7 @@ function SearchVehicles() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://car-vs-car-api.onrender.com/api/cars?${buildQuery(filters)}`,
+          `${process.env.REACT_APP_API_URL}/api/cars?${buildQuery(filters)}`,
         );
         if (!res.ok) throw new Error(await res.text());
 

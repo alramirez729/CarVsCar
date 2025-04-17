@@ -147,7 +147,7 @@ function Compare() {
   const fetchCarData = async (make, model, year) => {
     try {
         const response = await fetch(
-            `https://car-vs-car-api.onrender.com/api/cars?make=${make}&model=${encodeURIComponent(model)}&year=${year}&limit=75`
+            `${process.env.REACT_APP_API_URL}/api/cars?make=${make}&model=${encodeURIComponent(model)}&year=${year}&limit=75`
         );
         if (response.ok) {
             const data = await response.json(); 
@@ -215,7 +215,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       }
 
       // Fetch all cars for this make in one go
-      const bulkRes = await fetch(`https://car-vs-car-api.onrender.com/api/cars?make=${make}&limit=1000`);
+      const bulkRes = await fetch(`${process.env.REACT_APP_API_URL}/api/cars?make=${make}&limit=1000`);
 
       if (!bulkRes.ok) {
         console.error(`Failed to fetch car data for ${make}`);
@@ -252,7 +252,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         return;
       }
 
-      const endpoint = `https://car-vs-car-api.onrender.com/api/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
+      const endpoint = `${process.env.REACT_APP_API_URL}/api/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
 
       if (carNumber === 1) {
         setYearSuggestions1([]);
@@ -393,7 +393,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
       const token = localStorage.getItem('token');
   
-      const res = await fetch('https://car-vs-car-api.onrender.com/compare/save-comparison', {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/compare/save-comparison`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
