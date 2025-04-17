@@ -28,7 +28,7 @@ function UserDashboard() {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('Token not found');
 
-        const response = await axios.get('http://localhost:3000/users/me', {
+        const response = await axios.get('https://car-vs-car-api.onrender.com/users/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -66,7 +66,7 @@ function UserDashboard() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        'http://localhost:3000/users/update',
+        'https://car-vs-car-api.onrender.com/users/update',
         { [field]: editedValue },
         {
           headers: {
@@ -92,7 +92,7 @@ function UserDashboard() {
       if (selectedSection === 'Comparisons') {
         try {
           const token = localStorage.getItem('token');
-          const res = await fetch('http://localhost:3000/users/me', {
+          const res = await fetch('https://car-vs-car-api.onrender.com/users/me', {
             
             headers: {
               'Authorization': `Bearer ${token}`
@@ -213,12 +213,12 @@ function UserDashboard() {
             {Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
               savedComparisons.map((comp, index) => {
                 const dateString = comp?.date ? new Date(comp.date).toLocaleString() : 'Unknown date';
-                const fileUrl = `http://localhost:3000/compare/view-comparison/${comp._id}`;
+                const fileUrl = `https://car-vs-car-api.onrender.com/compare/view-comparison/${comp._id}`;
 
                 const handleDelete = async () => {
                   try {
                     const token = localStorage.getItem('token');
-                    const res = await fetch(`http://localhost:3000/users/delete-comparison/${comp._id}`, {
+                    const res = await fetch(`https://car-vs-car-api.onrender.com/users/delete-comparison/${comp._id}`, {
                       method: 'DELETE',
                       headers: { Authorization: `Bearer ${token}` },
                     });
@@ -248,7 +248,7 @@ function UserDashboard() {
                       onClick={async () => {
                         const token = localStorage.getItem('token');
                         try {
-                          const res = await fetch(`http://localhost:3000/compare/view-comparison/${comp._id}`, {
+                          const res = await fetch(`https://car-vs-car-api.onrender.com/compare/view-comparison/${comp._id}`, {
                             headers: {
                               Authorization: `Bearer ${token}`,
                             },

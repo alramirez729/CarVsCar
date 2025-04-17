@@ -43,7 +43,7 @@ export const getAISuggestion = async ({ make1, model1, year1, make2, model2, yea
       combination_mpg: car2.combination_mpg,
     };
   
-    const response = await fetch('http://localhost:3000/api/ai-suggestion', {
+    const response = await fetch('https://car-vs-car-api.onrender.com/api/ai-suggestion', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

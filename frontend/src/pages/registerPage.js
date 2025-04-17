@@ -15,7 +15,7 @@ function RegisterPage() {
             // Convert birthdate to correct format
             const formattedBirthdate = birthdate ? new Date(birthdate).toISOString().split('T')[0] : null;
     
-            const response = await axios.post('http://localhost:3000/users/register', {
+            const response = await axios.post('https://car-vs-car-api.onrender.com/users/register', {
                 username,
                 email,
                 password,

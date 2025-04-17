@@ -26,7 +26,7 @@ function UserPreferencesForm() {
     const fetchPreferences = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:3000/users/preferences', {
+        const response = await axios.get('https://car-vs-car-api.onrender.com/users/preferences', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data.preferences) {
@@ -50,7 +50,7 @@ function UserPreferencesForm() {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:3000/users/preferences',
+        'https://car-vs-car-api.onrender.com/users/preferences',
         preferences,
         {
           headers: { Authorization: `Bearer ${token}` },

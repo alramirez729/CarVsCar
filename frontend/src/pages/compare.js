@@ -407,7 +407,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   
       const token = localStorage.getItem('token');
   
-      const res = await fetch('http://localhost:3000/compare/save-comparison', {
+      const res = await fetch('https://car-vs-car-api.onrender.com/compare/save-comparison', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -591,7 +591,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
       console.log("Sending request to fetch user preferences...");
 
-      const response = await fetch('http://localhost:3000/users/preferences', {
+      const response = await fetch('https://car-vs-car-api.onrender.com/users/preferences', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const age = document.getElementById('age').value;
 
         try {
-            const response = await fetch('http://localhost:3000/users/create', {
+            const response = await fetch('https://car-vs-car-api.onrender.com/users/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchUsers() {
         try {
-            const response = await fetch('http://localhost:3000/users/all');
+            const response = await fetch('https://car-vs-car-api.onrender.com/users/all');
             const users = await response.json();
             users.forEach(user => appendUserToList(user));
         } catch (error) {
