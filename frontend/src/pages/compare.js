@@ -252,7 +252,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         return;
       }
 
-      const endpoint = `https://api.api-ninjas.com/v1/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
+      const endpoint = `https://car-vs-car-api.onrender.com/api/cars?make=${make}&model=${encodeURIComponent(model)}&limit=100`;
 
       if (carNumber === 1) {
         setYearSuggestions1([]);
@@ -262,12 +262,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         setYear2('');
       }
 
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        headers: {
-          'X-Api-Key': process.env.REACT_APP_API_KEY,
-        },
-      });
+      const response = await fetch(endpoint);
 
       if (!response.ok) {
         console.error(`Error fetching year suggestions: ${response.statusText}`);
