@@ -24,9 +24,10 @@ const __dirname = dirname(__filename);
 
 
 app.use(cors({
-    origin: 'https://car-vs-car-webapp.vercel.app/', // Allow requests from React app
+    origin: 'https://car-vs-car-webapp.vercel.app', // Allow requests from React app
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true // Allow credentials
 }));
 app.use(express.json());
 
