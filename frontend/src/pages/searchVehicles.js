@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import Loading from '../components/Loading';
 function SearchVehicles() {
   const [filters, setFilters] = useState({
     make: '',
@@ -72,6 +72,7 @@ function SearchVehicles() {
     fetchVehicles();
   }, [filters, selectedClass]);
 
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Search Vehicles</h1>
@@ -131,7 +132,7 @@ function SearchVehicles() {
       </div>
 
       {loading ? (
-        <p>Loading cars...</p>
+        <Loading />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {vehicles.map((car, idx) => (
