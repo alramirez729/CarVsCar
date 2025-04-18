@@ -4,6 +4,7 @@ import { AuthContext } from '../AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import UserPreferencesForm from './UserPreferencesForm';
+import Loading from '../components/Loading';
 import axios from 'axios';
 
 function UserDashboard() {
@@ -14,6 +15,10 @@ function UserDashboard() {
     email: '',
     birthdate: null,
   });
+
+  const [isLoading, setIsLoading] = useState(true);
+  const loaderGif = "https://cdn.dribbble.com/userupload/23755712/file/original-5943ff95835c4f5de7d6ca4d3586cffc.gif"; // Feel free to replace this with your own gif
+
   const [editField, setEditField] = useState(null);
   const [editedValue, setEditedValue] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -38,6 +43,7 @@ function UserDashboard() {
             ? response.data.user.birthdate.split('T')[0]
             : '',
         });
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user info:', error);
         if (error.response?.status === 401) {
@@ -176,6 +182,9 @@ function UserDashboard() {
       ))}
     </div>
   );
+  if (isLoading) {
+    return <Loading />;
+  }
   
 
   return (
