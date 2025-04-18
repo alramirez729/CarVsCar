@@ -960,7 +960,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <button 
         onClick={() => generatePDF("report-section")}
         className="general-button-styling">
-          Save as PDF
+          Download as PDF
         </button>
         
         <button onClick={resetComparison} className="compare-page-buttons-red">
@@ -973,7 +973,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <button 
         onClick={() => saveComparison({ make: make1, model: model1 }, { make: make2, model: model2 })}
         className="general-button-styling">
-          💾 Save Comparison
+          💾 Add to Saved Comparisons
         </button>
       )}
 
