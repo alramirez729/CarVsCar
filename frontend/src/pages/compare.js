@@ -1078,12 +1078,12 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           </>
         )}
           <div ref={resultsRef} 
-          className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-2 w-full justify-center items-center"
+              className="flex flex-wrap justify-center gap-4 w-full"          
           >
             {comparisonResult.length > 0 ? (
               comparisonResult.map((metricComponent, index) => (
-                <div key={index} className="flex flex-row items-center">
-                  <div className="">{metricComponent}</div>
+                <div key={index} className="w-full sm:w-[48%] lg:w-[32%] max-w-[341px]">
+                  <div >{metricComponent}</div>
                 </div>
               ))
             ) : (
