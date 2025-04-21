@@ -2,7 +2,7 @@
 const hardcodedCarMakes = [
     "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley",
     "BMW", "Bugatti", "Buick", "Cadillac", "Chevrolet", "Chrysler",
-    "Daewoo", "Daihatsu", "Dodge", "Ferrari",
+    "Daihatsu", "Dodge", "Ferrari",
     "Fiat", "Fisker", "Ford", "Genesis", "GMC", "Great Wall",
     "Haval", "Honda", "Hummer", "Hyundai", "Infiniti", "Isuzu",
     "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini",
