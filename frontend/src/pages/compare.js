@@ -691,13 +691,14 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     };
     // ✅ Bar Chart method
   return (
-    <div className="flex flex-col p-2 gap-0 bg-gray-100 rounded-lg shadow-md mb-4">
+    <div className="flex flex-col h-full p-1 gap-1 bg-gray-100 rounded-md shadow-sm">
       {/* Metric Label and Explanation */}
       <div className="flex items-center justify-between w-full mb-2">
-        <h3 className="text-xl font-bold font-sans">{metricLabel}</h3>
-        <FontAwesomeIcon 
+      <h3 className="w-full text-xl text-center font-semibold font-sans">{metricLabel}</h3>
+      <FontAwesomeIcon 
           icon={faQuestionCircle} 
-          className="ml-2 text-blue-600 cursor-pointer transition-transform duration-200 hover:scale-110"           onClick={toggleExplanation} 
+          className="ml-2 text-blue-600 cursor-pointer transition-transform duration-200 hover:scale-110"           
+          onClick={toggleExplanation} 
         />
       </div>
 
@@ -709,20 +710,20 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       )}
 
       {/* Car 1 and Car 2 Cards */}
-      <div className="flex flex-row w-full gap-4">
+      <div className="flex flex-row w-full">
         {/* Car 1 Box */}
-        <div className={"items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono bg-sky-200"}>
-          <h4 className="font-semibold text-sm">{car1.make} - {car1.model} ({car1.year})</h4>
+        <div className={"p-2 w-1/2 rounded-md shadow-sm text-xs font-mono bg-sky-200"}>
+          <h4 className="text-sm">{car1.make} - {car1.model} ({car1.year})</h4>
         </div>
 
         {/* Car 2 Box */}
-        <div className={"items-center p-4 rounded-lg shadow-md w-1/2 transition-colors duration-300 font-mono bg-fuchsia-300"}>
-          <h4 className="font-semibold text-sm">{car2.make} - {car2.model} ({car2.year})</h4>
+        <div className="p-2 w-1/2 rounded-md shadow-sm text-xs font-mono bg-fuchsia-300">
+        <h4 className="text-sm">{car2.make} - {car2.model} ({car2.year})</h4>
         </div>
       </div>
 
       {/* Bar Chart Appears Below the Metric Row (Centered) */}
-      <div className="flex justify-center items-center mt-4">
+      <div className="flex justify-center items-center mt-2">
         <RenderBarChart
           metricLabel={metricLabel}
           car1={car1}
@@ -737,7 +738,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5 animate-fade-in-up animation-delay-1000">Car Comparison</h1>
       <h1 className="subheading animate-fade-in-up animation-delay-1000">Select two vehicles to see how they compare.</h1>
-      <div className=" w-full flex flex-row space-x-4 my-4 justify-end">
+      <div className="w-full flex flex-row space-x-4 my-4 justify-end">
         <button
         className={`animate-fade-in inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
         onClick={() => setViewMode('list')}
@@ -1049,7 +1050,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {/* Non-Numerical Comparison Box */}
           {nonNumericalComparison && nonNumericalComparison}
           {/* Numerical Comparison Results */}
-
           <div className="flex flex-col col-2 sm:col-1 sm:flex-row justify-between gap-12 md:gap-8 sm:gap-4 my-10 items-center">
             {/* Car 1 Speedometer */}
             <div className="flex flex-col items-center">
@@ -1077,11 +1077,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           </div>
           </>
         )}
-          <div ref={resultsRef} className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-2 w-full justify-center items-center">
+          <div ref={resultsRef} 
+          className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-2 w-full justify-center items-center"
+          >
             {comparisonResult.length > 0 ? (
               comparisonResult.map((metricComponent, index) => (
                 <div key={index} className="flex flex-row items-center">
-                  <div className>{metricComponent}</div>
+                  <div className="">{metricComponent}</div>
                 </div>
               ))
             ) : (
@@ -1093,7 +1095,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           <>
             {/* Tab View */}
             <div className="w-full flex flex-col items-center">
-              <h2 className="text-2xl font-bold mb-4">{sections[activeTab]}</h2>
+              <h2 className="my-10 text-2xl font-bold mb-4">{sections[activeTab]}</h2>
 
               <div className="flex flex-row items-center w-full max-w-4xl">
                 {/* Left Arrow */}

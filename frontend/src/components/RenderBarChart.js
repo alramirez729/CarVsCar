@@ -1,5 +1,10 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer } from "recharts";
+
+
+
+
 
     // ✅ Bar Chart method
     const RenderBarChart = ({ metricLabel, car1, car2 }) => {
@@ -65,7 +70,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
         return (
           <div
           style={tooltipStyle} 
-          className="bg-white border border-gray-300 p-4 rounded-lg shadow-md font-sans ring-2 ring-slate-500">
+          className="bg-white border border-gray-300 p-1 rounded-lg shadow-md font-sans ring-2 ring-slate-500">
             <p className="font-bold text-lg mb-2 italic">{label}</p>
             {payload.map((entry, index) => (
               <div key={`item-${index}`} className="text-sm">
@@ -84,28 +89,32 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
     };
 
     return (
-      <BarChart barGap={30} width={400} height={250} data={data}>
-        <XAxis dataKey="metric" 
-              tick={<CustomTick />} // Custom Tick Component for X-Axis
-        />
-        <YAxis 
-          tick={<CustomYAxisTick />} // Custom Tick Component for Y-Axis
-        />
-        <Tooltip content={<CustomTooltip />}/>
-        <Legend content={<CustomLegend />} />
-        <Bar
-          className="font-sans"
-          dataKey={car1.make}
-          fill={'#7dd3fc'}
-          barSize={70}
-        />
-        <Bar
-          className="font-sans"
-          dataKey={car2.make}
-          fill={'#cc49ff'}
-          barSize={70}
-        />
+      
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart barGap={30} width={380} height={210} data={data}>
+          <XAxis dataKey="metric" 
+                tick={<CustomTick />} // Custom Tick Component for X-Axis
+          />
+          <YAxis 
+            tick={<CustomYAxisTick />} // Custom Tick Component for Y-Axis
+          />
+          <Tooltip content={<CustomTooltip />}/>
+          <Legend content={<CustomLegend />} />
+          <Bar
+            className="font-sans"
+            dataKey={car1.make}
+            fill={'#7dd3fc'}
+            barSize={45}
+          />
+          <Bar
+            className="font-sans"
+            dataKey={car2.make}
+            fill={'#cc49ff'}
+            barSize={45}
+          />
       </BarChart>
+    
+</ResponsiveContainer>
     );
   };
 
