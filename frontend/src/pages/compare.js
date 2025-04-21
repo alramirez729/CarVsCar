@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
@@ -62,8 +63,7 @@ function Compare() {
   const sections = ['Overall Ratings', 'Car Features', 'Performance Charts'];
 
   const [hasCompared, setHasCompared] = useState(false);
-
-  const [showResetModal, setShowResetModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   
   const handleNextTab = () => {
@@ -408,7 +408,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       const data = await res.json();
   
       if (res.ok) {
-        alert('Comparison saved to your profile!');
+        setShowConfirmationModal(true);
       } else {
         console.error(data.error);
         alert('Failed to save comparison.');
@@ -1019,15 +1019,28 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               {alertMessage}
             </div>
           )}
-
-        {showAlert && (
-          <div
-            className="p-4 -my-10 ml-32 fixed text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 shadow-lg"
-            role="alert"
-          >
-            <span className="font-medium ">Sorry!</span> Still working on this feature :)
+          {showConfirmationModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-lg text-center w-96">
+              <h2 className="text-2xl font-semibold mb-4 text-blue-400">Confirmation saved to Account</h2>
+              <Link 
+                to="/userDashboard"
+                className="mx-10 general-button-styling"
+              >
+                To Dashboard
+              </Link>
+              <button
+              onClick = {() => setShowConfirmationModal(false)}
+              className="mx-10 general-button-styling"
+              >
+                Not yet
+              </button>
+            </div>
           </div>
-        )}
+          )
+
+          }
+
 
       {viewMode === 'list' ? (
         <>
