@@ -24,13 +24,13 @@ router.post('/save-comparison', authenticate, upload.single('pdf'), async (req, 
     if (!req.file) {
       return res.status(400).json({ error: 'No PDF file provided.' });
     }
-    console.log("🚀 Incoming file:", req.file);
-    console.log("📄 Body data:", req.body);
+    //console.log("🚀 Incoming file:", req.file);
+    //console.log("📄 Body data:", req.body);
 
 
 
     const pdfBuffer = req.file.buffer;
-    console.log('Buffer size:', req.file?.buffer?.length); // add this
+    //console.log('Buffer size:', req.file?.buffer?.length); // add this
 
 
     const user = await User.findById(userId);

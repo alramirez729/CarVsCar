@@ -44,11 +44,7 @@ app.use('/compare', compareRoutes);
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
 
-app.use((req, res, next) => {
-    console.log(`🔥 ${req.method} ${req.originalUrl}`);
-    console.log('🧾 Headers:', req.headers);
-    next();
-  });
+
   
 
 const dbURI = process.env.DB_URL;
