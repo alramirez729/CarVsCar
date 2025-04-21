@@ -17,6 +17,9 @@ function UserDashboard() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isComparisonLoading, setIsComparisonLoading] = useState(false);
+  const [hasFetchedComparisons, setHasFetchedComparisons] = useState(false);
+
   const loaderGif = "https://cdn.dribbble.com/userupload/23755712/file/original-5943ff95835c4f5de7d6ca4d3586cffc.gif"; // Feel free to replace this with your own gif
 
   const [editField, setEditField] = useState(null);
@@ -29,27 +32,29 @@ function UserDashboard() {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
-        if (!token) throw new Error('Token not found');
+        const headers =  { Authorization: `Bearer ${token}` };
+        const userResponse = await axios.get('https://car-vs-car-api.onrender.com/users/me', { headers });
 
-        const response = await axios.get('https://car-vs-car-api.onrender.com/users/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        
+        const user = userResponse.data.user;
 
         setUserInfo({
-          ...response.data.user,
-          birthdate: response.data.user.birthdate
-            ? response.data.user.birthdate.split('T')[0]
-            : '',
+          ...user,
+          birthdate: user.birthdate ? user.birthdate.split('T')[0] : '',
         });
-        setIsLoading(false);
+        setSavedComparisons(user.savedComparisons || []);
+        setHasFetchedComparisons(true);
       } catch (error) {
         console.error('Error fetching user info:', error);
         if (error.response?.status === 401) {
           setIsLoggedIn(false);
           navigate('/login');
         }
+      } finally {
+        setTimeout(() => setIsLoading(false), 400);
       }
     };
 
@@ -93,40 +98,11 @@ function UserDashboard() {
     setEditField(null);
   };
 
-  useEffect(() => {
-    const fetchComparisons = async () => {
-      if (selectedSection === 'Comparisons') {
-        try {
-          const token = localStorage.getItem('token');
-          const res = await fetch('https://car-vs-car-api.onrender.com/users/me', {
-            
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-            
-          });
-          
-
-          const data = await res.json();
-
-          console.log("Full user object from /me:", data.user);
-          if (res.ok) {
-            setSavedComparisons(data.user.savedComparisons || []);
-            console.log("✔️ Saved comparisons:", data.user.savedComparisons);
-          } else {
-            console.error(data.message || 'Error fetching comparisons');
-          }
-        } catch (err) {
-          console.error('Error fetching saved comparisons:', err);
-        }
-      }
-    };
-  
-    fetchComparisons();
-  }, [selectedSection]);
   
 
-  const profileSection = (
+  const profileSection = isLoading ? (
+    <Loading/>
+) : (
     <div className="space-y-6">
       {Object.keys(userInfo).filter(
         (field) => typeof userInfo[field] !== 'object' || field === 'birthdate'
@@ -182,9 +158,7 @@ function UserDashboard() {
       ))}
     </div>
   );
-  if (isLoading) {
-    return <Loading />;
-  }
+  
   
 
   return (
@@ -192,7 +166,7 @@ function UserDashboard() {
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-sans text-3xl font-bold mb-6 underline animate-fade-in">User Dashboard:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
-          {['Profile', 'Preferences', 'Comparisons','Settings', 'Security'].map((section) => (
+          {['Profile', 'Preferences', 'Saved Comparisons','Settings', 'Security'].map((section) => (
             <li
               key={section}
               className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 animate-fade-in ${
@@ -216,13 +190,13 @@ function UserDashboard() {
         <div className="font-sans space-y-6 w-1/2 animate-fade-in">
           {selectedSection === 'Profile' && profileSection}
           {selectedSection === 'Preferences' && <UserPreferencesForm />} 
-          {selectedSection === 'Comparisons' && (
-          <div className="bg-white p-6 rounded-lg shadow-md space-y-4 animate-fade-in">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 font-sans ">Saved Comparisons</h2>
-            {Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
+          {selectedSection === 'Saved Comparisons' && (
+          <div className="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-md space-y-8 w-full max-w-4xl mx-auto transition-all duration-300 ease-in-out">
+            {isComparisonLoading ? (
+              <Loading />
+            ) : Array.isArray(savedComparisons) && savedComparisons.length > 0 ? (
               savedComparisons.map((comp, index) => {
                 const dateString = comp?.date ? new Date(comp.date).toLocaleString() : 'Unknown date';
-                const fileUrl = `https://car-vs-car-api.onrender.com/compare/view-comparison/${comp._id}`;
 
                 const handleDelete = async () => {
                   try {
@@ -248,40 +222,36 @@ function UserDashboard() {
                     key={comp._id || index}
                     className="flex justify-between items-center border p-4 rounded-lg shadow-sm animate-fade-in"
                   >
-                    <span className="text-gray-700 font-sans ">{dateString}</span>
+                    <span className="text-gray-700 font-sans">{dateString}</span>
                     <p className="text-sm italic">
-                      {comp.car1 || 'Car 1'} vs {comp.car2 || 'Car 2'}
+                      {comp.car1.toUpperCase() || 'Car 1'} vs {comp.car2.toUpperCase() || 'Car 2'}
                     </p>
                     <div className="flex items-center space-x-4">
-                    <button
-                      onClick={async () => {
-                        const token = localStorage.getItem('token');
-                        try {
-                          const res = await fetch(`https://car-vs-car-api.onrender.com/compare/view-comparison/${comp._id}`, {
-                            headers: {
-                              Authorization: `Bearer ${token}`,
-                            },
-                          });
+                      <button
+                        onClick={async () => {
+                          const token = localStorage.getItem('token');
+                          try {
+                            const res = await fetch(`https://car-vs-car-api.onrender.com/compare/view-comparison/${comp._id}`, {
+                              headers: { Authorization: `Bearer ${token}` },
+                            });
 
-                          if (!res.ok) {
-                            alert('⚠️ Could not load PDF.');
-                            return;
+                            if (!res.ok) {
+                              alert('⚠️ Could not load PDF.');
+                              return;
+                            }
+
+                            const blob = await res.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            window.open(url, '_blank');
+                          } catch (err) {
+                            console.error('Fetch PDF error:', err);
+                            alert('⚠️ Error retrieving the PDF.');
                           }
-
-                          const blob = await res.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          window.open(url, '_blank');
-                        } catch (err) {
-                          console.error('Fetch PDF error:', err);
-                          alert('⚠️ Error retrieving the PDF.');
-                        }
-                      }}
-                      className="text-blue-500 hover:underline font-sans"
-                    >
-                      View PDF
-                    </button>
-
-
+                        }}
+                        className="text-blue-500 hover:underline font-sans"
+                      >
+                        View PDF
+                      </button>
                       <button
                         onClick={handleDelete}
                         className="text-red-500 hover:text-red-700 hover:underline font-sans"

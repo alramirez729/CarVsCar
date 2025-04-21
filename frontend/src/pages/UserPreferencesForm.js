@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Loading from '../components/Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -65,7 +66,7 @@ function UserPreferencesForm() {
     }
   };
 
-  if (loading) return <p>Loading preferences...</p>;
+  if (loading) return <Loading/>
 
   return (
     
