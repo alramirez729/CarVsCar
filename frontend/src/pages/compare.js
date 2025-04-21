@@ -739,7 +739,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5 animate-fade-in-up animation-delay-1000">Car Comparison</h1>
       <h1 className="subheading animate-fade-in-up animation-delay-1000">Select two vehicles to see how they compare.</h1>
       {/* View Mode Selector */}
-      <div className="flex flex-col place-items-end w-full max-w-56 ml-80 mb-4">
+      <div className="flex flex-col place-items-end w-full max-w-32 ml-auto mr-4 mb-4">
         <select
           value={viewMode}
           onChange={(e) => setViewMode(e.target.value)}
