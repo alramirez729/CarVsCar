@@ -738,21 +738,16 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5 animate-fade-in-up animation-delay-1000">Car Comparison</h1>
       <h1 className="subheading animate-fade-in-up animation-delay-1000">Select two vehicles to see how they compare.</h1>
-      <div className="w-full flex flex-row space-x-4 my-4 justify-end">
-        <button
-        className={`animate-fade-in inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'list' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
-        onClick={() => setViewMode('list')}
-      >
-        <FontAwesomeIcon icon={faList} className="w-4 h-4" /> {/* List View Icon */}
-        <span>List View</span>
-      </button>
-      <button
-        className={`animate-fade-in inline-flex items-center space-x-2 text-blue font-sans py-2 px-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg ${viewMode === 'tab' ? 'bg-cyan-500 text-white' : 'bg-gray-300 text-black'}`}
-        onClick={() => setViewMode('tab')}
-      >
-        <FontAwesomeIcon icon={faThLarge} className="w-4 h-4" /> {/* Tab View Icon */}
-        <span>Tab View</span>
-      </button>
+      {/* View Mode Selector */}
+      <div className="flex flex-col place-items-end w-full max-w-56 ml-80 mb-4">
+        <select
+          value={viewMode}
+          onChange={(e) => setViewMode(e.target.value)}
+          className="dropdown_input_styling text-sm"
+        >
+          <option value="list">List View</option>
+          <option value="tab">Tab View</option>
+        </select>
       </div>
       <div className="animate-fade-in flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
         {/* Car 1 Input */}
@@ -988,6 +983,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
       
       <div id="report-section" className="flex flex-col items-center w-full">
+      
       {/* AI Suggestion Box */}
       {showAiBox && (
         <div className="mt-6 p-4 w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg relative">
@@ -1028,19 +1024,19 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-gray-50 p-6 rounded-lg shadow-lg text-center w-96">
               <div className="flex justify-between items-center mb-4 px-4">
-              <div className="compare-view-toggle">
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`compare-view-toggle-button ${viewMode === 'list' ? 'compare-view-toggle-button-active' : 'compare-view-toggle-button-inactive'}`}
+              <div className="relative w-48">
+                <select
+                  value={viewMode}
+                  onChange={(e) => setViewMode(e.target.value)}
+                  className="dropdown_input_styling text-lg"
                 >
-                  <FontAwesomeIcon icon={faList} className="mr-1" /> List
-                </button>
-                <button
-                  onClick={() => setViewMode('tab')}
-                  className={`compare-view-toggle-button ${viewMode === 'tab' ? 'compare-view-toggle-button-active' : 'compare-view-toggle-button-inactive'}`}
-                >
-                  <FontAwesomeIcon icon={faThLarge} className="mr-1" /> Tabs
-                </button>
+                  <option value="list">
+                    <FontAwesomeIcon icon={faList} /> List View
+                  </option>
+                  <option value="tab">
+                    <FontAwesomeIcon icon={faThLarge} /> Tab View
+                  </option>
+                </select>
               </div>
           </div>
           </div>
@@ -1106,12 +1102,12 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
               <div className="flex flex-row items-center w-full max-w-4xl">
                 {/* Left Arrow */}
-                <button onClick={handlePrevTab} className="compare-nav-button">
+                <button onClick={handlePrevTab} className="compare-nav-button ml-4">
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
 
                 {/* Tab Content */}
-                <div className="w-full flex justify-center">
+                <div className="w-full flex justify-center gap-12">
                 {activeTab === 0 && (
                     <>
                       <div className="flex justify-between w-full">
