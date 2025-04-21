@@ -2,7 +2,7 @@
 const hardcodedCarMakes = [
     "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley",
     "BMW", "Bugatti", "Buick", "Cadillac", "Chevrolet", "Chrysler",
-    "Citroën", "Daewoo", "Daihatsu", "Dodge", "Ferrari",
+    "Daewoo", "Daihatsu", "Dodge", "Ferrari",
     "Fiat", "Fisker", "Ford", "Genesis", "GMC", "Great Wall",
     "Haval", "Honda", "Hummer", "Hyundai", "Infiniti", "Isuzu",
     "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini",
@@ -12,7 +12,7 @@ const hardcodedCarMakes = [
     "Pagani", "Peugeot", "Polestar", "Pontiac", "Porsche", "Ram",
     "Renault", "Rivian", "Rolls-Royce", "Saab", "Saturn", "Scion",
     "Seat", "Skoda", "Smart", "SsangYong", "Subaru", "Suzuki",
-    "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo", "Zotye"
+    "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo", 
   ];
 
   export default hardcodedCarMakes;
