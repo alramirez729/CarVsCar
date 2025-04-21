@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
 import { generatePDF } from "../components/generatePDF.js";
@@ -949,35 +949,39 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
         </div>
       </div>
-  
-      <div className="flex flex-row gap-5 my-0 justify-center space-x-2 -mr-12">
-        <button onClick={handleCompare} className="compare-page-buttons">
-          Compare
-        </button>
-        {isLoggedIn && (
-        <button className="compare-page-buttons" onClick={handleAISuggestion}>
-          🪄 AI suggestion
-        </button>
-      )}
-      </div>
       {hasCompared &&(
-        <div className="w-full flex flex-col sm:flex-row sm:justify-end sm:items-center gap-2 mt-4">
+        <div className="w-full flex flex-col text-xs sm:flex-row sm:justify-end sm:items-center gap-2 mt-4">
         <button 
         onClick={() => generatePDF("report-section")}
-        className="general-button-styling">
-          Download as PDF
+        className="compare-control-button-primary">
+          <FontAwesomeIcon icon={faFilePdf} className="mr-2" /> Download as PDF
         </button>
         
-        <button onClick={resetComparison} className="compare-page-buttons-red">
+        <button onClick={resetComparison} className="compare-control-button-secondary">
           🔄 Reset Comparison
         </button>
         </div>
       )}
+      <div className="flex flex-row my-0 justify-center -mr-24 space-x-0">
+        <button 
+        onClick={handleCompare} 
+        className="compare-page-buttons"
+        >
+          Compare
+        </button>
+        {isLoggedIn && (
+        <button className="compare-page-buttons" 
+        onClick={handleAISuggestion}>
+          🪄AI suggestion
+        </button>
+      )}
+      </div>
+      
 
       {isLoggedIn && hasCompared && (
         <button 
         onClick={() => saveComparison({ make: make1, model: model1 }, { make: make2, model: model2 })}
-        className="general-button-styling">
+        className="save-comparison-button">
           💾 Add to Saved Comparisons
         </button>
       )}
@@ -1023,20 +1027,23 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {showConfirmationModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-gray-50 p-6 rounded-lg shadow-lg text-center w-96">
-              <h2 className="text-2xl font-semibold mb-4 text-blue-400">Confirmation saved to Account</h2>
-              <Link 
-                to="/userDashboard"
-                className="mx-10 general-button-styling"
-              >
-                To Dashboard
-              </Link>
-              <button
-              onClick = {() => setShowConfirmationModal(false)}
-              className="mx-10 general-button-styling"
-              >
-                Not yet
-              </button>
-            </div>
+              <div className="flex justify-between items-center mb-4 px-4">
+              <div className="compare-view-toggle">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`compare-view-toggle-button ${viewMode === 'list' ? 'compare-view-toggle-button-active' : 'compare-view-toggle-button-inactive'}`}
+                >
+                  <FontAwesomeIcon icon={faList} className="mr-1" /> List
+                </button>
+                <button
+                  onClick={() => setViewMode('tab')}
+                  className={`compare-view-toggle-button ${viewMode === 'tab' ? 'compare-view-toggle-button-active' : 'compare-view-toggle-button-inactive'}`}
+                >
+                  <FontAwesomeIcon icon={faThLarge} className="mr-1" /> Tabs
+                </button>
+              </div>
+          </div>
+          </div>
           </div>
           )
 
@@ -1099,7 +1106,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
               <div className="flex flex-row items-center w-full max-w-4xl">
                 {/* Left Arrow */}
-                <button onClick={handlePrevTab} className="text-2xl p-2">
+                <button onClick={handlePrevTab} className="compare-nav-button">
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
 
@@ -1149,7 +1156,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
                 </div>
 
                 {/* Right Arrow */}
-                <button onClick={handleNextTab} className="text-2xl p-2">
+                <button onClick={handleNextTab} className="compare-nav-button">
                   <FontAwesomeIcon icon={faChevronRight} />
                 </button>
               </div>
