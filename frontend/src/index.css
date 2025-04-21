@@ -23,7 +23,7 @@ body {
 }
 
 .compare-page-buttons{
-    @apply mt-8 mr-10 text-3xl bg-cyan-500 text-white font-sans py-3 px-12 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
+    @apply mt-8 mr-24 text-2xl bg-cyan-500 text-white font-sans py-3 px-12 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
 }
 
 .compare-page-buttons-red {
@@ -60,7 +60,7 @@ body {
 }
 
 .compare-control-button {
-    @apply flex items-center gap-2 px-4 py-2 rounded-lg text-white font-sans transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md;
+    @apply flex items-center gap-2 py-2 rounded-lg text-white font-sans transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md;
 }
 
 .compare-control-button-primary {
@@ -73,13 +73,6 @@ body {
 
 .compare-nav-button {
     @apply bg-cyan-600 h-80 px-2 rounded-lg text-2xl p-2 mb-0 text-white hover:text-cyan-500 transition-colors duration-300;
-}
-.compare-view-toggle {
-    @apply flex gap-2 bg-gray-100 p-1 rounded-lg;
-}
-
-.compare-view-toggle-button {
-    @apply px-3 py-1 rounded-md transition-all duration-300 ease-in-out;
 }
 
 .compare-view-toggle-button-active {
