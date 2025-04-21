@@ -948,11 +948,11 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <div className="w-full flex flex-col text-xs sm:flex-row sm:justify-end sm:items-center gap-2 mt-4">
         <button 
         onClick={() => generatePDF("report-section")}
-        className="compare-control-button-primary">
-          <FontAwesomeIcon icon={faFilePdf} className="mr-2" /> Download as PDF
+        className="compare-control-button-primary p-2 ">
+          <FontAwesomeIcon icon={faFilePdf} className="mr-2" /> Download as PDF  
         </button>
         
-        <button onClick={resetComparison} className="compare-control-button-secondary">
+        <button onClick={resetComparison} className="compare-control-button-secondary p-4">
           🔄 Reset Comparison
         </button>
         </div>
