@@ -132,14 +132,18 @@ function Compare() {
 
   //autoscroll when clicking the compare button
   useEffect(() => {
-    if (comparisonResult.length > 0 && resultsRef.current) {
-      const offset = -1600; // Adjust this value to move the scroll position up
-      const top = resultsRef.current.getBoundingClientRect().top + window.pageYOffset + offset;
-  
-      window.scrollTo({
-        top: top,
-        behavior: 'smooth', // Ensures smooth scrolling
-      });
+    if (comparisonResult && comparisonResult.length  > 0 && resultsRef.current) {
+      const timeout = setTimeout(() => {
+        const offset = -2000; // Adjust this value to move the scroll position up
+        const top = resultsRef.current.getBoundingClientRect().top + window.pageYOffset + offset;
+    
+        window.scrollTo({
+          top: top,
+          behavior: 'smooth', // Ensures smooth scrolling
+        });
+      }, 100);
+      
+      return () => clearTimeout(timeout);
     }
   }, [comparisonResult]);
   
