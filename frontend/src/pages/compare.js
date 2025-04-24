@@ -1023,22 +1023,20 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           {showConfirmationModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-gray-50 p-6 rounded-lg shadow-lg text-center w-96">
-              <div className="flex justify-between items-center mb-4 px-4">
-              <div className="relative w-48">
-                <select
-                  value={viewMode}
-                  onChange={(e) => setViewMode(e.target.value)}
-                  className="dropdown_input_styling text-lg"
-                >
-                  <option value="list">
-                    <FontAwesomeIcon icon={faList} /> List View
-                  </option>
-                  <option value="tab">
-                    <FontAwesomeIcon icon={faThLarge} /> Tab View
-                  </option>
-                </select>
-              </div>
-          </div>
+              <h2 className="text-2xl font-semibold mb-4 text-blue-400">Confirmation saved to Account</h2>
+              <Link 
+                to="/userDashboard"
+                className="mx-10 general-button-styling"
+              >
+                To Dashboard
+              </Link>
+              <button
+              onClick = {() => setShowConfirmationModal(false)}
+              className="mx-10 general-button-styling"
+              >
+                Not yet
+              </button>
+              
           </div>
           </div>
           )
