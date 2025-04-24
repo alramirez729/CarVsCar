@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import hardcodedCarMakes from "../constants/makes.js";
 import Loading from '../components/Loading';
+
 function SearchVehicles() {
   const [filters, setFilters] = useState({
     make: '',
@@ -12,6 +14,8 @@ function SearchVehicles() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedClass, setSelectedClass] = useState('');
+  const [makes] = useState(hardcodedCarMakes);
+
 
   const classMap = {
     "SUV" : 'special purpose vehicle',
@@ -26,14 +30,35 @@ function SearchVehicles() {
     "Van": 'van'
   };
 
+  useEffect(() => {
+    const fetchMakes = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/carmakes`);
+        const data = await res.json();
+      } catch (err) {
+        console.error('Error loading car makes:', err.message);
+      }
+    };
+  
+    fetchMakes();
+  }, []);
+
   const buildQuery = (filters) => {
     const query = new URLSearchParams();
+  
     Object.entries(filters).forEach(([key, value]) => {
       if (value) query.append(key, value);
     });
+  
+    const classKeyword = classMap[selectedClass]?.toLowerCase();
+    if (classKeyword) {
+      query.append('class', classKeyword); // 👈 Add this line
+    }
+  
     query.append('limit', 50);
     return query.toString();
   };
+  
 
   useEffect(() => {
     const hasFilters = Object.values(filters).some(val => val.trim() !== '') || selectedClass;
@@ -42,6 +67,7 @@ function SearchVehicles() {
       setVehicles([]);
       return;
     }
+    console.log(filters);
 
     const fetchVehicles = async () => {
       setLoading(true);
@@ -78,12 +104,17 @@ function SearchVehicles() {
       <h1 className="text-3xl font-bold mb-4">Search Vehicles</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        <input
-          placeholder="Make"
+      <select
           value={filters.make}
-          onChange={(e) => setFilters(f => ({ ...f, make: e.target.value.toLowerCase() }))}
+          onChange={(e) => setFilters(f => ({ ...f, make: e.target.value }))}
           className="p-2 border rounded"
-        />
+        >
+          <option value="">All Makes</option>
+          {makes.map((make) => (
+            <option key={make} value={make.toLowerCase()}>{make}</option>
+          ))}
+        </select>
+
         <input
           placeholder="Model"
           value={filters.model}
@@ -130,6 +161,11 @@ function SearchVehicles() {
           </button>
         ))}
       </div>
+      {vehicles.length === 0 && !loading && (
+        <p className="text-gray-500 italic">No matching vehicles found. Try adjusting your filters. 
+        (hint: start with adjusting "makes")</p>
+      )}
+
 
       {loading ? (
         <Loading />

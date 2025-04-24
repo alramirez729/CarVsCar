@@ -180,6 +180,7 @@ app.get('/api/carmodels', async (req, res) => {
         const response = await axios.get(`https://api.api-ninjas.com/v1/carmodels?make=${make}`, {
             headers: { 'X-Api-Key': process.env.API_KEY },
         });
+        
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching car models:', error.message);
@@ -191,54 +192,71 @@ app.get('/api/carmodels', async (req, res) => {
 // Fetch car details
 app.get('/api/cars', async (req, res) => {
     try {
-        const apiKey = process.env.API_KEY;
-        const { make, model, year, limit = 10, offset = 0 } = req.query;
+      const apiKey = process.env.API_KEY;
+      const { make, model, year, limit = 10, offset = 0 } = req.query;
+  
+      // Ensure at least one filter is present
+      if (
+        !make &&
+        !model &&
+        !year &&
+        !req.query.fuel_type &&
+        !req.query.drive &&
+        !req.query.cylinders &&
+        !req.query.transmission &&
+        !req.query.min_comb_mpg &&
+        !req.query.class
+      ) {
+        return res.status(400).json({ message: 'At least one filter is required to fetch car details' });
+      }
+  
+      let apiUrl = `https://api.api-ninjas.com/v1/cars?limit=${limit}&offset=${offset}`;
+      if (make) apiUrl += `&make=${make}`;
+      if (model) apiUrl += `&model=${model}`;
+      if (year) apiUrl += `&year=${year}`;
+      if (req.query.fuel_type) apiUrl += `&fuel_type=${req.query.fuel_type}`;
+      if (req.query.drive) apiUrl += `&drive=${req.query.drive}`;
+      if (req.query.transmission) apiUrl += `&transmission=${req.query.transmission}`;
+      if (req.query.cylinders) apiUrl += `&cylinders=${req.query.cylinders}`;
+      if (req.query.min_comb_mpg) apiUrl += `&min_comb_mpg=${req.query.min_comb_mpg}`;
+      if (req.query.class) apiUrl += `&class=${req.query.class}`;
 
-        // Allow make-only queries for model suggestions
-        if (!make) {
-            return res.status(400).json({ message: 'Make is required to fetch car details' });
-        }
-
-        let apiUrl = `https://api.api-ninjas.com/v1/cars?make=${make}&limit=${limit}&offset=${offset}`;
-        if (model) apiUrl += `&model=${model}`;
-        if (year) apiUrl += `&year=${year}`;
-
-        const response = await axios.get(apiUrl, {
-            headers: { 'X-Api-Key': apiKey },
-        });
-
-        const carData = response.data.map(car => ({
-            make: car.make,
-            model: car.model,
-            year: car.year,
-            city_mpg: car.city_mpg,
-            highway_mpg: car.highway_mpg,
-            combination_mpg: car.combination_mpg,
-            cylinders: car.cylinders,
-            displacement: car.displacement,
-            drive: car.drive,
-            fuel_type: car.fuel_type,
-            transmission: car.transmission,
-            class: car.class,
-        }));
-
-        if (carData.length === 0) {
-            return res.status(404).json({ message: 'No cars found.' });
-        }
-
-        res.json(carData);
+  
+      const response = await axios.get(apiUrl, {
+        headers: { 'X-Api-Key': apiKey },
+      });
+  
+      const carData = response.data.map(car => ({
+        make: car.make,
+        model: car.model,
+        year: car.year,
+        city_mpg: car.city_mpg,
+        highway_mpg: car.highway_mpg,
+        combination_mpg: car.combination_mpg,
+        cylinders: car.cylinders,
+        displacement: car.displacement,
+        drive: car.drive,
+        fuel_type: car.fuel_type,
+        transmission: car.transmission,
+        class: car.class,
+      }));
+  
+      if (carData.length === 0) {
+        return res.status(404).json({ message: 'No cars found.' });
+      }
+  
+      res.json(carData);
     } catch (error) {
-        console.error('Error fetching car data:', error.message);
-
-        if (error.response) {
-            return res.status(error.response.status).json({
-                message: error.response.data || 'Error fetching car data',
-            });
-        }
-
-        res.status(500).send('Internal Server Error');
+      console.error('Error fetching car data:', error.message);
+      if (error.response) {
+        return res.status(error.response.status).json({
+          message: error.response.data || 'Error fetching car data',
+        });
+      }
+      res.status(500).send('Internal Server Error');
     }
-});
+  });
+  
 
 // Default route for health check
 app.get('/', (req, res) => {
