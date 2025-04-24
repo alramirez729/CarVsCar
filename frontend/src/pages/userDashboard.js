@@ -8,7 +8,7 @@ import Loading from '../components/Loading';
 import axios from 'axios';
 
 function UserDashboard() {
-  const [selectedSection, setSelectedSection] = useState('Profile');
+  const [selectedSection, setSelectedSection] = useState('Account');
   const { setIsLoggedIn } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -100,7 +100,7 @@ function UserDashboard() {
 
   
 
-  const profileSection = isLoading ? (
+  const AccountSection = isLoading ? (
     <Loading/>
 ) : (
     <div className="space-y-6">
@@ -166,7 +166,7 @@ function UserDashboard() {
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-sans text-3xl font-bold mb-6 underline animate-fade-in">User Dashboard:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
-          {['Profile', 'Preferences', 'Saved Comparisons','Settings', 'Security'].map((section) => (
+          {['Account', 'Preferences', 'Saved Comparisons','Settings', 'Security'].map((section) => (
             <li
               key={section}
               className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 animate-fade-in ${
@@ -188,7 +188,7 @@ function UserDashboard() {
       <main className="flex-1 p-8 ml-72 h-screen overflow-y-auto flex flex-col items-center">
         <h1 className="text-6xl font-semibold mb-6 text-gray-800 underline font-sans p-2 animate-fade-in">{selectedSection}</h1>
         <div className="font-sans space-y-6 w-1/2 animate-fade-in">
-          {selectedSection === 'Profile' && profileSection}
+          {selectedSection === 'Account' && AccountSection}
           {selectedSection === 'Preferences' && <UserPreferencesForm />} 
           {selectedSection === 'Saved Comparisons' && (
           <div className="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-md space-y-8 w-full max-w-4xl mx-auto transition-all duration-300 ease-in-out">
