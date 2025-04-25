@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
@@ -16,6 +16,10 @@ import metricExplanations from '../constants/metricsExplanation.js';
 
 function Compare() {
   //use state for vehicles 
+  const location = useLocation();
+  const vehiclesFromSearch = location.state?.vehicles;
+  const [comparisonTriggered, setComparisonTriggered] = useState(false);
+
   const [carMakes, setCarMakes] = useState(hardcodedCarMakes);
   
   const [make1, setMake1] = useState('');
@@ -73,6 +77,39 @@ function Compare() {
   const handlePrevTab = () => {
     setActiveTab((prev) => (prev - 1 + sections.length) % sections.length);
   };
+
+  // for passing in values from searchVehicles.js queue
+  useEffect(() => {
+    if (vehiclesFromSearch && vehiclesFromSearch.length === 2) {
+      const [car1, car2] = vehiclesFromSearch;
+      setMake1(car1.make);
+      setModel1(car1.model);
+      setYear1(car1.year);
+      setMake2(car2.make);
+      setModel2(car2.model);
+      setYear2(car2.year);
+      setComparisonTriggered(true);
+      
+      fetchSuggestions('model', car1.make, '', 1).then(() => {
+        fetchSuggestions('year', car1.make, car1.model, 1);
+      });
+  
+      fetchSuggestions('model', car2.make, '', 2).then(() => {
+        fetchSuggestions('year', car2.make, car2.model, 2);
+      });
+    }
+
+    
+  }, [vehiclesFromSearch]);
+
+  // helper effect for other edge cases not using searchVehicles.js
+  useEffect(() => {
+    if (comparisonTriggered && make1 && model1 && year1 && make2 && model2 && year2) {
+      handleCompare();
+      setComparisonTriggered(false);
+    }
+  }, [comparisonTriggered, make1, model1, year1, make2, model2, year2]);
+
   
   //alerts for button if input fields are incomplete/incorrect
   useEffect(() => {
