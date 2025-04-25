@@ -7,17 +7,6 @@ body {
     @apply font-oswald m-0 p-0 box-border bg-white h-full;
 }
 
-.navbar-style {
-    @apply bg-cyan-700 h-full fixed flex place-items-start justify-center p-4 font-oswald;
-}
-.navbar-button-styling {
-    @apply flex items-center bg-cyan-600 text-white py-3 px-4 rounded-lg hover:bg-cyan-500 transition duration-300 ease-in-out transform hover:scale-105 font-oswald;
-}
-
-.navbar-button-hover{
-    @apply opacity-0 group-hover:opacity-100  absolute italic top-3/4 left-3/4 bg-black font-oswald text-white text-sm py-1 px-2 rounded-lg shadow-lg transition-opacity duration-300
-}
-
 .general-button-styling{
     @apply mt-8 text-xl bg-cyan-500 text-white font-sans py-3 px-4 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
 }
@@ -81,4 +70,16 @@ body {
 
 .compare-view-toggle-button-inactive {
     @apply text-gray-600 hover:text-cyan-600;
+}
+
+.navbar-button{
+    @apply hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2;
+}
+
+.navbar-icon{
+    @apply hidden sm:block font-sans hover:scale-105;
+}
+
+.navbar-button-current-page{
+    @apply text-cyan-400 scale-125;
 }

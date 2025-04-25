@@ -1,8 +1,9 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCodeCompare, faUserCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../AuthContext.js';
+
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -10,6 +11,9 @@ function Navbar() {
   const navigate = useNavigate('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const dropdownRef = useRef(null);
+  const location = useLocation();
+
+  
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -52,32 +56,38 @@ function Navbar() {
           </li>
           */}
           <li>
-            <Link to="/homepage" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
+            <Link 
+            to="/homepage" 
+            className={`navbar-button ${
+                  location.pathname === "/homepage" ? "navbar-button-current-page" : ""
+                }`}
+              >
               <FontAwesomeIcon icon={faHome} />
-              <span className="hidden sm:block font-sans hover:scale-105">Homepage</span>
+              <span className="">Home</span>
             </Link>
           </li>
           <li>
-            <Link to="/compare" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
+            <Link to="/compare" className={`navbar-button ${location.pathname === "/compare" ? "navbar-button-current-page" : ""}`}
+  >
               <FontAwesomeIcon icon={faCodeCompare} />
-              <span className="hidden sm:block font-sans hover:scale-105">Compare</span>
+              <span className="navbar-icon">Compare</span>
             </Link>
           </li>
           {!isLoggedIn ? (
             <li>
-              <Link to="/login" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
+              <Link to="/login" className="navbar-button">
                 <FontAwesomeIcon icon={faUserCircle} />
-                <span className="hidden sm:block font-sans hover:scale-105">Login / Sign up</span>
+                <span className="">Login / Sign up</span>
               </Link>
             </li>
           ) : (
             <li className='relative' ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="hover:text-cyan-400 transition hover:scale-125 duration-300 flex items-center space-x-2"
+                className="navbar-button"
               >
                 <FontAwesomeIcon icon={faUserCircle} />
-                <span className="hidden sm:block font-sans hover:scale-105">User Dashboard</span>
+                <span className="">User Dashboard</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute top-full mt-2 right-0 w-40 bg-white text-black shadow-lg rounded-md z-50">
