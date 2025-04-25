@@ -12,7 +12,7 @@ body {
 }
 
 .compare-page-buttons{
-    @apply mt-8 mr-24 text-2xl bg-cyan-500 text-white font-sans py-3 px-12 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
+    @apply mt-8 text-2xl bg-cyan-500 text-white font-sans py-3 px-8 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg;
 }
 
 .compare-page-buttons-red {

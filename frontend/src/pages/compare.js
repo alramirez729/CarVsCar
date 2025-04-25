@@ -957,7 +957,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </button>
         </div>
       )}
-      <div className="flex flex-row my-0 justify-center -mr-24 space-x-0">
+      <div className="flex flex-row justify-center space-x-12 ml-10">
         <button 
         onClick={handleCompare} 
         className="compare-page-buttons"
@@ -965,7 +965,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           Compare
         </button>
         {isLoggedIn && (
-        <button className="mt-8 mx-10 text-2xl bg-cyan-500 text-white font-sans py-3 px-12 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg" 
+        <button className="compare-page-buttons" 
         onClick={handleAISuggestion}>
           🪄AI Analysis
         </button>
