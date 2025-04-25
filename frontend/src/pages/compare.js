@@ -965,9 +965,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           Compare
         </button>
         {isLoggedIn && (
-        <button className="compare-page-buttons" 
+        <button className="mt-8 mx-10 text-2xl bg-cyan-500 text-white font-sans py-3 px-12 rounded-lg hover:bg-cyan-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg" 
         onClick={handleAISuggestion}>
-          🪄AI suggestion
+          🪄AI Analysis
         </button>
       )}
       </div>
