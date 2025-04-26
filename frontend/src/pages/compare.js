@@ -759,7 +759,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         <h4 className="text-sm">{car2.make} - {car2.model} ({car2.year})</h4>
         </div>
       </div>
-
       {/* Bar Chart Appears Below the Metric Row (Centered) */}
       <div className="flex justify-center items-center mt-2">
         <RenderBarChart
@@ -824,11 +823,10 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       {hasCompared &&(
         <div className="w-full flex flex-col text-xs sm:flex-row sm:justify-end sm:items-center gap-2 mt-4">
         <button 
-        onClick={() => generatePDF("report-section")}
-        className="compare-control-button-primary p-2 ">
+          onClick={() => generatePDF("report-section")}
+          className="compare-control-button-primary p-2 ">
           <FontAwesomeIcon icon={faFilePdf} className="mr-2" /> Download as PDF  
         </button>
-        
         <button onClick={resetComparison} className="compare-control-button-secondary p-4">
           🔄 Reset Comparison
         </button>
@@ -848,8 +846,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </button>
       )}
       </div>
-      
-
       {isLoggedIn && hasCompared && (
         <button 
         onClick={() => saveComparison({ make: make1, model: model1 }, { make: make2, model: model2 })}
@@ -857,10 +853,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           💾 Add to Saved Comparisons
         </button>
       )}
-
-      
       <div id="report-section" className="flex flex-col items-center w-full">
-      
       {/* AI Suggestion Box */}
       {showAiBox && (
         <div className="mt-6 p-4 w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg relative">
@@ -871,7 +864,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           >
             <FontAwesomeIcon icon={faTimes} size="lg" />
           </button>
-
           {/* AI Text Display */}
           <div className="text-gray-800 text-lg whitespace-pre-wrap font-mono">
             {aiLoading ? (
@@ -882,8 +874,6 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           </div>
         </div>
       )}
-      {/* Toggle Button for View Mode */}
-  
         {/* Custom Alert */}
           {alertMessage && (
             <div
@@ -913,37 +903,33 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
               >
                 Not yet
               </button>
-              
-          </div>
+            </div>
           </div>
           )
-
           }
-
-
-<ComparisonResults
-  hasCompared={hasCompared}
-  nonNumericalComparison={nonNumericalComparison}
-  comparisonResult={comparisonResult}
-  overallRating1={overallRating1}
-  fuelEfficiency1={fuelEfficiency1}
-  power1={power1}
-  make1={make1}
-  overallRating2={overallRating2}
-  fuelEfficiency2={fuelEfficiency2}
-  power2={power2}
-  make2={make2}
-  viewMode={viewMode}
-  sections={sections}
-  activeTab={activeTab}
-  handleNextTab={handleNextTab}
-  handlePrevTab={handlePrevTab}
-  resultsRef={resultsRef}
-/>
+            <ComparisonResults
+              hasCompared={hasCompared}
+              nonNumericalComparison={nonNumericalComparison}
+              comparisonResult={comparisonResult}
+              overallRating1={overallRating1}
+              fuelEfficiency1={fuelEfficiency1}
+              power1={power1}
+              make1={make1}
+              overallRating2={overallRating2}
+              fuelEfficiency2={fuelEfficiency2}
+              power2={power2}
+              make2={make2}
+              viewMode={viewMode}
+              sections={sections}
+              activeTab={activeTab}
+              handleNextTab={handleNextTab}
+              handlePrevTab={handlePrevTab}
+              resultsRef={resultsRef}
+            />
 
         
-</div>
-</div>
+    </div>
+    </div>
 );
 }
 
