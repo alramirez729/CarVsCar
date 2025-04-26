@@ -13,6 +13,7 @@ import ComparisonResults from '../components/ComparisonResults.jsx';
 import CarInputCard from '../components/CarInputCard.jsx';
 import RenderBarChart from '../components/RenderBarChart.js';
 import metricExplanations from '../constants/metricsExplanation.js';
+import AISuggestionBox from '../components/AISuggestionBox.jsx';
 
 
 function Compare() {
@@ -856,57 +857,13 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       <div id="report-section" className="flex flex-col items-center w-full">
       {/* AI Suggestion Box */}
       {showAiBox && (
-        <div className="mt-6 p-4 w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg relative">
-          {/* Close Button */}
-          <button 
-            onClick={() => setShowAiBox(prev => !prev)} 
-            className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
-          >
-            <FontAwesomeIcon icon={faTimes} size="lg" />
-          </button>
-          {/* AI Text Display */}
-          <div className="text-gray-800 text-lg whitespace-pre-wrap font-mono">
-            {aiLoading ? (
-              <div className="animate-pulse">Thinking...</div>
-            ) : (
-              aiSuggestion || "No suggestion available."
-            )}
-          </div>
-        </div>
+        <AISuggestionBox
+          aiLoading={aiLoading}
+          aiSuggestion={aiSuggestion}
+          setShowAiBox={setShowAiBox}
+        />
       )}
-        {/* Custom Alert */}
-          {alertMessage && (
-            <div
-              className={`left-1/2 transform -translate-x-1/2 z-50 p-4 text-sm rounded-lg shadow-lg 
-                ${alertType === 'error' ? 'text-red-800 bg-red-50' : 'text-blue-800 bg-blue-50'}`}
-              role="alert"
-            >
-              <span className="font-medium">
-                {alertType === 'error' ? 'Error!' : 'Info!'}
-              </span>{' '}
-              {alertMessage}
-            </div>
-          )}
-          {showConfirmationModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-gray-50 p-6 rounded-lg shadow-lg text-center w-96">
-              <h2 className="text-2xl font-semibold mb-4 text-blue-400">Confirmation saved to Account</h2>
-              <Link 
-                to="/userDashboard"
-                className="mx-10 general-button-styling"
-              >
-                To Dashboard
-              </Link>
-              <button
-              onClick = {() => setShowConfirmationModal(false)}
-              className="mx-10 general-button-styling"
-              >
-                Not yet
-              </button>
-            </div>
-          </div>
-          )
-          }
+
             <ComparisonResults
               hasCompared={hasCompared}
               nonNumericalComparison={nonNumericalComparison}
