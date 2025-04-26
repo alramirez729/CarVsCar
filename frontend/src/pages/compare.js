@@ -10,6 +10,7 @@ import hardcodedCarMakes from "../constants/makes.js";
 import SpeedometerGroup from '../components/SpeedometerGroup.js';
 import carLogoLeft from "./images/CarCompareLeft.png";
 import carLogoRight from "./images/CarCompareRight.png";
+import CarInputCard from '../components/CarInputCard.jsx';
 import RenderBarChart from '../components/RenderBarChart.js';
 import metricExplanations from '../constants/metricsExplanation.js';
 
@@ -787,199 +788,38 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </select>
       </div>
       <div className="animate-fade-in flex flex-col md:flex-row md:justify-between w-full max-w-8xl gap-5 -my-0">
-        {/* Car 1 Input */}
-        <div className="flex flex-col items-center ring-8 ring-sky-100 shadow-xl p-5 rounded-lg w-full">
-        <div className="relative w-full">
-          <button
-            onClick={resetCar1}
-            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 transition transform hover:scale-110"
-            title="Reset Car 1"
-          >
-            🔄
-          </button>
-        </div>
-        <div className="w-36 min-h-36 flex items-center justify-center">
-            {carLogo1 ? (
-                <img 
-                    src={carLogo1} 
-                    alt="Car 1 Logo" 
-                    className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform"
-                />
-            ) : (
-                <img src={carLogoRight} size="5x" />
-            )}
-        </div>
-          <h2 className="title">
-            {make1 
-              ? model1 
-                ? `${make1.charAt(0).toUpperCase() + make1.slice(1)} - ${model1.charAt(0).toUpperCase() + model1.slice(1)}` // If both make and model are selected
-                : make1                // If only make is selected
-              : "Car 1"                // Default when neither make nor model is selected
-            }
-          </h2>
+      <CarInputCard
+          carNumber={1}
+          make={make1}
+          setMake={setMake1}
+          model={model1}
+          setModel={setModel1}
+          year={year1}
+          setYear={setYear1}
+          carMakes={carMakes}
+          modelSuggestions={modelSuggestions1}
+          yearSuggestions={yearSuggestions1}
+          carLogo={carLogo1}
+          resetCar={resetCar1}
+          fetchSuggestions={fetchSuggestions}
+        />
 
-          {/* Make Dropdown */}
-          <div className="relative w-full">
-            <h1 className="font-thin italic font-sans">Select vehicle make:</h1>
-            <select
-              value={make1}
-              onChange={(e) => {
-                setMake1(e.target.value);
-                fetchSuggestions('model', e.target.value, '', 1);
-              }}
-              className="dropdown_input_styling"
-            >
-              <option value="" disabled>Select Car Make</option>
-              {carMakes.map((make, index) => (
-                <option key={index} value={make}>
-                  {make}
-                </option>
-              ))}
-            </select>
-          </div>
+        <CarInputCard
+          carNumber={2}
+          make={make2}
+          setMake={setMake2}
+          model={model2}
+          setModel={setModel2}
+          year={year2}
+          setYear={setYear2}
+          carMakes={carMakes}
+          modelSuggestions={modelSuggestions2}
+          yearSuggestions={yearSuggestions2}
+          carLogo={carLogo2}
+          resetCar={resetCar2}
+          fetchSuggestions={fetchSuggestions}
+        />
 
-          {/* Model Dropdown */}
-          <div className="relative w-full">
-          <h1 className="font-thin italic font-sans">Select vehicle model:</h1>
-            <select
-              value={model1}
-              onChange={(e) => {
-                const selectedModel = e.target.value;
-                setModel1(selectedModel);  
-                fetchSuggestions('year', make1, selectedModel, 1);            
-              }}
-              className="dropdown_input_styling"
-            >
-              <option value="" disabled>Select Car Model</option>
-              {modelSuggestions1.map((model, index) => (
-                <option key={index} value={model}>{model}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Year Dropdown */}
-          <div className="relative w-full">
-          <h1 className="font-thin italic font-sans">Select vehicle year:</h1>
-          <select
-            value={year1}
-            onChange={(e) => setYear1(e.target.value)}
-            onFocus={() => {
-              if (make1 && model1) {
-                fetchSuggestions('year', make1, model1, 1);
-              }
-            }}
-            className="dropdown_input_styling"
-            disabled={yearSuggestions1.length === 1 && yearSuggestions1[0] === "No available years"}
-          >
-            <option value="" disabled>{yearSuggestions1[0] === "No available years" ? "No years available" : "Select Year"}</option>
-            {yearSuggestions1[0] !== "No available years" &&
-              yearSuggestions1.map((year, index) => (
-                <option key={index} value={year}>
-                  {year}
-                </option>
-              ))
-            }
-            </select>
-          </div>
-        </div>
-  
-        {/* Car 2 Input */}
-        <div className="animate-fade-in flex flex-col items-center ring-8 ring-fuchsia-100 shadow-xl p-5 rounded-lg w-full">
-        <div className="relative w-full">
-          <button
-            onClick={resetCar2}
-            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 transition transform hover:scale-110"
-            title="Reset Car 2"
-          >
-            🔄
-          </button>
-        </div>
-        <div className="w-36 min-h-36 flex items-center justify-center ">
-            {carLogo2 ? (
-                <img 
-                    src={carLogo2} 
-                    alt="Car 1 Logo" 
-                    className="w-36 h-36 object-contain mx-auto hover:scale-125 transition-transform "
-                />
-            ) : (
-                <img src={carLogoLeft} size="5x" />
-            )}
-        </div>
-          <h2 className="title">
-            {make2 
-              ? model2 
-                ? `${make2.charAt(0).toUpperCase() + make2.slice(1)} - ${model2.charAt(0).toUpperCase() + model2.slice(1)}` // If both make and model are selected
-                : make2                // If only make is selected
-              : "Car 2"                // Default when neither make nor model is selected
-            }
-          </h2>
-  
-          {/* Make 2 Input with Dropdown */}
-          <div className="relative w-full">
-          <h1 className="font-thin italic font-sans">Select vehicle make:</h1>
-            <select
-              value={make2}
-              onChange={(e) => {
-                setMake2(e.target.value);
-                fetchSuggestions('model', e.target.value, '', 2); // Fetch models for the selected make
-              }}
-              className="dropdown_input_styling"
-            >
-              <option value="" disabled>Select Car Make</option>
-              {carMakes.map((make, index) => (
-                <option key={index} value={make}>
-                  {make}
-                </option>
-              ))}
-            </select>
-          </div>
-  
-          {/* Model 2 Input with Dropdown */}
-          <div className="relative w-full">
-          <h1 className="font-thin italic font-sans">Select vehicle model:</h1>
-            <select
-              value={model2}
-              onChange={(e) => {
-                setModel2(e.target.value)
-                fetchSuggestions('year', make2, e.target.value, 2);
-              }}
-              className="dropdown_input_styling"
-            >
-              <option value="" disabled>Select Car Model</option>
-              {modelSuggestions2.map((model, index) => (
-                <option key={index} value={model}>
-                  {model}
-                </option>
-              ))}
-            </select>
-          </div>
-  
-          {/* Year 2 Input */}
-          <div className="relative w-full">
-          <h1 className="font-thin italic font-sans">Select vehicle year:</h1>
-          <select
-            value={year2}
-            onChange={(e) => setYear2(e.target.value)}
-            onFocus={() => {
-              if (make2 && model2) {
-                fetchSuggestions('year', make2, model2, 2);
-              }
-            }}
-            className="dropdown_input_styling"
-            disabled={yearSuggestions2.length === 1 && yearSuggestions2[0] === "No available years"}
-          >
-            <option value="" disabled>{yearSuggestions2[0] === "No available years" ? "No years available" : "Select Year"}</option>
-            {yearSuggestions2[0] !== "No available years" &&
-              yearSuggestions2.map((year, index) => (
-                <option key={index} value={year}>
-                  {year}
-                </option>
-              ))
-            }
-            </select>
-          </div>
-
-        </div>
       </div>
       {hasCompared &&(
         <div className="w-full flex flex-col text-xs sm:flex-row sm:justify-end sm:items-center gap-2 mt-4">
