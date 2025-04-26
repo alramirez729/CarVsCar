@@ -8,7 +8,7 @@ import Loading from '../components/Loading';
 import axios from 'axios';
 
 function UserDashboard() {
-  const [selectedSection, setSelectedSection] = useState('Account');
+  const [selectedSection, setSelectedSection] = useState('Car Preferences');
   const { setIsLoggedIn } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -166,7 +166,7 @@ function UserDashboard() {
       <aside className="w-72 bg-gray-800 text-white p-6 space-y-6 h-screen fixed top-12 left-0">
         <h2 className="font-sans text-3xl font-bold mb-6 underline animate-fade-in">User Dashboard:</h2>
         <ul className="space-y-2 -mx-2 text-xl">
-          {['Account', 'Car Preferences', 'Saved Comparisons'].map((section) => (
+          {['Car Preferences', 'Saved Comparisons','Account'].map((section) => (
             <li
               key={section}
               className={`font-sans cursor-pointer p-3 rounded-lg transition duration-300 animate-fade-in ${
