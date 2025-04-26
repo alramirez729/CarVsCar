@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { faCar } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-let debounceTimeout;
 
 function SearchVehicles() {
   const navigate = useNavigate();
@@ -23,100 +21,142 @@ function SearchVehicles() {
     'hatchback', 'van'
   ];
 
-  const fetchFilteredVehicles = async (term, useFallback = false) => {
+  // Fetch all vehicles based on search term
+  const fetchVehicles = async (term) => {
     setLoading(true);
     try {
       let apiUrl;
+  
       if (term) {
-        const query = new URLSearchParams({ make: term, limit: 50 });
-        apiUrl = `${process.env.REACT_APP_API_URL}/api/cars?${query.toString()}`;
-      } else if (useFallback) {
-        const query = new URLSearchParams({ model: 'a', limit: 50 });
-        apiUrl = `${process.env.REACT_APP_API_URL}/api/cars?${query.toString()}`;
-      } else {
-        setFilteredVehicles([]);
-        return;
-      }
-
-      const res = await fetch(apiUrl);
-      if (!res.ok) throw new Error(await res.text());
-
-      const data = await res.json();
-      const enrichedData = data.map(car => ({ ...car, _id: uuidv4() }));
-      setVehicles(enrichedData);
-
-      if (selectedClass) {
-        const filtered = enrichedData.filter(car => car.class && car.class.toLowerCase() === selectedClass.toLowerCase());
-        setFilteredVehicles(filtered);
-      } else {
+        const words = term.trim().split(/\s+/);
+  
+        if (words.length === 1) {
+          // One word - search by make
+          const query = new URLSearchParams({ make: words[0], limit: 100 });
+          apiUrl = `${process.env.REACT_APP_API_URL}/api/cars?${query.toString()}`;
+        } else {
+          // Two or more words - search by make and model
+          const make = words[0];
+          const model = words.slice(1).join(' ');
+          const query = new URLSearchParams({ make, model, limit: 100 });
+          apiUrl = `${process.env.REACT_APP_API_URL}/api/cars?${query.toString()}`;
+        }
+  
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error(await res.text());
+  
+        const data = await res.json();
+        const enrichedData = data.map(car => ({ ...car, _id: uuidv4() }));
+  
+        setVehicles(enrichedData);
         setFilteredVehicles(enrichedData);
+      } else {
+        setVehicles([]);
+        setFilteredVehicles([]);
       }
     } catch (err) {
       console.error('Error fetching vehicles:', err.message);
+      setVehicles([]);
       setFilteredVehicles([]);
     } finally {
       setLoading(false);
     }
   };
+  
 
+  // Apply class filter on frontend
   useEffect(() => {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-      if (searchTerm || selectedClass) {
-        fetchFilteredVehicles(searchTerm, !searchTerm && selectedClass);
-      } else {
-        setFilteredVehicles([]);
-      }
+    let filtered = vehicles;
+
+    if (selectedClass) {
+      filtered = filtered.filter(
+        car => car.class && car.class.toLowerCase() === selectedClass.toLowerCase()
+      );
+    }
+
+    setFilteredVehicles(filtered);
+  }, [vehicles, selectedClass]);
+
+  // Handle search with debounce
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fetchVehicles(searchTerm);
     }, 300);
-    return () => clearTimeout(debounceTimeout);
-  }, [searchTerm, selectedClass]);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm]);
 
   const handleCarClick = (car) => {
-    const isSelected = comparisonQueue.some(
-      (qCar) => qCar._id === car._id
-    );
+    const isSelected = comparisonQueue.some(qCar => qCar._id === car._id);
 
     if (isSelected) {
-      setComparisonQueue(queue => queue.filter(
-        (qCar) => qCar._id !== car._id
-      ));
+      setComparisonQueue(queue => queue.filter(qCar => qCar._id !== car._id));
     } else if (comparisonQueue.length < 2) {
       setComparisonQueue(queue => [...queue, car]);
     }
   };
 
   const renderComparisonSlots = () => {
-    const slots = [0, 1].map((index) => {
-      const car = comparisonQueue[index];
-      return (
-        <div
-          key={index}
-          className="flex flex-col items-center justify-center w-40 h-40 border rounded-lg bg-white shadow-md"
-        >
-          <FontAwesomeIcon
-            icon={faCar}
+    return (
+      <div className="flex gap-4 mb-8">
+        {[0, 1].map((index) => {
+          const car = comparisonQueue[index];
+          return (
+            <div
+              key={index}
+              className="relative flex flex-col items-center justify-center w-40 h-40 border rounded-lg bg-white shadow-md"
             >
-          </FontAwesomeIcon>
-          <p className="text-sm text-center">
-            {car ? `${car.make} ${car.model}` : 'Empty Slot'}
-          </p>
-        </div>
-      );
-    });
-    return <div className="flex gap-4 mb-8">{slots}</div>;
+              {car ? (
+                <>
+                  {/* Remove button */}
+                  <button
+                    onClick={() => {
+                      setComparisonQueue(queue => queue.filter(qCar => qCar._id !== car._id));
+                    }}
+                    className="absolute top-1 right-1 bg-gray-200 hover:bg-gray-400 rounded-full p-1 text-xs"
+                    title="Remove from comparison"
+                  >
+                    ✕
+                  </button>
+                  {/* Car content */}
+                  <FontAwesomeIcon icon={faCar} className="text-blue-500 mb-2" size="2x" />
+                  <p className="text-sm text-center font-semibold">{car.make} {car.model}</p>
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faCar} className="text-gray-400 mb-2" size="2x" />
+                  <p className="text-gray-400 text-sm text-center">Tap a car to add</p>
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
+  
 
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6">Search Vehicles</h1>
 
-      <input
-        type="text"
-        placeholder="Start typing a make (e.g., Toyota, Ford...)"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="p-2 border rounded w-full mb-4"
-      />
+      <div className="relative w-full mb-4">
+        <input
+          type="text"
+          placeholder="Start typing a make (e.g., Toyota, Ford...)"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 border rounded w-full"
+        />
+        {searchTerm && (
+          <button
+            onClick={() => setSearchTerm('')}
+            className="absolute right-3 top-2 text-gray-400 hover:text-gray-600"
+          >
+            <FontAwesomeIcon icon={faTimesCircle} size="lg" />
+          </button>
+        )}
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
         {bodyTypes.map((type) => (
@@ -141,7 +181,7 @@ function SearchVehicles() {
       ) : (
         <>
           {filteredVehicles.length === 0 && (searchTerm || selectedClass) && (
-            <p className="text-gray-500 italic">
+            <p className="text-gray-500 italic mb-8">
               No vehicles found that match your criteria.
             </p>
           )}
