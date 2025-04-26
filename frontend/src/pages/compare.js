@@ -9,11 +9,13 @@ import html2pdf from "html2pdf.js";
 import { getAISuggestion } from '../components/getAISuggestion.js';
 import { generatePDF } from "../components/generatePDF.js";
 import hardcodedCarMakes from "../constants/makes.js";
-import ComparisonResults from '../components/ComparisonResults.jsx';
-import CarInputCard from '../components/CarInputCard.jsx';
+import ComparisonResults from '../components/ComparisonResults.js';
+import CarInputCard from '../components/CarInputCard.js';
 import RenderBarChart from '../components/RenderBarChart.js';
 import metricExplanations from '../constants/metricsExplanation.js';
-import AISuggestionBox from '../components/AISuggestionBox.jsx';
+import AISuggestionBox from '../components/AISuggestionBox.js';
+import { calculateOverallRating, extractSpeedometerValues } from '../utils/compareUtils';
+
 
 
 function Compare() {
@@ -131,43 +133,19 @@ function Compare() {
       const car1 = comparisonData[0];
       const car2 = comparisonData[1];
   
-      const maxMpg = 50; // Maximum MPG for scaling
-      const maxCylinders = 16; // Maximum cylinders for scaling
+      const values1 = extractSpeedometerValues(car1);
+      const values2 = extractSpeedometerValues(car2);
   
-      // Weights for metrics
-      const weightFuelEfficiency = 1.2;
-      const weightPower = 0.3;
+      setFuelEfficiency1(values1.fuelEfficiency);
+      setPower1(values1.power);
+      setOverallRating1(values1.overallRating);
   
-      // Calculate normalized scores
-      const calculateFuelEfficiencyScore = (mpg) => (Math.min((mpg / maxMpg) * 100, 100));
-      const calculatePowerScore = (cylinders) => Math.min((cylinders / maxCylinders) * 100, 100);
-  
-      // Calculate overall rating
-      const calculateOverallRating = (fuelEfficiency, power) => {
-        const fuelEfficiencyScore = calculateFuelEfficiencyScore(fuelEfficiency * 2) ;
-        const powerScore = calculatePowerScore(power);
-  
-        return Math.round(
-          (fuelEfficiencyScore * weightFuelEfficiency + powerScore * weightPower) /
-            (weightFuelEfficiency + weightPower)
-        );
-      };
-  
-      // Update speedometer values
-      setFuelEfficiency1(car1?.combination_mpg || 0);
-      setFuelEfficiency2(car2?.combination_mpg || 0);
-  
-      setPower1(car1?.cylinders || 0);
-      setPower2(car2?.cylinders || 0);
-  
-      setOverallRating1(
-        calculateOverallRating(car1?.combination_mpg || 0, car1?.cylinders || 0)
-      );
-      setOverallRating2(
-        calculateOverallRating(car2?.combination_mpg || 0, car2?.cylinders || 0)
-      );
+      setFuelEfficiency2(values2.fuelEfficiency);
+      setPower2(values2.power);
+      setOverallRating2(values2.overallRating);
     }
   }, [comparisonData]);
+  
 
   //autoscroll when clicking the compare button
   useEffect(() => {
