@@ -63,7 +63,7 @@ function Navbar() {
                 }`}
               >
               <FontAwesomeIcon icon={faHome} />
-              <span className="">Home</span>
+              <span className="navbar-icon">Home</span>
             </Link>
           </li>
           <li>
@@ -77,7 +77,7 @@ function Navbar() {
             <li>
               <Link to="/login" className="navbar-button">
                 <FontAwesomeIcon icon={faUserCircle} />
-                <span className="">Login / Sign up</span>
+                <span className="navbar-icon">Login / Sign up</span>
               </Link>
             </li>
           ) : (
@@ -87,7 +87,7 @@ function Navbar() {
                 className="navbar-button"
               >
                 <FontAwesomeIcon icon={faUserCircle} />
-                <span className="">User Dashboard</span>
+                <span className="navbar-icon">User Dashboard</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute top-full mt-2 right-0 w-40 bg-white text-black shadow-lg rounded-md z-50">
