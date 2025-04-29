@@ -389,7 +389,10 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const saveComparison = async (car1, car2) => {
     const element = document.getElementById("report-section");
   
-    if (!element) return alert("No comparison to save.");
+    if (!element) {
+      alert("No comparison to save.");
+      return;
+    }
   
     try {
       const pdf_options = {
@@ -400,17 +403,19 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
       };
   
-      // Generate PDF blob using the same settings
-      const pdfBlob = await html2pdf().from(element).set(pdf_options).outputPdf('blob');
-
-
+      const worker = html2pdf()
+        .from(element)
+        .set(pdf_options);
+  
+      await worker.toPdf(); // <-- Needed step!
+      const pdfBlob = await worker.output('blob'); // <-- Correct
+  
       const file = new File([pdfBlob], pdf_options.filename, { type: 'application/pdf' });
-
+  
       const formData = new FormData();
-      formData.append('pdf', file); // <— this is the important change
+      formData.append('pdf', file);
       formData.append('car1', `${car1.make} ${car1.model}`);
       formData.append('car2', `${car2.make} ${car2.model}`);
-
   
       const token = localStorage.getItem('token');
   
@@ -435,6 +440,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       alert('An error occurred while saving.');
     }
   };
+  
   
 
   //Box above the graphs
@@ -832,6 +838,26 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           💾 Add to Saved Comparisons
         </button>
       )}
+      {showConfirmationModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center space-y-6">
+          <h2 className="text-2xl font-bold text-gray-800">Comparison Saved! 🎉</h2>
+          <p className="text-gray-600">Your comparison was saved successfully. You can view it on your dashboard.</p>
+          <div className="flex justify-center space-x-4">
+            <Link to="/userDashboard" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              Go to Dashboard
+            </Link>
+            <button
+              onClick={() => setShowConfirmationModal(false)}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+            >
+              Stay Here
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
       <div id="report-section" className="flex flex-col items-center w-full">
       {/* AI Suggestion Box */}
       {showAiBox && (
