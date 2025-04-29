@@ -63,6 +63,11 @@ function SearchVehicles() {
     }
   };
   
+  const handleNavigateToCompare = () => {
+    console.log("Navigating with comparisonQueue:", comparisonQueue);
+    navigate('/compare', { state: { vehicles: comparisonQueue } });
+  };
+  
 
   // Apply class filter on frontend
   useEffect(() => {
@@ -189,7 +194,7 @@ function SearchVehicles() {
           {comparisonQueue.length === 2 && (
             <div className="fixed bottom-4 right-4 z-50">
               <button
-                onClick={() => navigate('/compare', { state: { vehicles: comparisonQueue } })}
+                onClick={handleNavigateToCompare}
                 className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 transition-colors"
               >
                 Compare Vehicles

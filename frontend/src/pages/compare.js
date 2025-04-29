@@ -95,11 +95,15 @@ function Compare() {
       setComparisonTriggered(true);
       
       fetchSuggestions('model', car1.make, '', 1).then(() => {
-        fetchSuggestions('year', car1.make, car1.model, 1);
+        fetchSuggestions('year', car1.make, car1.model, 1).then(() => {
+          setYear1(car1.year); 
+        });
       });
   
       fetchSuggestions('model', car2.make, '', 2).then(() => {
-        fetchSuggestions('year', car2.make, car2.model, 2);
+        fetchSuggestions('year', car2.make, car2.model, 2).then(() => {
+          setYear2(car2.year); 
+        });
       });
     }
 

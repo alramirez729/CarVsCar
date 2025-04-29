@@ -77,7 +77,7 @@ body {
 }
 
 .navbar-icon{
-    @apply hidden sm:block font-sans hover:scale-105;
+    @apply hidden text-xl sm:block font-sans hover:scale-105;
 }
 
 .navbar-button-current-page{

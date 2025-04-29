@@ -46,15 +46,7 @@ function Navbar() {
 
         {/* Navigation Links */}
         <ul className="flex items-center space-x-8">
-          {/* TODO
-          <li>
-            <Link to="/searchVehicles" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
-              <FontAwesomeIcon icon={faSearch}/>
-              <span className="hidden sm:block font-sans hover:scale-105">Search</span>
-            </Link>
-            
-          </li>
-          */}
+          
           <li>
             <Link 
             to="/homepage" 
@@ -65,6 +57,13 @@ function Navbar() {
               <FontAwesomeIcon icon={faHome} />
               <span className="navbar-icon">Home</span>
             </Link>
+          </li>
+          <li>
+            <Link to="/searchVehicles" className="hover:text-cyan-400 hover:scale-125 transition duration-300 flex items-center space-x-2">
+              <FontAwesomeIcon icon={faSearch}/>
+              <span className="navbar-icon">Search</span>
+            </Link>
+            
           </li>
           <li>
             <Link to="/compare" className={`navbar-button ${location.pathname === "/compare" ? "navbar-button-current-page" : ""}`}
