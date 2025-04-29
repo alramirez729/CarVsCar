@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 
-function UserPreferencesForm() {
+function UserPreferencesForm({mode, onSave}) {
   const [showExplanation, setShowExplanation] = useState(false);
 
   const [preferences, setPreferences] = useState({
@@ -18,11 +18,13 @@ function UserPreferencesForm() {
     carUsage: '',
   });
 
-  const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false); // ✅ Controls if form is editable
+  const [loading, setLoading] = useState(mode !== 'embedded');
+  const [editing, setEditing] = useState(mode === 'embedded'); // ✅ Controls if form is editable
   const [message, setMessage] = useState('');
 
+  
   useEffect(() => {
+    if (mode === 'embedded') return; // ⛔ skip fetch if embedded
     // Fetch existing preferences
     const fetchPreferences = async () => {
       try {
@@ -40,7 +42,7 @@ function UserPreferencesForm() {
       }
     };
     fetchPreferences();
-  }, []);
+  }, [mode]);
 
   const handleChange = (e) => {
     setPreferences({ ...preferences, [e.target.name]: e.target.value });
@@ -48,6 +50,11 @@ function UserPreferencesForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (mode === 'embedded' && onSave) {
+      onSave(preferences); // save locally in parent (RegisterPage)
+      return;
+    }
     try {
       const token = localStorage.getItem('token');
       await axios.put(
