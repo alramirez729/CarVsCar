@@ -12,7 +12,7 @@ const hardcodedCarMakes = [
     "Pagani", "Peugeot", "Polestar", "Pontiac", "Porsche", "Ram",
     "Renault", "Rivian", "Rolls-Royce", "Saab", "Saturn", "Scion",
     "Seat", "Skoda", "Smart", "SsangYong", "Subaru", "Suzuki",
-    "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo", 
+    "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo", "Qvale"
   ];
 
   export default hardcodedCarMakes;
