@@ -46,8 +46,8 @@ function RegisterPage() {
                 });
             }
 
-            // Redirect to dashboard after
-            navigate('/userDashboard', { state: { showPreferences: !preferences } }); // If they skipped, prompt later
+            // Redirect to compare.js after
+            navigate('/compare', { state: { showPreferences: !preferences } }); // If they skipped, prompt later
             setMessage(message);
 
         } catch (error) {
