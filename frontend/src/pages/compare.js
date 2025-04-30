@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
 import html2pdf from "html2pdf.js";
@@ -72,6 +72,8 @@ function Compare() {
 
   const [hasCompared, setHasCompared] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const navigate = useNavigate();
 
   
   const handleNextTab = () => {
@@ -759,6 +761,10 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
       </div>
   );
 };
+const  handleNavigateSearch = () => {
+   navigate('/searchVehicles');
+   return;
+}
 
   return (
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
@@ -822,6 +828,14 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
         </div>
       )}
       <div className="flex flex-row justify-center space-x-12 ml-10">
+      <button 
+        onClick={handleNavigateSearch}
+        className="compare-page-buttons"
+      >
+        <FontAwesomeIcon icon={faSearch} className="mr-2 size-5" />
+        Search
+      </button>
+
         <button 
         onClick={handleCompare} 
         className="compare-page-buttons"
@@ -829,7 +843,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
           Compare
         </button>
         {isLoggedIn && (
-        <button className="compare-page-buttons" 
+        <button className="compare-page-buttons " 
         onClick={handleAISuggestion}>
           🪄AI Analysis
         </button>
