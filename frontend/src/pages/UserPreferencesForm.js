@@ -124,7 +124,7 @@ function UserPreferencesForm({mode, onSave}) {
         </div>
       ) : (
         /* ✅ Show Editable Form when in Edit Mode */
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-0">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y">
           <label className="block">
             <span className="text-gray-700">What is your occupation?</span>
             <input type="text" name="occupation" value={preferences.occupation} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-lg" />

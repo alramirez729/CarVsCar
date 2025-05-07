@@ -140,7 +140,7 @@ function SearchVehicles() {
     );
   };
   
-
+  
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6">Search Vehicles</h1>
@@ -152,17 +152,18 @@ function SearchVehicles() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 border rounded w-full"
-        />
+          />
         {searchTerm && (
           <button
-            onClick={() => setSearchTerm('')}
-            className="absolute right-3 top-2 text-gray-400 hover:text-gray-600"
+          onClick={() => setSearchTerm('')}
+          className="absolute right-3 top-2 text-gray-400 hover:text-gray-600"
           >
             <FontAwesomeIcon icon={faTimesCircle} size="lg" />
           </button>
         )}
       </div>
 
+        {renderComparisonSlots()}
       <div className="flex flex-wrap gap-2 mb-6">
         {bodyTypes.map((type) => (
           <button
@@ -179,7 +180,6 @@ function SearchVehicles() {
         ))}
       </div>
 
-      {renderComparisonSlots()}
 
       {loading ? (
         <Loading />
@@ -190,7 +190,15 @@ function SearchVehicles() {
               No vehicles found that match your criteria.
             </p>
           )}
-
+          {comparisonQueue.length === 1 &&(
+          <div className="fixed bottom-4 right-4 z-50">
+            <p
+            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 transition-colors"
+            >
+              Select one more vehicle to compare
+            </p>
+          </div>
+          )}
           {comparisonQueue.length === 2 && (
             <div className="fixed bottom-4 right-4 z-50">
               <button
@@ -201,6 +209,7 @@ function SearchVehicles() {
               </button>
             </div>
           )}
+          
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredVehicles.map((car) => {
@@ -217,7 +226,7 @@ function SearchVehicles() {
                 >
                   <h2 className="font-bold">{car.make} {car.model}</h2>
                   <p className="text-sm text-gray-600">{car.year}</p>
-                  <p>Class: {car.class || 'N/A'}</p>
+                  <p>Class: {car.class.toUpperCase() || 'N/A'}</p>
                   <p>MPG: {car.combination_mpg || 'N/A'}</p>
                   <p>{car.fuel_type}, {car.drive}</p>
                   {isSelected && (
@@ -225,9 +234,13 @@ function SearchVehicles() {
                       Selected for comparison
                     </div>
                   )}
+                  
                 </div>
               );
+              
+              
             })}
+            
           </div>
         </>
       )}
