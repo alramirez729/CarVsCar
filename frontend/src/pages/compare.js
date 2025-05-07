@@ -770,13 +770,23 @@ const  handleNavigateSearch = () => {
     <div className="flex flex-col items-center justify-center w-full my-min-h-screen p-10 bg-white">
       <h1 className="heading tracking-widest ring-1 ring-slate-300 bg-slate-200 rounded-l h-30 w-30 border-b-gray-300 border-2 p-5 animate-fade-in-up animation-delay-1000">Car Comparison</h1>
       <h1 className="subheading animate-fade-in-up animation-delay-1000">Select two vehicles to see how they compare.</h1>
+      <button 
+        onClick={handleNavigateSearch}
+        className="compare-page-button-alt"
+      >
+        <FontAwesomeIcon icon={faSearch} className="mr-2 size-5" />
+        Search for vehicles
+      </button>
       {/* View Mode Selector */}
+      
       <div className="flex flex-col place-items-end w-full max-w-32 ml-auto mr-4 mb-4">
+      
         <select
           value={viewMode}
           onChange={(e) => setViewMode(e.target.value)}
           className="dropdown_input_styling text-sm"
         >
+          
           <option value="list">List View</option>
           <option value="tab">Tab View</option>
         </select>
@@ -828,13 +838,7 @@ const  handleNavigateSearch = () => {
         </div>
       )}
       <div className="flex flex-row justify-center space-x-12 ml-10">
-      <button 
-        onClick={handleNavigateSearch}
-        className="compare-page-buttons"
-      >
-        <FontAwesomeIcon icon={faSearch} className="mr-2 size-5" />
-        Search
-      </button>
+      
 
         <button 
         onClick={handleCompare} 
