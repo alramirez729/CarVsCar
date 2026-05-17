@@ -18,6 +18,20 @@ function Homepage() {
         Two cars of your choice go head to head. See which one suits your needs using Car vs. Car!
       </p>
 
+      {/* POC Notice */}
+      <div className="my-6 max-w-xl w-full bg-blue-50 border border-blue-200 rounded-lg px-6 py-4 text-slate-700 text-sm md:text-base leading-relaxed">
+        <p>
+          <span className="font-semibold text-blue-700">Heads up —</span> this is a{' '}
+          <span className="font-semibold">proof of concept</span>. Some features may be limited or incomplete,
+          but the core experience is ready to explore. If you'd like to see what it can do, head over to the{' '}
+          <Link to="/compare" className="text-blue-600 underline hover:text-blue-800 font-semibold transition-colors">
+            Compare page
+          </Link>{' '}
+          and pit two cars against each other.
+        </p>
+        <p className="mt-2 text-slate-500 italic">Thank you for checking out Car vs. Car!</p>
+      </div>
+
       {/* Call-to-Action Buttons */}
       <div className="flex flex-col space-y-4">
         <Link
