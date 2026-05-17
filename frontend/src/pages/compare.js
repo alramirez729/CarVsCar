@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { faSearch, faQuestionCircle, faTimes, faChevronLeft, faChevronRight, faList, faThLarge, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faQuestionCircle, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../AuthContext';
 import html2pdf from "html2pdf.js";
@@ -14,7 +14,7 @@ import CarInputCard from '../components/CarInputCard.js';
 import RenderBarChart from '../components/RenderBarChart.js';
 import metricExplanations from '../constants/metricsExplanation.js';
 import AISuggestionBox from '../components/AISuggestionBox.js';
-import { calculateOverallRating, extractSpeedometerValues } from '../utils/compareUtils';
+import { extractSpeedometerValues } from '../utils/compareUtils';
 
 
 
@@ -24,7 +24,7 @@ function Compare() {
   const vehiclesFromSearch = location.state?.vehicles;
   const [comparisonTriggered, setComparisonTriggered] = useState(false);
 
-  const [carMakes, setCarMakes] = useState(hardcodedCarMakes);
+  const [carMakes] = useState(hardcodedCarMakes);
   
   const [make1, setMake1] = useState('');
   const [model1, setModel1] = useState('');
@@ -49,11 +49,10 @@ function Compare() {
   const [aiLoading, setAiLoading] = useState(false);
   const [showAiBox, setShowAiBox] = useState(false);
 
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
-  const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState('info'); 
+  const [, setAlertType] = useState('info');
   
   const resultsRef = useRef(null);
   
@@ -112,12 +111,12 @@ function Compare() {
   }, [vehiclesFromSearch]);
 
   // helper effect for other edge cases not using searchVehicles.js
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (comparisonTriggered && make1 && model1 && year1 && make2 && model2 && year2) {
       handleCompare();
       setComparisonTriggered(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comparisonTriggered, make1, model1, year1, make2, model2, year2]);
 
   

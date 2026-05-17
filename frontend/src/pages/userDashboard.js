@@ -12,11 +12,11 @@ function UserDashboard() {
   const { setIsLoggedIn } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({ name: '', email: '', birthdate: null });
   const [isLoading, setIsLoading] = useState(true);
-  const [isComparisonLoading, setIsComparisonLoading] = useState(false);
+  const [isComparisonLoading] = useState(false);
   const [savedComparisons, setSavedComparisons] = useState([]);
   const [editField, setEditField] = useState(null);
   const [editedValue, setEditedValue] = useState('');
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [, setShowLogoutModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const navigate = useNavigate();
@@ -50,6 +50,7 @@ function UserDashboard() {
     fetchUserInfo();
   }, [setIsLoggedIn, navigate]);
 
+  // eslint-disable-next-line no-unused-vars
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);

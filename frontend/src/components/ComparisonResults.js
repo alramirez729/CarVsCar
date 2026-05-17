@@ -1,6 +1,5 @@
 import React from 'react';
 import SpeedometerGroup from './SpeedometerGroup';
-import RenderBarChart from './RenderBarChart';
 
 function ComparisonResults({
   hasCompared,

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../AuthContext';
 import UserPreferencesForm from './UserPreferencesForm'; // ⬅️ Import your form!
@@ -28,7 +28,7 @@ function RegisterPage() {
                 birthdate: formattedBirthdate,
             });
 
-            const { token, user, message } = response.data;
+            const { token, message } = response.data;
 
             if (!token) {
                 setMessage('Account created, but automatic login failed. Please login manually.');
