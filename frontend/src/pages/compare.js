@@ -108,11 +108,11 @@ function Compare() {
         });
       });
     }
-
-    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vehiclesFromSearch]);
 
   // helper effect for other edge cases not using searchVehicles.js
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (comparisonTriggered && make1 && model1 && year1 && make2 && model2 && year2) {
       handleCompare();
@@ -179,7 +179,7 @@ function Compare() {
         if (response.ok) {
             const data = await response.json(); 
             if(data.length === 0){
-              alert('No data available for  ${make} ${mode} (${year}). Please select another model.');
+              alert(`No data available for ${make} ${model} (${year}). Please select another model.`);
               return[];
             }
             return data;
@@ -192,9 +192,6 @@ function Compare() {
         return [];
     }
 };
-
-// Cache for storing year data for models
-const yearDataCache = new Map();
 
 // Helpers for TTL-based cache
 const getWithExpiry = (key) => {
@@ -605,7 +602,7 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
 
       console.log("Sending request to fetch user preferences...");
 
-      const response = await fetch('https://car-vs-car-api.onrender.com/users/preferences', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/users/preferences`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -708,18 +705,9 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const MetricComparisonRow = ({ metric, metricLabel, car1, car2 }) => {
     const [explanationVisible, setExplanationVisible] = useState(false);
   
-    // Compare metric values
-    const car1Value = parseFloat(car1.value);
-    const car2Value = parseFloat(car2.value);
     const toggleExplanation = () => setExplanationVisible(!explanationVisible);
-  
-    // Utility to get the shortened metric label
-    const getShortMetricLabel = (metricLabel) => {
-      const words = metricLabel.split(" ");
-      return words.slice(1).join(" ") || metricLabel;
-    };
     // ✅ Bar Chart method
-  return (
+    return (
     <div className="flex flex-col h-full p-1 gap-1 bg-gray-100 rounded-md shadow-sm">
       {/* Metric Label and Explanation */}
       <div className="flex items-center justify-between w-full mb-2">

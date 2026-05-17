@@ -11,6 +11,7 @@ import path from 'path';
 import userRoutes from './routes/users.js';  // Add .js extension
 import compareRoutes from './routes/compareRoutes.js'; // ✅ Import your new route
 import authRoutes from './routes/authRoutes.js';
+import carsRoutes from './routes/carsRoutes.js'; // ✅ Import car data route
 import { generateText } from './openAIService.js';  // Add .js extension
 
 
@@ -40,6 +41,7 @@ app.use(express.json());
 
 
 app.use('/pdfs', express.static(path.join(__dirname, 'pdfs')));
+app.use('/api', carsRoutes); // ✅ Mount car data route at /api
 app.use('/compare', compareRoutes); 
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
