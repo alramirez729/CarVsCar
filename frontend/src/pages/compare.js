@@ -73,7 +73,7 @@ function Compare() {
   const [hasCompared, setHasCompared] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-  const [userPreferences, setUserPreferences] = useState(null);
+  const [, setUserPreferences] = useState(null);
   const [showPreferences, setShowPreferences] = useState(true);
 
   const navigate = useNavigate();

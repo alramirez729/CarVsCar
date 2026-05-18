@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\alram\\\\CodeFiles\\\\car-webapp\\\\CarVsCar-1\\\\server\\\\backend\" -Exclude node_modules -Recurse -File | Where-Object { $_.Extension -eq '.js' } | Select-Object -ExpandProperty FullName | ForEach-Object { $_ -replace [regex]::Escape\\(\"c:\\\\Users\\\\alram\\\\CodeFiles\\\\car-webapp\\\\CarVsCar-1\"\\), \".\" })"
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\alram\\\\CodeFiles\\\\car-webapp\\\\CarVsCar-1\\\\server\\\\backend\" -Exclude node_modules -Recurse -File | Where-Object { $_.Extension -eq '.js' } | Select-Object -ExpandProperty FullName | ForEach-Object { $_ -replace [regex]::Escape\\(\"c:\\\\Users\\\\alram\\\\CodeFiles\\\\car-webapp\\\\CarVsCar-1\"\\), \".\" })",
+      "Bash(npm run *)"
     ]
   }
 }
