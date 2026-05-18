@@ -37,17 +37,18 @@ router.get('/cars', (req, res) => {
     
     let filteredCars = database.cars;
 
-    // Filter by make
+    // Filter by make (partial/startsWith for search UX)
     if (make) {
-      filteredCars = filteredCars.filter(car => 
-        car.make.toLowerCase() === make.toLowerCase()
+      filteredCars = filteredCars.filter(car =>
+        car.make.toLowerCase().startsWith(make.toLowerCase())
       );
     }
 
-    // Filter by model
+    // Filter by model (exact when coming from dropdowns, startsWith for search)
     if (model) {
-      filteredCars = filteredCars.filter(car => 
-        car.model.toLowerCase() === model.toLowerCase()
+      filteredCars = filteredCars.filter(car =>
+        car.model.toLowerCase() === model.toLowerCase() ||
+        car.model.toLowerCase().startsWith(model.toLowerCase())
       );
     }
 

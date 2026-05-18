@@ -15,6 +15,7 @@ import RenderBarChart from '../components/RenderBarChart.js';
 import metricExplanations from '../constants/metricsExplanation.js';
 import AISuggestionBox from '../components/AISuggestionBox.js';
 import { extractSpeedometerValues } from '../utils/compareUtils';
+import UserPreferencesForm from './UserPreferencesForm';
 
 
 
@@ -71,6 +72,9 @@ function Compare() {
 
   const [hasCompared, setHasCompared] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const [userPreferences, setUserPreferences] = useState(null);
+  const [showPreferences, setShowPreferences] = useState(true);
 
   const navigate = useNavigate();
 
@@ -626,16 +630,24 @@ const fetchSuggestions = async (type, make = '', model = '', carNumber) => {
   const handleAISuggestion = async() => {
     setAiSuggestion('');
     setShowAiBox(true);
-    setAiLoading(true);
 
+    if (!isLoggedIn) {
+      setAiLoading(false);
+      setAiSuggestion(
+        "Currently out of tokens, but here the AI agent would take the user's preferences and spit out a response."
+      );
+      return;
+    }
+
+    setAiLoading(true);
     try{
       const suggestion = await getAISuggestion({
-        make1, 
+        make1,
         model1,
         year1,
         make2,
-        model2, 
-        year2, 
+        model2,
+        year2,
         fetchCarData,
         fetchUserPreferences,
       });
@@ -824,21 +836,37 @@ const  handleNavigateSearch = () => {
         </button>
         </div>
       )}
-      <div className="flex flex-row justify-center space-x-12 ml-10">
-      
+      {/* User Preferences Panel */}
+      <div className="w-full max-w-lg mx-auto my-4">
+        <button
+          onClick={() => setShowPreferences(!showPreferences)}
+          className="w-full flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 font-semibold hover:bg-blue-100 transition"
+        >
+          <span>⚙️ Your Preferences <span className="text-sm font-normal text-blue-500">(used by AI Analysis)</span></span>
+          <span>{showPreferences ? '▲' : '▼'}</span>
+        </button>
+        {showPreferences && (
+          <UserPreferencesForm
+            mode="embedded"
+            onSave={(prefs) => setUserPreferences(prefs)}
+          />
+        )}
+      </div>
 
-        <button 
-        onClick={handleCompare} 
-        className="compare-page-buttons"
+      <div className="flex flex-row justify-center space-x-12 ml-10">
+
+        <button
+          onClick={handleCompare}
+          className="compare-page-buttons"
         >
           Compare
         </button>
-        {isLoggedIn && (
-        <button className="compare-page-buttons " 
-        onClick={handleAISuggestion}>
+        <button
+          className="compare-page-buttons"
+          onClick={handleAISuggestion}
+        >
           🪄AI Analysis
         </button>
-      )}
       </div>
       {isLoggedIn && hasCompared && (
         <button 
