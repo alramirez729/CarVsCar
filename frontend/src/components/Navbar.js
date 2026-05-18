@@ -1,40 +1,11 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCodeCompare, faUserCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { AuthContext } from '../AuthContext.js';
+import { faHome, faCodeCompare, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 
 function Navbar() {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate('');
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const dropdownRef = useRef(null);
   const location = useLocation();
-
-  
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setShowLogoutModal(false);
-    navigate('/login')
-    console.log('User logged out');
-
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if(dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-}, []);
 
   return (
     <nav className="bg-gray-800 text-white w-full py-4 shadow-lg fixed top-0 left-0 z-50">
@@ -72,70 +43,10 @@ function Navbar() {
               <span className="navbar-icon">Compare</span>
             </Link>
           </li>
-          {!isLoggedIn ? (
-            <li>
-              <Link to="/login" className="navbar-button">
-                <FontAwesomeIcon icon={faUserCircle} />
-                <span className="navbar-icon">Login / Sign up</span>
-              </Link>
-            </li>
-          ) : (
-            <li className='relative' ref={dropdownRef}>
-              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="navbar-button"
-              >
-                <FontAwesomeIcon icon={faUserCircle} />
-                <span className="navbar-icon">User Dashboard</span>
-              </button>
-              {dropdownOpen && (
-                <div className="absolute top-full mt-2 right-0 w-40 bg-white text-black shadow-lg rounded-md z-50">
-                  <Link
-                    to="/userDashboard"
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    User Dashboard
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setShowLogoutModal(true);
-                      setDropdownOpen(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-200"
-                  >
-                    Logout
-                  </button>
-
-                </div>
-              )}
-            </li>
-          )}
+          {/* login/logout commented out for POC */}
         </ul>
       </div>
-      {/* Logout Confirmation Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center w-96">
-            <h2 className="text-2xl font-semibold mb-4 text-black">Are you sure you want to logout?</h2>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={handleLogout}
-                
-                className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition"
-              >
-                Logout
-              </button>
-              <button
-                onClick={() => setShowLogoutModal(false)}
-                className="bg-gray-300 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-        )}
+      {/* logout modal commented out for POC */}
 
     </nav>
   );
